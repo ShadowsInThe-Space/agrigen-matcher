@@ -10,14 +10,18 @@ from kernel import KernelStrategy, RBFKernel
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def X_small():
     """3 samples x 4 features."""
-    return np.array([
-        [1.0, 2.0, 3.0, 4.0],
-        [5.0, 6.0, 7.0, 8.0],
-        [1.1, 2.1, 3.1, 4.1],
-    ], dtype=np.float64)
+    return np.array(
+        [
+            [1.0, 2.0, 3.0, 4.0],
+            [5.0, 6.0, 7.0, 8.0],
+            [1.1, 2.1, 3.1, 4.1],
+        ],
+        dtype=np.float64,
+    )
 
 
 @pytest.fixture
@@ -29,6 +33,7 @@ def Y_query():
 # ---------------------------------------------------------------------------
 # Interface contract
 # ---------------------------------------------------------------------------
+
 
 class TestKernelInterface:
     def test_is_abstract(self):
@@ -42,6 +47,7 @@ class TestKernelInterface:
 # ---------------------------------------------------------------------------
 # RBFKernel — fit + compute (K(X, X))
 # ---------------------------------------------------------------------------
+
 
 class TestRBFKernelSelfCompute:
     def test_matrix_shape_square(self, X_small):
@@ -75,6 +81,7 @@ class TestRBFKernelSelfCompute:
 # Gamma strategies
 # ---------------------------------------------------------------------------
 
+
 class TestGammaStrategies:
     def test_gamma_auto_positive(self, X_small):
         k = RBFKernel(gamma="auto")
@@ -101,6 +108,7 @@ class TestGammaStrategies:
     def test_gamma_median_formula(self, X_small):
         """median = 1 / (median(pairwise_sq_dist) + epsilon)."""
         from scipy.spatial.distance import pdist
+
         k = RBFKernel(gamma="median")
         k.fit(X_small)
         sq_dists = pdist(X_small, "sqeuclidean")
@@ -132,6 +140,7 @@ class TestGammaStrategies:
 # Cross-kernel computation K(X, Y)
 # ---------------------------------------------------------------------------
 
+
 class TestRBFKernelQuery:
     def test_query_shape(self, X_small, Y_query):
         k = RBFKernel(gamma="median")
@@ -157,6 +166,7 @@ class TestRBFKernelQuery:
 # ---------------------------------------------------------------------------
 # n=1 edge case — the bug we're fixing from the start
 # ---------------------------------------------------------------------------
+
 
 class TestRBFKernelSingleSample:
     def test_fit_single_sample_no_nan(self):

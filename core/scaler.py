@@ -27,8 +27,7 @@ class TraitScaler:
     def __init__(self, strategy: str = "standard") -> None:
         if strategy not in self._VALID_STRATEGIES:
             raise ValueError(
-                f"Unknown scaler strategy '{strategy}'. "
-                f"Valid: {self._VALID_STRATEGIES}"
+                f"Unknown scaler strategy '{strategy}'. Valid: {self._VALID_STRATEGIES}"
             )
         self._strategy = strategy
         self._impl: StandardScaler | None = (

@@ -14,10 +14,18 @@ class TestTraitKeys:
 
     def test_trait_keys_order_stable(self):
         expected = [
-            "drought_tolerance", "heat_tolerance", "cold_tolerance",
-            "disease_resistance", "nitrogen_efficiency", "salinity_tolerance",
-            "soil_ph_min", "soil_ph_max", "growing_days",
-            "yield_potential_t_ha", "water_requirement_mm", "root_depth_cm",
+            "drought_tolerance",
+            "heat_tolerance",
+            "cold_tolerance",
+            "disease_resistance",
+            "nitrogen_efficiency",
+            "salinity_tolerance",
+            "soil_ph_min",
+            "soil_ph_max",
+            "growing_days",
+            "yield_potential_t_ha",
+            "water_requirement_mm",
+            "root_depth_cm",
         ]
         assert TRAIT_KEYS == expected
 
@@ -65,8 +73,11 @@ class TestTraitProfile:
 class TestMatchResult:
     def _make_accession(self):
         return Accession(
-            accession_id="X", genus="G", species="S",
-            cultivar="C", origin_country="DE",
+            accession_id="X",
+            genus="G",
+            species="S",
+            cultivar="C",
+            origin_country="DE",
             traits={k: 0.0 for k in TRAIT_KEYS},
         )
 
@@ -85,8 +96,11 @@ class TestMatchResult:
 
     def test_immutable(self):
         mr = MatchResult(
-            rank=1, accession_id="X", label="T",
-            match_score=1.0, kernel_similarity=0.5,
+            rank=1,
+            accession_id="X",
+            label="T",
+            match_score=1.0,
+            kernel_similarity=0.5,
             accession=self._make_accession(),
         )
         with pytest.raises(dataclasses.FrozenInstanceError):

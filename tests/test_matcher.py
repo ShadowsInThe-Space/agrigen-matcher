@@ -50,6 +50,7 @@ def _valid_query_dict() -> dict[str, float]:
 
 def _load_real_accessions() -> list[Accession]:
     from data_loader import JSONLoader
+
     return JSONLoader().load(DATA_PATH)
 
 
@@ -73,6 +74,7 @@ def fitted_matcher(real_accessions):
 # Construction & DI
 # ---------------------------------------------------------------------------
 
+
 class TestDependencyInjection:
     def test_accepts_kernel_and_scaler(self):
         m = HilbertMatcher(
@@ -94,6 +96,7 @@ class TestDependencyInjection:
 # ---------------------------------------------------------------------------
 # Fit
 # ---------------------------------------------------------------------------
+
 
 class TestFit:
     def test_fit_returns_self(self, real_accessions):
@@ -130,6 +133,7 @@ class TestFit:
 # ---------------------------------------------------------------------------
 # Match — return type & ranking
 # ---------------------------------------------------------------------------
+
 
 class TestMatchResults:
     def test_returns_match_result_objects(self, fitted_matcher):
@@ -180,6 +184,7 @@ class TestMatchResults:
 # Query validation (the known bug fix)
 # ---------------------------------------------------------------------------
 
+
 class TestQueryValidation:
     def test_missing_trait_raises_keyerror(self, fitted_matcher):
         partial = _valid_query_dict()
@@ -209,6 +214,7 @@ class TestQueryValidation:
 # ---------------------------------------------------------------------------
 # n=1 edge case (the known bug fix)
 # ---------------------------------------------------------------------------
+
 
 class TestSingleAccessionFit:
     def test_single_accession_no_nan(self):
@@ -261,14 +267,23 @@ class TestSingleAccessionFit:
 # Semantic correctness (integration tests)
 # ---------------------------------------------------------------------------
 
+
 class TestSemanticCorrectness:
     def test_drought_query_finds_drought_tolerant(self, fitted_matcher):
         """Drought/heat query should rank DesertKing or DryMax-7 in top 3."""
         query = {
-            "drought_tolerance": 10, "heat_tolerance": 10, "cold_tolerance": 2,
-            "disease_resistance": 6, "nitrogen_efficiency": 6, "salinity_tolerance": 7,
-            "soil_ph_min": 5.5, "soil_ph_max": 8.5, "growing_days": 110,
-            "yield_potential_t_ha": 8.0, "water_requirement_mm": 350, "root_depth_cm": 200,
+            "drought_tolerance": 10,
+            "heat_tolerance": 10,
+            "cold_tolerance": 2,
+            "disease_resistance": 6,
+            "nitrogen_efficiency": 6,
+            "salinity_tolerance": 7,
+            "soil_ph_min": 5.5,
+            "soil_ph_max": 8.5,
+            "growing_days": 110,
+            "yield_potential_t_ha": 8.0,
+            "water_requirement_mm": 350,
+            "root_depth_cm": 200,
         }
         results = fitted_matcher.match(query, top_k=3)
         top_ids = {r.accession_id for r in results}
@@ -276,10 +291,18 @@ class TestSemanticCorrectness:
 
     def test_cold_query_finds_cold_tolerant(self, fitted_matcher):
         query = {
-            "drought_tolerance": 3, "heat_tolerance": 2, "cold_tolerance": 10,
-            "disease_resistance": 8, "nitrogen_efficiency": 7, "salinity_tolerance": 4,
-            "soil_ph_min": 5.8, "soil_ph_max": 7.5, "growing_days": 155,
-            "yield_potential_t_ha": 7.0, "water_requirement_mm": 580, "root_depth_cm": 90,
+            "drought_tolerance": 3,
+            "heat_tolerance": 2,
+            "cold_tolerance": 10,
+            "disease_resistance": 8,
+            "nitrogen_efficiency": 7,
+            "salinity_tolerance": 4,
+            "soil_ph_min": 5.8,
+            "soil_ph_max": 7.5,
+            "growing_days": 155,
+            "yield_potential_t_ha": 7.0,
+            "water_requirement_mm": 580,
+            "root_depth_cm": 90,
         }
         results = fitted_matcher.match(query, top_k=3)
         top_ids = {r.accession_id for r in results}
@@ -288,10 +311,18 @@ class TestSemanticCorrectness:
     def test_opposite_profile_ranks_low(self, fitted_matcher):
         """DesertKing should not rank high for a cold query."""
         cold_query = {
-            "drought_tolerance": 2, "heat_tolerance": 2, "cold_tolerance": 10,
-            "disease_resistance": 8, "nitrogen_efficiency": 7, "salinity_tolerance": 3,
-            "soil_ph_min": 6.0, "soil_ph_max": 7.5, "growing_days": 160,
-            "yield_potential_t_ha": 7.0, "water_requirement_mm": 600, "root_depth_cm": 85,
+            "drought_tolerance": 2,
+            "heat_tolerance": 2,
+            "cold_tolerance": 10,
+            "disease_resistance": 8,
+            "nitrogen_efficiency": 7,
+            "salinity_tolerance": 3,
+            "soil_ph_min": 6.0,
+            "soil_ph_max": 7.5,
+            "growing_days": 160,
+            "yield_potential_t_ha": 7.0,
+            "water_requirement_mm": 600,
+            "root_depth_cm": 85,
         }
         results = fitted_matcher.match(cold_query, top_k=12)
         desert_king = [r for r in results if r.accession_id == "EUR-006"]
@@ -302,12 +333,17 @@ class TestSemanticCorrectness:
 # Kernel metadata
 # ---------------------------------------------------------------------------
 
+
 class TestKernelMetadata:
     def test_kernel_info_fields(self, fitted_matcher):
         info = fitted_matcher.kernel_info()
         required = {
-            "n_accessions", "gamma", "kernel_rank",
-            "kernel_trace", "kernel_det", "frobenius_norm",
+            "n_accessions",
+            "gamma",
+            "kernel_rank",
+            "kernel_trace",
+            "kernel_det",
+            "frobenius_norm",
         }
         assert required.issubset(set(info.keys()))
 
@@ -332,6 +368,7 @@ class TestKernelMetadata:
 # Determinism
 # ---------------------------------------------------------------------------
 
+
 class TestDeterminism:
     def test_same_query_same_results(self, fitted_matcher):
         r1 = fitted_matcher.match(_valid_query_dict(), top_k=5)
@@ -342,6 +379,7 @@ class TestDeterminism:
 # ---------------------------------------------------------------------------
 # Extreme queries don't crash
 # ---------------------------------------------------------------------------
+
 
 class TestExtremeQueries:
     def test_all_zeros(self, fitted_matcher):

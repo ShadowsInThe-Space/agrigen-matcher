@@ -152,14 +152,16 @@ class HilbertMatcher:
         results: list[MatchResult] = []
         for rank, idx in enumerate(ranked_indices[:actual_k]):
             acc = self._accessions[idx]
-            results.append(MatchResult(
-                rank=rank + 1,
-                accession_id=acc.accession_id,
-                label=self._labels[idx],
-                match_score=round(float(scores[idx]), 2),
-                kernel_similarity=round(float(k_query[idx]), 6),
-                accession=acc,
-            ))
+            results.append(
+                MatchResult(
+                    rank=rank + 1,
+                    accession_id=acc.accession_id,
+                    label=self._labels[idx],
+                    match_score=round(float(scores[idx]), 2),
+                    kernel_similarity=round(float(k_query[idx]), 6),
+                    accession=acc,
+                )
+            )
 
         return results
 
@@ -177,9 +179,7 @@ class HilbertMatcher:
             "gamma": round(self._kernel.gamma_value, 6),
             "kernel_rank": int(np.linalg.matrix_rank(self._K)),
             "kernel_trace": round(float(np.trace(self._K)), 4),
-            "kernel_det": round(
-                float(np.linalg.det(self._K)) if n <= 12 else -1, 8
-            ),
+            "kernel_det": round(float(np.linalg.det(self._K)) if n <= 12 else -1, 8),
             "frobenius_norm": round(float(np.linalg.norm(self._K, "fro")), 4),
         }
 

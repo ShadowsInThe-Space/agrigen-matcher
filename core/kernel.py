@@ -21,6 +21,7 @@ from sklearn.metrics.pairwise import rbf_kernel
 # Interface
 # ---------------------------------------------------------------------------
 
+
 class KernelStrategy(ABC):
     """Strategy interface for kernel computation in Hilbert space."""
 
@@ -30,9 +31,7 @@ class KernelStrategy(ABC):
         ...
 
     @abstractmethod
-    def compute(
-        self, X: np.ndarray, Y: np.ndarray | None = None
-    ) -> np.ndarray:
+    def compute(self, X: np.ndarray, Y: np.ndarray | None = None) -> np.ndarray:
         """Kernel matrix K(X, Y).  If Y is None, compute K(X, X)."""
         ...
 
@@ -46,6 +45,7 @@ class KernelStrategy(ABC):
 # ---------------------------------------------------------------------------
 # RBF Kernel implementation
 # ---------------------------------------------------------------------------
+
 
 class RBFKernel(KernelStrategy):
     """RBF (Gaussian) kernel with pluggable gamma heuristics.
@@ -86,9 +86,7 @@ class RBFKernel(KernelStrategy):
         else:
             self._gamma_val = float(self._gamma_param)
 
-    def compute(
-        self, X: np.ndarray, Y: np.ndarray | None = None
-    ) -> np.ndarray:
+    def compute(self, X: np.ndarray, Y: np.ndarray | None = None) -> np.ndarray:
         if self._gamma_val is None:
             raise RuntimeError("Kernel not fitted. Call fit() first.")
         if Y is None:

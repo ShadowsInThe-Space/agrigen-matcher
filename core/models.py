@@ -15,10 +15,18 @@ import numpy as np
 # ---------------------------------------------------------------------------
 
 TRAIT_KEYS: list[str] = [
-    "drought_tolerance", "heat_tolerance", "cold_tolerance",
-    "disease_resistance", "nitrogen_efficiency", "salinity_tolerance",
-    "soil_ph_min", "soil_ph_max", "growing_days",
-    "yield_potential_t_ha", "water_requirement_mm", "root_depth_cm",
+    "drought_tolerance",
+    "heat_tolerance",
+    "cold_tolerance",
+    "disease_resistance",
+    "nitrogen_efficiency",
+    "salinity_tolerance",
+    "soil_ph_min",
+    "soil_ph_max",
+    "growing_days",
+    "yield_potential_t_ha",
+    "water_requirement_mm",
+    "root_depth_cm",
 ]
 
 # ---------------------------------------------------------------------------
@@ -52,6 +60,6 @@ class MatchResult:
     rank: int
     accession_id: str
     label: str
-    match_score: float        # 0–100
+    match_score: float  # 0–100
     kernel_similarity: float
     accession: Accession

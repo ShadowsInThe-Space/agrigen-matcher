@@ -30,7 +30,9 @@ def print_kernel_info(matcher: HilbertMatcher) -> None:
     print("── Kernel-Matrix (Hilbert-Raum) ──────────────────────────")
     print(f"  Accessionen im Raum:    {info['n_accessions']}")
     print(f"  RBF gamma:              {info['gamma']}")
-    print(f"  Rang der Kernel-Matrix: {info['kernel_rank']} (von {info['n_accessions']})")
+    print(
+        f"  Rang der Kernel-Matrix: {info['kernel_rank']} (von {info['n_accessions']})"
+    )
     print(f"  Spur (Trace):           {info['kernel_trace']}")
     print(f"  Frobenius-Norm:         {info['frobenius_norm']}")
     print("  → Vollständige Hilbert-Raum-Repräsentation aktiv")
@@ -42,13 +44,15 @@ def print_results(results: list[MatchResult], query_name: str) -> None:
     print()
 
     print(f"  {'#':<3} {'Score':>6}  {'Sorte':<45} {'Herkunft':<12}")
-    print(f"  {'─'*3} {'─'*6}  {'─'*45} {'─'*12}")
+    print(f"  {'─' * 3} {'─' * 6}  {'─' * 45} {'─' * 12}")
 
     for r in results:
         sorte = f"{r.accession.genus} {r.accession.species} — {r.accession.cultivar}"
         if len(sorte) > 45:
             sorte = sorte[:42] + "..."
-        print(f"  {r.rank:<3} {r.match_score:>5.1f}%  {sorte:<45} {r.accession.origin_country:<12}")
+        print(
+            f"  {r.rank:<3} {r.match_score:>5.1f}%  {sorte:<45} {r.accession.origin_country:<12}"
+        )
 
     print()
 
@@ -77,28 +81,52 @@ _SCENARIOS = [
     {
         "name": "Szenario A: Dürre-resistente Sorte für Südeuropa",
         "traits": {
-            "drought_tolerance": 9, "heat_tolerance": 9, "cold_tolerance": 3,
-            "disease_resistance": 6, "nitrogen_efficiency": 6, "salinity_tolerance": 7,
-            "soil_ph_min": 5.8, "soil_ph_max": 8.0, "growing_days": 120,
-            "yield_potential_t_ha": 10.0, "water_requirement_mm": 400, "root_depth_cm": 180,
+            "drought_tolerance": 9,
+            "heat_tolerance": 9,
+            "cold_tolerance": 3,
+            "disease_resistance": 6,
+            "nitrogen_efficiency": 6,
+            "salinity_tolerance": 7,
+            "soil_ph_min": 5.8,
+            "soil_ph_max": 8.0,
+            "growing_days": 120,
+            "yield_potential_t_ha": 10.0,
+            "water_requirement_mm": 400,
+            "root_depth_cm": 180,
         },
     },
     {
         "name": "Szenario B: Kälte-resistente Sorte für Nordeuropa",
         "traits": {
-            "drought_tolerance": 4, "heat_tolerance": 3, "cold_tolerance": 10,
-            "disease_resistance": 8, "nitrogen_efficiency": 7, "salinity_tolerance": 4,
-            "soil_ph_min": 5.8, "soil_ph_max": 7.5, "growing_days": 155,
-            "yield_potential_t_ha": 7.5, "water_requirement_mm": 580, "root_depth_cm": 95,
+            "drought_tolerance": 4,
+            "heat_tolerance": 3,
+            "cold_tolerance": 10,
+            "disease_resistance": 8,
+            "nitrogen_efficiency": 7,
+            "salinity_tolerance": 4,
+            "soil_ph_min": 5.8,
+            "soil_ph_max": 7.5,
+            "growing_days": 155,
+            "yield_potential_t_ha": 7.5,
+            "water_requirement_mm": 580,
+            "root_depth_cm": 95,
         },
     },
     {
         "name": "Szenario C: N-fixierende, wasser-effiziente Sorte",
         "traits": {
-            "drought_tolerance": 7, "heat_tolerance": 6, "cold_tolerance": 6,
-            "disease_resistance": 6, "nitrogen_efficiency": 10, "salinity_tolerance": 5,
-            "soil_ph_min": 5.8, "soil_ph_max": 7.5, "growing_days": 110,
-            "yield_potential_t_ha": 4.0, "water_requirement_mm": 400, "root_depth_cm": 120,
+            "drought_tolerance": 7,
+            "heat_tolerance": 6,
+            "cold_tolerance": 6,
+            "disease_resistance": 6,
+            "nitrogen_efficiency": 10,
+            "salinity_tolerance": 5,
+            "soil_ph_min": 5.8,
+            "soil_ph_max": 7.5,
+            "growing_days": 110,
+            "yield_potential_t_ha": 4.0,
+            "water_requirement_mm": 400,
+            "root_depth_cm": 120,
         },
     },
 ]

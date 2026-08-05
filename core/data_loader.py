@@ -19,6 +19,7 @@ from models import TRAIT_KEYS, Accession
 # Interface
 # ---------------------------------------------------------------------------
 
+
 class DataLoader(ABC):
     """Interface for data sources providing Accession records."""
 
@@ -43,6 +44,7 @@ class DataLoader(ABC):
 # ---------------------------------------------------------------------------
 # JSON implementation
 # ---------------------------------------------------------------------------
+
 
 class JSONLoader(DataLoader):
     """Loads Accession records from a JSON file.
@@ -72,8 +74,12 @@ class JSONLoader(DataLoader):
             raise TypeError(f"Entry {index} is {type(entry).__name__}, expected dict")
 
         required_fields = {
-            "accession_id", "genus", "species",
-            "cultivar", "origin_country", "traits",
+            "accession_id",
+            "genus",
+            "species",
+            "cultivar",
+            "origin_country",
+            "traits",
         }
         missing = required_fields - set(entry.keys())
         if missing:
@@ -112,6 +118,7 @@ class JSONLoader(DataLoader):
 # ---------------------------------------------------------------------------
 # Trait matrix extraction utility
 # ---------------------------------------------------------------------------
+
 
 def extract_trait_matrix(accessions: list[Accession]) -> tuple[np.ndarray, list[str]]:
     """Extract a numeric trait matrix from a list of Accession objects.

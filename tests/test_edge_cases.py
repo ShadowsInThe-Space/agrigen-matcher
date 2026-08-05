@@ -15,6 +15,7 @@ from scaler import TraitScaler
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_accession(aid: str = "TEST-001", **trait_overrides) -> Accession:
     traits = {k: 5.0 for k in TRAIT_KEYS}
     traits["soil_ph_min"] = 6.0
@@ -55,6 +56,7 @@ def _build_matcher(accessions: list[Accession]) -> HilbertMatcher:
 # Query validation
 # ---------------------------------------------------------------------------
 
+
 class TestQueryValidation:
     def test_empty_dict_raises(self):
         m = _build_matcher(_make_accessions(3))
@@ -92,6 +94,7 @@ class TestQueryValidation:
 # JSONLoader robustness
 # ---------------------------------------------------------------------------
 
+
 class TestJSONLoaderRobustness:
     def test_malformed_json_raises(self, tmp_path):
         bad = tmp_path / "bad.json"
@@ -112,8 +115,15 @@ class TestJSONLoaderRobustness:
         assert result == []
 
     def test_entry_missing_traits_raises(self, tmp_path):
-        bad_data = [{"accession_id": "X", "genus": "G", "species": "S",
-                      "cultivar": "C", "origin_country": "DE"}]
+        bad_data = [
+            {
+                "accession_id": "X",
+                "genus": "G",
+                "species": "S",
+                "cultivar": "C",
+                "origin_country": "DE",
+            }
+        ]
         f = tmp_path / "notraits.json"
         f.write_text(json.dumps(bad_data))
         with pytest.raises(KeyError):
@@ -122,9 +132,16 @@ class TestJSONLoaderRobustness:
     def test_entry_missing_single_trait_raises(self, tmp_path):
         traits = {k: 5.0 for k in TRAIT_KEYS}
         del traits["drought_tolerance"]
-        bad_data = [{"accession_id": "X", "genus": "G", "species": "S",
-                      "cultivar": "C", "origin_country": "DE",
-                      "traits": traits}]
+        bad_data = [
+            {
+                "accession_id": "X",
+                "genus": "G",
+                "species": "S",
+                "cultivar": "C",
+                "origin_country": "DE",
+                "traits": traits,
+            }
+        ]
         f = tmp_path / "missing.json"
         f.write_text(json.dumps(bad_data))
         with pytest.raises(KeyError):
@@ -134,6 +151,7 @@ class TestJSONLoaderRobustness:
 # ---------------------------------------------------------------------------
 # Single accession (n=1 bug fix)
 # ---------------------------------------------------------------------------
+
 
 class TestSingleAccession:
     def test_fit_single_no_nan(self):
@@ -171,6 +189,7 @@ class TestSingleAccession:
 # Duplicate accession IDs
 # ---------------------------------------------------------------------------
 
+
 class TestDuplicateAccessionIDs:
     def test_duplicates_dont_crash(self):
         accs = _make_accessions(3)
@@ -191,13 +210,21 @@ class TestDuplicateAccessionIDs:
 # Non-numeric trait values (at loader level)
 # ---------------------------------------------------------------------------
 
+
 class TestNonNumericTraits:
     def test_string_trait_rejected_by_loader(self, tmp_path):
         traits = {k: 5.0 for k in TRAIT_KEYS}
         traits["drought_tolerance"] = "high"
-        bad_data = [{"accession_id": "X", "genus": "G", "species": "S",
-                      "cultivar": "C", "origin_country": "DE",
-                      "traits": traits}]
+        bad_data = [
+            {
+                "accession_id": "X",
+                "genus": "G",
+                "species": "S",
+                "cultivar": "C",
+                "origin_country": "DE",
+                "traits": traits,
+            }
+        ]
         f = tmp_path / "bad.json"
         f.write_text(json.dumps(bad_data))
         with pytest.raises(TypeError):
@@ -206,9 +233,16 @@ class TestNonNumericTraits:
     def test_none_trait_rejected_by_loader(self, tmp_path):
         traits = {k: 5.0 for k in TRAIT_KEYS}
         traits["drought_tolerance"] = None
-        bad_data = [{"accession_id": "X", "genus": "G", "species": "S",
-                      "cultivar": "C", "origin_country": "DE",
-                      "traits": traits}]
+        bad_data = [
+            {
+                "accession_id": "X",
+                "genus": "G",
+                "species": "S",
+                "cultivar": "C",
+                "origin_country": "DE",
+                "traits": traits,
+            }
+        ]
         f = tmp_path / "bad.json"
         f.write_text(json.dumps(bad_data))
         with pytest.raises(TypeError):
@@ -218,6 +252,7 @@ class TestNonNumericTraits:
 # ---------------------------------------------------------------------------
 # top_k edge cases
 # ---------------------------------------------------------------------------
+
 
 class TestTopKEdgeCases:
     def test_top_k_zero(self):
@@ -236,6 +271,7 @@ class TestTopKEdgeCases:
 # Determinism
 # ---------------------------------------------------------------------------
 
+
 class TestDeterminism:
     def test_same_query_same_results(self):
         m = _build_matcher(_make_accessions(5))
@@ -248,12 +284,17 @@ class TestDeterminism:
 # MatchResult immutability
 # ---------------------------------------------------------------------------
 
+
 class TestMatchResultImmutable:
     def test_cannot_mutate_rank(self):
         import dataclasses
+
         mr = MatchResult(
-            rank=1, accession_id="X", label="L",
-            match_score=1.0, kernel_similarity=0.5,
+            rank=1,
+            accession_id="X",
+            label="L",
+            match_score=1.0,
+            kernel_similarity=0.5,
             accession=_make_accession(),
         )
         with pytest.raises(dataclasses.FrozenInstanceError):

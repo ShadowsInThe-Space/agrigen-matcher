@@ -10,19 +10,24 @@ from scaler import TraitScaler
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def X_sample():
-    return np.array([
-        [1.0, 10.0, 100.0],
-        [2.0, 20.0, 200.0],
-        [3.0, 30.0, 300.0],
-        [4.0, 40.0, 400.0],
-    ], dtype=np.float64)
+    return np.array(
+        [
+            [1.0, 10.0, 100.0],
+            [2.0, 20.0, 200.0],
+            [3.0, 30.0, 300.0],
+            [4.0, 40.0, 400.0],
+        ],
+        dtype=np.float64,
+    )
 
 
 # ---------------------------------------------------------------------------
 # Constructor validation
 # ---------------------------------------------------------------------------
+
 
 class TestTraitScalerConstruction:
     def test_default_strategy_is_standard(self):
@@ -37,6 +42,7 @@ class TestTraitScalerConstruction:
 # ---------------------------------------------------------------------------
 # standard strategy
 # ---------------------------------------------------------------------------
+
 
 class TestStandardStrategy:
     def test_fit_transform_shape(self, X_sample):
@@ -74,6 +80,7 @@ class TestStandardStrategy:
 # ---------------------------------------------------------------------------
 # none strategy (identity)
 # ---------------------------------------------------------------------------
+
 
 class TestNoneStrategy:
     def test_none_returns_copy(self, X_sample):

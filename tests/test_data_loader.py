@@ -9,12 +9,14 @@ from models import TRAIT_KEYS, Accession
 from data_loader import DataLoader, JSONLoader, extract_trait_matrix
 
 import os
+
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sample_eurisco.json")
 
 
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
+
 
 @pytest.fixture
 def loader():
@@ -35,6 +37,7 @@ def loaded_accessions(loader, sample_path):
 # DataLoader interface
 # ---------------------------------------------------------------------------
 
+
 class TestDataLoaderInterface:
     def test_is_abstract(self):
         """DataLoader should not be directly instantiable."""
@@ -48,6 +51,7 @@ class TestDataLoaderInterface:
 # ---------------------------------------------------------------------------
 # JSONLoader — happy path
 # ---------------------------------------------------------------------------
+
 
 class TestJSONLoaderHappyPath:
     def test_loads_all_accessions(self, loaded_accessions):
@@ -74,13 +78,15 @@ class TestJSONLoaderHappyPath:
     def test_trait_values_numeric(self, loaded_accessions):
         for acc in loaded_accessions:
             for key, val in acc.traits.items():
-                assert isinstance(val, (int, float)), \
+                assert isinstance(val, (int, float)), (
                     f"{acc.accession_id}.{key} is {type(val)}"
+                )
 
 
 # ---------------------------------------------------------------------------
 # JSONLoader — error cases
 # ---------------------------------------------------------------------------
+
 
 class TestJSONLoaderErrors:
     def test_missing_file(self, loader):
@@ -106,8 +112,15 @@ class TestJSONLoaderErrors:
         assert result == []
 
     def test_accession_missing_traits_key(self, loader, tmp_path):
-        bad_data = [{"accession_id": "X", "genus": "G", "species": "S",
-                      "cultivar": "C", "origin_country": "DE"}]
+        bad_data = [
+            {
+                "accession_id": "X",
+                "genus": "G",
+                "species": "S",
+                "cultivar": "C",
+                "origin_country": "DE",
+            }
+        ]
         f = tmp_path / "notraits.json"
         f.write_text(json.dumps(bad_data))
         with pytest.raises(KeyError):
@@ -117,9 +130,16 @@ class TestJSONLoaderErrors:
         """Accession missing one of TRAIT_KEYS in traits dict."""
         traits = {k: 5.0 for k in TRAIT_KEYS}
         del traits["drought_tolerance"]
-        bad_data = [{"accession_id": "X", "genus": "G", "species": "S",
-                      "cultivar": "C", "origin_country": "DE",
-                      "traits": traits}]
+        bad_data = [
+            {
+                "accession_id": "X",
+                "genus": "G",
+                "species": "S",
+                "cultivar": "C",
+                "origin_country": "DE",
+                "traits": traits,
+            }
+        ]
         f = tmp_path / "missingtrait.json"
         f.write_text(json.dumps(bad_data))
         with pytest.raises(KeyError):
@@ -129,6 +149,7 @@ class TestJSONLoaderErrors:
 # ---------------------------------------------------------------------------
 # extract_trait_matrix utility
 # ---------------------------------------------------------------------------
+
 
 class TestExtractTraitMatrix:
     def test_matrix_shape(self, loaded_accessions):
@@ -149,7 +170,11 @@ class TestExtractTraitMatrix:
 
     def test_label_format(self, loaded_accessions):
         _, labels = extract_trait_matrix(loaded_accessions)
-        assert "Triticum" in labels[0] or "EUR-001" in labels[0] or "Wintergold" in labels[0]
+        assert (
+            "Triticum" in labels[0]
+            or "EUR-001" in labels[0]
+            or "Wintergold" in labels[0]
+        )
 
     def test_empty_input(self):
         X, labels = extract_trait_matrix([])
@@ -159,12 +184,25 @@ class TestExtractTraitMatrix:
         # Build a raw dict with non-numeric trait value
         # JSONLoader should raise on non-numeric trait
         with pytest.raises((ValueError, TypeError)):
-            raw = [{"accession_id": "X", "genus": "G", "species": "S",
-                    "cultivar": "C", "origin_country": "DE",
-                    "traits": {**{k: 5.0 for k in TRAIT_KEYS}, "drought_tolerance": "high"}}]
+            raw = [
+                {
+                    "accession_id": "X",
+                    "genus": "G",
+                    "species": "S",
+                    "cultivar": "C",
+                    "origin_country": "DE",
+                    "traits": {
+                        **{k: 5.0 for k in TRAIT_KEYS},
+                        "drought_tolerance": "high",
+                    },
+                }
+            ]
             # Write temp JSON and try loading
             import tempfile
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+
+            with tempfile.NamedTemporaryFile(
+                mode="w", suffix=".json", delete=False
+            ) as f:
                 json.dump(raw, f)
                 f.flush()
                 loader = JSONLoader()

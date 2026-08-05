@@ -17,6 +17,7 @@ from scaler import TraitScaler
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 def _make_accession() -> Accession:
     return Accession(
         accession_id="TEST-001",
@@ -44,6 +45,7 @@ def real_matcher():
     """Real matcher fitted on sample data via run_demo internals."""
     loader = JSONLoader()
     import os
+
     data_path = os.path.join(
         os.path.dirname(__file__), "..", "data", "sample_eurisco.json"
     )
@@ -60,6 +62,7 @@ def real_matcher():
 # print_banner
 # ---------------------------------------------------------------------------
 
+
 class TestPrintBanner:
     def test_outputs_text(self, capsys):
         print_banner()
@@ -70,6 +73,7 @@ class TestPrintBanner:
 # ---------------------------------------------------------------------------
 # print_results
 # ---------------------------------------------------------------------------
+
 
 class TestPrintResults:
     def test_outputs_match_data(self, capsys):
@@ -84,6 +88,7 @@ class TestPrintResults:
 # ---------------------------------------------------------------------------
 # run_demo — end-to-end smoke test
 # ---------------------------------------------------------------------------
+
 
 class TestRunDemo:
     def test_runs_without_error(self, capsys):
@@ -115,6 +120,7 @@ class TestRunDemo:
         """cli.py must be presentation-only — no direct math imports."""
         import cli
         import inspect
+
         source = inspect.getsource(cli)
         # Allow data_loader/matcher imports but not raw numpy/sklearn/scipy usage
         assert "import numpy" not in source
