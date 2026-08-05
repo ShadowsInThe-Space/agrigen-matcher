@@ -1,16 +1,14 @@
 """Tests for core/data_loader.py — DataLoader interface + JSONLoader."""
 
 import json
+
 import pytest
 import numpy as np
-import sys
-import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "core"))
 from models import TRAIT_KEYS, Accession
 from data_loader import DataLoader, JSONLoader, extract_trait_matrix
 
-# Path to the real sample data
+import os
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sample_eurisco.json")
 
 

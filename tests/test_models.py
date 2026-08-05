@@ -1,12 +1,10 @@
 """Tests for core/models.py — Domain data classes."""
 
 import dataclasses
+
 import pytest
 import numpy as np
-import sys
-import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "core"))
 from models import TRAIT_KEYS, Accession, TraitProfile, MatchResult
 
 
