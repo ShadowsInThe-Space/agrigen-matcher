@@ -47,8 +47,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install ruff
-        run: pip install ruff
+      - name: Install ruff (pinned via requirements-dev.txt)
+        run: pip install -r requirements-dev.txt
 
       - name: Run ruff check
         run: ruff check core/ tests/
