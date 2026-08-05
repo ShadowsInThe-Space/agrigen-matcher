@@ -2,10 +2,7 @@
 
 import pytest
 import numpy as np
-import sys
-import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "core"))
 from kernel import KernelStrategy, RBFKernel
 
 
@@ -15,7 +12,7 @@ from kernel import KernelStrategy, RBFKernel
 
 @pytest.fixture
 def X_small():
-    """3 samples × 4 features."""
+    """3 samples x 4 features."""
     return np.array([
         [1.0, 2.0, 3.0, 4.0],
         [5.0, 6.0, 7.0, 8.0],
@@ -25,12 +22,12 @@ def X_small():
 
 @pytest.fixture
 def Y_query():
-    """1 × 4 query vector."""
+    """1 x 4 query vector."""
     return np.array([[1.05, 2.05, 3.05, 4.05]], dtype=np.float64)
 
 
 # ---------------------------------------------------------------------------
-# Interface
+# Interface contract
 # ---------------------------------------------------------------------------
 
 class TestKernelInterface:
@@ -39,15 +36,14 @@ class TestKernelInterface:
             KernelStrategy()
 
     def test_rbf_is_kernel_strategy(self):
-        k = RBFKernel()
-        assert isinstance(k, KernelStrategy)
+        assert isinstance(RBFKernel(), KernelStrategy)
 
 
 # ---------------------------------------------------------------------------
-# RBFKernel — fit + compute
+# RBFKernel — fit + compute (K(X, X))
 # ---------------------------------------------------------------------------
 
-class TestRBFKernelFitCompute:
+class TestRBFKernelSelfCompute:
     def test_matrix_shape_square(self, X_small):
         k = RBFKernel(gamma="median")
         k.fit(X_small)
@@ -61,13 +57,13 @@ class TestRBFKernelFitCompute:
         assert np.allclose(K, K.T)
 
     def test_diagonal_one(self, X_small):
-        """RBF: K(x,x) = exp(0) = 1."""
+        """RBF: K(x, x) = exp(0) = 1."""
         k = RBFKernel(gamma="median")
         k.fit(X_small)
         K = k.compute(X_small)
         assert np.allclose(np.diag(K), 1.0)
 
-    def test_values_in_01(self, X_small):
+    def test_values_in_unit_interval(self, X_small):
         k = RBFKernel(gamma="median")
         k.fit(X_small)
         K = k.compute(X_small)
@@ -113,12 +109,27 @@ class TestGammaStrategies:
 
     def test_gamma_not_set_before_fit(self):
         k = RBFKernel(gamma="median")
-        with pytest.raises((ValueError, RuntimeError)):
+        with pytest.raises(RuntimeError):
             _ = k.gamma_value
+
+    def test_compute_before_fit_raises(self, X_small):
+        k = RBFKernel(gamma="median")
+        with pytest.raises(RuntimeError):
+            k.compute(X_small)
+
+    def test_unknown_gamma_string_raises(self, X_small):
+        k = RBFKernel(gamma="bogus")
+        with pytest.raises(ValueError):
+            k.fit(X_small)
+
+    def test_fit_rejects_1d_array(self):
+        k = RBFKernel()
+        with pytest.raises(ValueError):
+            k.fit(np.array([1.0, 2.0, 3.0]))
 
 
 # ---------------------------------------------------------------------------
-# Query (cross-kernel) computation
+# Cross-kernel computation K(X, Y)
 # ---------------------------------------------------------------------------
 
 class TestRBFKernelQuery:
@@ -126,7 +137,7 @@ class TestRBFKernelQuery:
         k = RBFKernel(gamma="median")
         k.fit(X_small)
         K_q = k.compute(X_small, Y_query)
-        assert K_q.shape == (3, 1) or K_q.shape == (1, 3)
+        assert K_q.shape == (3, 1)
 
     def test_query_values_in_01(self, X_small, Y_query):
         k = RBFKernel(gamma="median")
@@ -136,7 +147,7 @@ class TestRBFKernelQuery:
         assert K_q.max() <= 1.0 + 1e-10
 
     def test_self_query_is_one(self, X_small):
-        """K(x, x) for a query == 1."""
+        """K(x, x) for a single query row == 1."""
         k = RBFKernel(gamma="median")
         k.fit(X_small)
         K_q = k.compute(X_small, X_small[:1])
@@ -144,16 +155,24 @@ class TestRBFKernelQuery:
 
 
 # ---------------------------------------------------------------------------
-# n=1 edge case (the bug we're fixing from the start)
+# n=1 edge case — the bug we're fixing from the start
 # ---------------------------------------------------------------------------
 
 class TestRBFKernelSingleSample:
-    def test_fit_single_sample_does_not_nan(self):
+    def test_fit_single_sample_no_nan(self):
+        """With n=1, pdist returns empty → must not produce NaN."""
         X = np.array([[1.0, 2.0, 3.0, 4.0]])
         k = RBFKernel(gamma="median")
         k.fit(X)
         assert np.isfinite(k.gamma_value)
         assert k.gamma_value > 0
+
+    def test_fit_single_sample_fallback_gamma(self):
+        """n=1 median heuristic should fall back to gamma=1.0."""
+        X = np.array([[1.0, 2.0, 3.0, 4.0]])
+        k = RBFKernel(gamma="median")
+        k.fit(X)
+        assert k.gamma_value == pytest.approx(1.0)
 
     def test_compute_single_sample(self):
         X = np.array([[1.0, 2.0, 3.0, 4.0]])

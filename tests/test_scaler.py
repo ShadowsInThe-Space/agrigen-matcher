@@ -1,11 +1,8 @@
-"""Tests for core/scaler.py — TraitScaler."""
+"""Tests for core/scaler.py — TraitScaler wrapper."""
 
 import pytest
 import numpy as np
-import sys
-import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "core"))
 from scaler import TraitScaler
 
 
@@ -14,100 +11,86 @@ from scaler import TraitScaler
 # ---------------------------------------------------------------------------
 
 @pytest.fixture
-def X_train():
-    """4 samples × 3 features, varying ranges."""
+def X_sample():
     return np.array([
-        [1.0, 100.0, 0.5],
-        [2.0, 200.0, 1.5],
-        [3.0, 300.0, 2.5],
-        [4.0, 400.0, 3.5],
+        [1.0, 10.0, 100.0],
+        [2.0, 20.0, 200.0],
+        [3.0, 30.0, 300.0],
+        [4.0, 40.0, 400.0],
     ], dtype=np.float64)
 
 
-@pytest.fixture
-def X_query(X_train):
-    return np.array([[2.5, 250.0, 2.0]], dtype=np.float64)
-
-
 # ---------------------------------------------------------------------------
-# fit_transform
+# Constructor validation
 # ---------------------------------------------------------------------------
 
-class TestFitTransform:
-    def test_output_shape_matches_input(self, X_train):
+class TestTraitScalerConstruction:
+    def test_default_strategy_is_standard(self):
         s = TraitScaler()
-        Xs = s.fit_transform(X_train)
-        assert Xs.shape == X_train.shape
+        assert s._strategy == "standard"
 
-    def test_zero_mean(self, X_train):
-        s = TraitScaler()
-        Xs = s.fit_transform(X_train)
-        means = Xs.mean(axis=0)
-        assert np.allclose(means, 0.0, atol=1e-10)
-
-    def test_unit_std(self, X_train):
-        s = TraitScaler()
-        Xs = s.fit_transform(X_train)
-        stds = Xs.std(axis=0)
-        assert np.allclose(stds, 1.0, atol=1e-10)
-
-    def test_finite_output(self, X_train):
-        s = TraitScaler()
-        Xs = s.fit_transform(X_train)
-        assert np.all(np.isfinite(Xs))
-
-
-# ---------------------------------------------------------------------------
-# transform (after fit)
-# ---------------------------------------------------------------------------
-
-class TestTransform:
-    def test_transform_uses_fitted_params(self, X_train, X_query):
-        s = TraitScaler()
-        s.fit_transform(X_train)
-        Xq = s.transform(X_query)
-        assert Xq.shape == X_query.shape
-
-    def test_transform_is_consistent(self, X_train):
-        """transform(fit_transform(X)) == fit_transform(X)."""
-        s = TraitScaler()
-        Xs = s.fit_transform(X_train)
-        Xs2 = s.transform(X_train)
-        assert np.allclose(Xs, Xs2)
-
-    def test_transform_new_data(self, X_train):
-        """Transform should apply same scaling to new data."""
-        s = TraitScaler()
-        Xs = s.fit_transform(X_train)
-
-        # A point equal to the training mean → scaled to 0
-        mean_row = X_train.mean(axis=0, keepdims=True)
-        scaled_mean = s.transform(mean_row)
-        assert np.allclose(scaled_mean, 0.0, atol=1e-10)
-
-
-# ---------------------------------------------------------------------------
-# Strategy "none"
-# ---------------------------------------------------------------------------
-
-class TestStrategyNone:
-    def test_none_is_identity(self, X_train):
-        s = TraitScaler(strategy="none")
-        Xs = s.fit_transform(X_train)
-        assert np.allclose(Xs, X_train)
-
-    def test_none_transform(self, X_train, X_query):
-        s = TraitScaler(strategy="none")
-        s.fit_transform(X_train)
-        Xq = s.transform(X_query)
-        assert np.allclose(Xq, X_query)
-
-
-# ---------------------------------------------------------------------------
-# Invalid strategy
-# ---------------------------------------------------------------------------
-
-class TestInvalidStrategy:
-    def test_invalid_raises(self):
+    def test_invalid_strategy_raises(self):
         with pytest.raises(ValueError):
             TraitScaler(strategy="bogus")
+
+
+# ---------------------------------------------------------------------------
+# standard strategy
+# ---------------------------------------------------------------------------
+
+class TestStandardStrategy:
+    def test_fit_transform_shape(self, X_sample):
+        s = TraitScaler(strategy="standard")
+        Xs = s.fit_transform(X_sample)
+        assert Xs.shape == X_sample.shape
+
+    def test_zero_mean_after_fit(self, X_sample):
+        s = TraitScaler(strategy="standard")
+        Xs = s.fit_transform(X_sample)
+        assert np.allclose(Xs.mean(axis=0), 0.0, atol=1e-10)
+
+    def test_unit_std_after_fit(self, X_sample):
+        s = TraitScaler(strategy="standard")
+        Xs = s.fit_transform(X_sample)
+        assert np.allclose(Xs.std(axis=0), 1.0, atol=1e-10)
+
+    def test_transform_uses_fit_params(self, X_sample):
+        s = TraitScaler(strategy="standard")
+        s.fit_transform(X_sample)
+        Y = np.array([[5.0, 50.0, 500.0]])
+        Yt = s.transform(Y)
+        # Manual standardisation using X_sample stats
+        means = X_sample.mean(axis=0)
+        stds = X_sample.std(axis=0)
+        expected = (Y - means) / stds
+        assert np.allclose(Yt, expected)
+
+    def test_transform_without_fit_raises(self, X_sample):
+        s = TraitScaler(strategy="standard")
+        with pytest.raises(Exception):
+            s.transform(X_sample)
+
+
+# ---------------------------------------------------------------------------
+# none strategy (identity)
+# ---------------------------------------------------------------------------
+
+class TestNoneStrategy:
+    def test_none_returns_copy(self, X_sample):
+        s = TraitScaler(strategy="none")
+        Xs = s.fit_transform(X_sample)
+        assert np.array_equal(Xs, X_sample)
+
+    def test_none_transform_identity(self, X_sample):
+        s = TraitScaler(strategy="none")
+        s.fit_transform(X_sample)
+        Y = np.array([[99.0, 99.0, 99.0]])
+        Yt = s.transform(Y)
+        assert np.array_equal(Yt, Y)
+
+    def test_none_returns_independent_copy(self, X_sample):
+        """Mutating the output must not affect the input."""
+        s = TraitScaler(strategy="none")
+        Xs = s.fit_transform(X_sample)
+        Xs[0, 0] = -999.0
+        assert X_sample[0, 0] != -999.0

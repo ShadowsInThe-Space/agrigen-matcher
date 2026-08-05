@@ -1,54 +1,46 @@
-"""Feature scaling for AgriGen Matcher.
+"""Feature scaling for trait matrices.
 
 Thin wrapper around sklearn scalers, providing a stable interface
-and enabling future strategy swaps without touching the matcher.
+that can be swapped (Standard / MinMax / Robust / None) without
+touching the matcher.
 """
 
 from __future__ import annotations
 
 import numpy as np
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+from sklearn.preprocessing import StandardScaler
 
 
 class TraitScaler:
-    """Normalises trait matrices using configurable scaling strategies.
+    """Normalises trait matrices using the configured strategy.
 
-    Strategies:
-        "standard" — zero mean, unit variance (default)
-        "minmax"   — scale to [0, 1]
-        "robust"   — median/IQR based (outlier-resistant)
-        "none"     — identity (no scaling)
+    Parameters
+    ----------
+    strategy
+        ``"standard"``  — zero mean, unit variance (default).
+        ``"none"``      — pass-through (identity).
+        Future: ``"minmax"``, ``"robust"``.
     """
 
-    _SCALERS = {
-        "standard": StandardScaler,
-        "minmax": MinMaxScaler,
-        "robust": RobustScaler,
-    }
+    _VALID_STRATEGIES = {"standard", "none"}
 
     def __init__(self, strategy: str = "standard") -> None:
-        if strategy not in self._SCALERS and strategy != "none":
+        if strategy not in self._VALID_STRATEGIES:
             raise ValueError(
-                f"Unknown strategy '{strategy}'. "
-                f"Choose from: {list(self._SCALERS.keys()) + ['none']}"
+                f"Unknown scaler strategy '{strategy}'. "
+                f"Valid: {self._VALID_STRATEGIES}"
             )
         self._strategy = strategy
-        self._scaler: StandardScaler | MinMaxScaler | RobustScaler | None = None
-        self._fitted = False
+        self._impl: StandardScaler | None = (
+            StandardScaler() if strategy != "none" else None
+        )
 
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
-        if self._strategy == "none":
-            self._fitted = True
+        if self._impl is None:
             return X.copy()
-        self._scaler = self._SCALERS[self._strategy]()
-        result = self._scaler.fit_transform(X)
-        self._fitted = True
-        return result
+        return self._impl.fit_transform(X)
 
     def transform(self, X: np.ndarray) -> np.ndarray:
-        if not self._fitted:
-            raise RuntimeError("Scaler not fitted. Call fit_transform() first.")
-        if self._strategy == "none":
+        if self._impl is None:
             return X.copy()
-        assert self._scaler is not None
-        return self._scaler.transform(X)
+        return self._impl.transform(X)
