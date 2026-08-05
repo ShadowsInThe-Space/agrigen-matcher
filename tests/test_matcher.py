@@ -319,7 +319,7 @@ class TestEdgeCases:
 
     def test_extreme_query_all_tens(self, fitted_matcher):
         """Query mit allen Zehnen sollte nicht crashen."""
-        tolerance_keys = [k for k in TRAIT_KEYS if k.endswith("_tolerance") or k.endswith("_efficiency")]
+        tolerance_keys = [k for k in TRAIT_KEYS if k.endswith("_tolerance") or k.endswith("_efficiency") or k == "disease_resistance"]
         query = {}
         for k in TRAIT_KEYS:
             if k in tolerance_keys:

@@ -108,10 +108,13 @@ class HilbertMatcher:
         if self.gamma == "auto":
             self._gamma_value = 1.0 / (n_features * X.var())
         elif self.gamma == "median":
-            # Median-Heuristik: gamma = 1 / median(d_ij²)
-            sq_dists = pdist(self.X_scaled, "sqeuclidean")
-            median_sq_dist = np.median(sq_dists)
-            self._gamma_value = 1.0 / (median_sq_dist + 1e-10)
+            # Median-Heuristik braucht mindestens 2 Accessionen
+            if self.X_scaled.shape[0] < 2:
+                self._gamma_value = 1.0
+            else:
+                sq_dists = pdist(self.X_scaled, "sqeuclidean")
+                median_sq_dist = np.median(sq_dists)
+                self._gamma_value = 1.0 / (median_sq_dist + 1e-10)
         else:
             self._gamma_value = float(self.gamma)
         
