@@ -10,7 +10,7 @@ from typing import Any
 
 import numpy as np
 
-from models import TRAIT_KEYS, Accession, MatchResult
+from models import TRAIT_KEYS, Accession, MatchResult, TraitProfile
 from kernel import KernelStrategy, RBFKernel
 from scaler import TraitScaler
 
@@ -97,11 +97,15 @@ class HilbertMatcher:
     # Match
     # ------------------------------------------------------------------
 
-    def match(self, query_traits: dict[str, float], top_k: int = 5) -> list[MatchResult]:
+    def match(
+        self,
+        query: dict[str, float] | TraitProfile,
+        top_k: int = 5,
+    ) -> list[MatchResult]:
         """Match a trait profile against all fitted accessions.
 
         Args:
-            query_traits: Dict containing all TRAIT_KEYS.
+            query: Dict containing all TRAIT_KEYS, or a TraitProfile.
             top_k: Number of top matches to return.
 
         Returns:
@@ -109,19 +113,24 @@ class HilbertMatcher:
         """
         self._ensure_fitted()
 
-        if not isinstance(query_traits, dict):
-            raise TypeError(f"query_traits must be dict, got {type(query_traits).__name__}")
         if top_k < 0:
             top_k = 0
 
-        # Build query vector
-        try:
+        # Build query vector from dict or TraitProfile
+        if isinstance(query, TraitProfile):
+            q_raw = query.values.reshape(1, -1).astype(np.float64)
+        elif isinstance(query, dict):
+            missing = [k for k in TRAIT_KEYS if k not in query]
+            if missing:
+                raise KeyError(f"Query missing traits: {missing}")
             q_raw = np.array(
-                [[float(query_traits[k]) for k in TRAIT_KEYS]],
+                [[float(query[k]) for k in TRAIT_KEYS]],
                 dtype=np.float64,
             )
-        except KeyError as e:
-            raise KeyError(f"Query missing trait: {e}") from e
+        else:
+            raise TypeError(
+                f"query must be dict or TraitProfile, got {type(query).__name__}"
+            )
 
         # Scale query with fitted scaler
         q_scaled = self._scaler.transform(q_raw)
