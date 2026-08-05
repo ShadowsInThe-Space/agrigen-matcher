@@ -156,15 +156,16 @@ class TestExtractTraitMatrix:
         assert X.shape == (0, 0) or len(X) == 0
 
     def test_non_numeric_trait_raises(self):
-        acc = Accession(
-            accession_id="X", genus="G", species="S",
-            cultivar="C", origin_country="DE",
-            traits={k: 5.0 for k in TRAIT_KEYS},
-        )
-        # Frozen dataclass — can't mutate, so build a raw dict
-        from data_loader import extract_trait_matrix
-        raw = [{"accession_id": "X", "genus": "G", "species": "S",
-                "cultivar": "C", "origin_country": "DE",
-                "traits": {**{k: 5.0 for k in TRAIT_KEYS}, "drought_tolerance": "high"}}]
-        # JSONLoader.load would validate this, but extract_trait_matrix gets Accession list
-        # For raw dict path, we test via loader
+        # Build a raw dict with non-numeric trait value
+        # JSONLoader should raise on non-numeric trait
+        with pytest.raises((ValueError, TypeError)):
+            raw = [{"accession_id": "X", "genus": "G", "species": "S",
+                    "cultivar": "C", "origin_country": "DE",
+                    "traits": {**{k: 5.0 for k in TRAIT_KEYS}, "drought_tolerance": "high"}}]
+            # Write temp JSON and try loading
+            import tempfile
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+                json.dump(raw, f)
+                f.flush()
+                loader = JSONLoader()
+                loader.load(f.name)

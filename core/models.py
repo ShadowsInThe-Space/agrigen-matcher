@@ -6,8 +6,7 @@ This module has zero dependencies on other core modules.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Any
+from dataclasses import dataclass
 
 import numpy as np
 

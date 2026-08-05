@@ -16,8 +16,8 @@ from scaler import TraitScaler
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
 
-DATA_PATH = None  # set in conftest-free style below
 import os
+
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sample_eurisco.json")
 
 

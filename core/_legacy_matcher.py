@@ -23,12 +23,11 @@ Quellen:
 """
 
 import json
-import sys
 import os
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import rbf_kernel
-from scipy.spatial.distance import pdist, squareform
+from scipy.spatial.distance import pdist
 
 # ---------------------------------------------------------------------------
 # Konfiguration
@@ -209,7 +208,7 @@ def print_kernel_info(matcher: HilbertMatcher):
     print(f"  Rang der Kernel-Matrix: {info['kernel_rank']} (von {info['n_accessions']})")
     print(f"  Spur (Trace):           {info['kernel_trace']}")
     print(f"  Frobenius-Norm:         {info['frobenius_norm']}")
-    print(f"  → Vollständige Hilbert-Raum-Repräsentation aktiv")
+    print("  → Vollständige Hilbert-Raum-Repräsentation aktiv")
     print()
 
 
@@ -234,7 +233,7 @@ def print_results(results: list[dict], query_name: str):
     print(f"  ★ Top-Match Detail: {top['cultivar']}")
     print(f"    Match-Score (RKHS Cosine): {top['match_score']:.2f}%")
     print(f"    Kernel-Ähnlichkeit (K(x,y)): {top['kernel_similarity']:.6f}")
-    print(f"    Trait-Profil:")
+    print("    Trait-Profil:")
     for k, v in top["traits"].items():
         print(f"      {k:<25} {v}")
     print()

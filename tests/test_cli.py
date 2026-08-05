@@ -3,7 +3,6 @@
 import pytest
 import sys
 import os
-from unittest.mock import MagicMock, patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "core"))
 from cli import run_demo, print_banner, print_results

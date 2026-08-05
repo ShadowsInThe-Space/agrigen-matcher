@@ -4,10 +4,10 @@ import json
 import pytest
 import numpy as np
 
-from data_loader import JSONLoader, extract_trait_matrix
+from data_loader import JSONLoader
 from kernel import RBFKernel
 from matcher import HilbertMatcher
-from models import TRAIT_KEYS, Accession, MatchResult, TraitProfile
+from models import TRAIT_KEYS, Accession, MatchResult
 from scaler import TraitScaler
 
 
