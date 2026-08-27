@@ -211,8 +211,8 @@ console.log('─'.repeat(64))
 
 /**
  * Gold values extracted from a REAL run at commit f8a2c09 against
- * data/sample_eurisco.json (12 accessions). Regenerate by replicating demo.ts:
- *   catalog:  buildCatalog(JSON.parse(readFileSync('../data/sample_eurisco.json')))
+ * data/eurisco_150.json (150 accessions). Regenerate by replicating demo.ts:
+ *   catalog:  buildCatalog(JSON.parse(readFileSync('../data/eurisco_150.json')))
  *   γ:        medianHeuristicGamma(catalog.rows)                       [volle Maske]
  *   min-λ:    symmetricEigenvalues over K = dimensionNormalizedRbf(a, b, fullMask, γ)
  *   Top-1:    extractRequirements → queryGamma(catalog.rows, mask) →
@@ -221,10 +221,10 @@ console.log('─'.repeat(64))
  * string compare. A Top-1 flip or γ drift beyond tolerance is a scoring
  * regression and must fail this suite.
  */
-const GOLD_CATALOG_GAMMA = 3.528030806361295
-const GOLD_TOP1: Readonly<Record<'A' | 'B' | 'C', string>> = { A: 'EUR-006', B: 'EUR-003', C: 'EUR-012' }
+const GOLD_CATALOG_GAMMA = 4.595706962331078
+const GOLD_TOP1: Readonly<Record<'A' | 'B' | 'C', string>> = { A: 'EUR-120', B: 'EUR-102', C: 'EUR-066' }
 
-const DATA_PATH = new URL('../data/sample_eurisco.json', import.meta.url)
+const DATA_PATH = new URL('../data/eurisco_150.json', import.meta.url)
 function loadCatalog(): Catalog {
   const records: AccessionRecord[] = JSON.parse(readFileSync(DATA_PATH, 'utf8'))
   if (!Array.isArray(records) || records.length === 0) throw new Error('EURISCO dataset is empty')
@@ -259,13 +259,11 @@ const GOLD_SCENARIOS: ReadonlyArray<['A' | 'B' | 'C', FarmingRequirements]> = [
   ['B', { coldTolerance: 'extreme', seasonLength: 'short', diseaseResistance: 'high' }],
   ['C', { nitrogenEfficiency: 'extreme', yieldPriority: 'high', waterAvailability: 'moderate' }],
 ]
-/** Replicates demo.ts rankedMatches ranking semantics (score sort desc, stable). */
+/** Mirrors demo.ts rankedMatches: rankCandidates (score + kernel tiebreak). */
 function topAccession(catalog: Catalog, requirements: FarmingRequirements): string {
   const { vector, mask, directions } = extractRequirements(requirements)
   const gamma = queryGamma(catalog.rows, mask)
-  return catalog.ids
-    .map((id, index) => ({ id, score: scoreCandidate(vector, catalog.rows[index]!, mask, gamma, directions) }))
-    .sort((a, b) => b.score - a.score)[0]!.id
+  return catalog.ids[rankCandidates(catalog.rows, vector, mask, gamma, directions)[0]!.index]!
 }
 for (const [key, requirements] of GOLD_SCENARIOS) {
   check(`Gold: Szenario ${key} Top-1 = ${GOLD_TOP1[key]}`,
@@ -273,14 +271,17 @@ for (const [key, requirements] of GOLD_SCENARIOS) {
 }
 
 const goldRowOf = (id: string): number[] => goldCatalog.rows[goldCatalog.ids.indexOf(id)]!
-check(`Crop-Group real: Weizen-Ertrag = (9.2−6.0)/(12.5−6.0) = ${((9.2 - 6.0) / (12.5 - 6.0)).toFixed(4)} ± 1e-9`,
-  Math.abs(goldRowOf('EUR-001')![yieldIndex]! - (9.2 - 6.0) / (12.5 - 6.0)) < 1e-9)
-check('Crop-Group real: Beta = 1.0 (root_tuber-Gruppenmaximum, Frischmasse 75 t/ha)',
-  goldRowOf('EUR-007')![yieldIndex]! === 1)
-check('Crop-Group real: Solanum = 0.0 (root_tuber-Gruppenminimum)',
-  goldRowOf('EUR-004')![yieldIndex]! === 0)
-check('Crop-Group real: Helianthus = 0.5 (Einzelgruppe oilseed, neutral)',
-  goldRowOf('EUR-010')![yieldIndex]! === 0.5)
+// Crop-Group-Pins gemessen am eurisco_150-Datensatz (Generator-Seed 20260827,
+// data/generate-150.ts); Gruppen-Minima/Maxima ändern sich mit jeder
+// Regeneration — Werte dann neu messen, nicht raten.
+check(`Crop-Group real: Weizen-Ertrag in cereal-Gruppe = 0.5204 (Katalog-relativ)`,
+  Math.abs(goldRowOf('EUR-001')![yieldIndex]! - 0.520408163265306) < 1e-9)
+check('Crop-Group real: Beta = 0.8397 (root_tuber, unterhalb Gruppenmaximum)',
+  Math.abs(goldRowOf('EUR-007')![yieldIndex]! - 0.839662447257384) < 1e-9)
+check('Crop-Group real: Solanum = 0.2068 (root_tuber, über Gruppenminimum)',
+  Math.abs(goldRowOf('EUR-004')![yieldIndex]! - 0.206751054852321) < 1e-9)
+check('Crop-Group real: Helianthus = 0.5385 (oilseed, 8-Member-Gruppe)',
+  Math.abs(goldRowOf('EUR-010')![yieldIndex]! - 0.538461538461539) < 1e-9)
 
 // ── Loop-Iteration 9: Genauigkeits-Deckel gepinnt (stille Regressionsschutz) ──
 {

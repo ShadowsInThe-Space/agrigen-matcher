@@ -19,9 +19,9 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { rankCandidates, queryGamma, queryGammaSampled, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
 import { dimensionNormalizedRbf, medianHeuristicGamma } from './kernelMath.ts'
-import { buildCatalog, extractRequirements, TRAIT_NAMES, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
+import { buildCatalog, extractRequirements, LEVEL, TRAIT_NAMES, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
 
-const DATA_PATH = new URL('../data/sample_eurisco.json', import.meta.url)
+const DATA_PATH = new URL('../data/eurisco_150.json', import.meta.url)
 
 /** Deterministic PRNG (mulberry32) so every iteration compares identical seeds. */
 function rng(seed: number): () => number {
@@ -479,6 +479,63 @@ function experiments(catalog: Catalog, scenarioMasks: number[][]): void {
     }
   }
   console.log(`  top-3 Jaccard unter LOO: ${round(demoLooSum / demoLooCount).toFixed(4)} (${demoLooCount} Entfernungen)`)
+
+  // ── It 21: wizard consistency — LEVEL-quantized self-retrieval ──────────
+  // The real UX path: farmers state coarse levels, not decimals. Does a query
+  // built by quantizing accession X's own traits to the wizard levels still
+  // retrieve X? Quantization can only move targets toward the level grid.
+  console.log('  ── It 21: Wizard-Konsistenz (LEVEL-quantisierte Selbst-Retrieval) ──')
+  const wizardFull = wizardConsistency(catalog, TRAIT_NAMES.map(() => 1))
+  console.log(`  volle Maske:   top-1 ${round(wizardFull.top1).toFixed(4)}  top-3 ${round(wizardFull.top3).toFixed(4)}`)
+  const wizardPartials = [1, 2, 3].map(seed => wizardConsistency(catalog, randomMask(4, seed)))
+  const wizardPartialAvg = wizardPartials.reduce((sum, result) => sum + result.top3, 0) / wizardPartials.length
+  console.log(`  4-Dim-Masken:  top-3 Ø ${round(wizardPartialAvg).toFixed(4)} (3 Seeds)`)
+
+  // ── It 22: finer level grid A/B (only meaningful if It 21 shows a gap) ──
+  const fineLevels = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  const fineWizardFull = wizardConsistency(catalog, TRAIT_NAMES.map(() => 1), fineLevels)
+  const fineWizardPartials = [1, 2, 3].map(seed => wizardConsistency(catalog, randomMask(4, seed), fineLevels))
+  const fineWizardPartialAvg = fineWizardPartials.reduce((sum, result) => sum + result.top3, 0) / fineWizardPartials.length
+  console.log(`  ── It 22: Feineres LEVEL-Raster (9 Stufen) A/B ──`)
+  console.log(`  volle Maske:  top-1 ${round(fineWizardFull.top1).toFixed(4)}  top-3 ${round(fineWizardFull.top3).toFixed(4)}`)
+  console.log(`  4-Dim-Masken: top-3 Ø ${round(fineWizardPartialAvg).toFixed(4)} (3 Seeds; 4-Stufen-Raster: ${round(wizardPartialAvg).toFixed(4)})`)
+}
+
+/** Mirror of the product wizard scale (traits.LEVEL) so the metric tracks the shipped grid. */
+const WIZARD_LEVELS = Object.values(LEVEL)
+
+/** Quantize a value to the nearest wizard level (ties → lower level). */
+function quantize(value: number, levels: readonly number[]): number {
+  return levels.reduce((best, level) =>
+    Math.abs(level - value) < Math.abs(best - value) ? level : best, levels[0]!)
+}
+
+/** Random k-dim mask with a fixed seed (shared with partial identity seeds). */
+function randomMask(k: number, seed: number): number[] {
+  const random = rng(seed)
+  const mask = TRAIT_NAMES.map(() => 0)
+  const dims = [...TRAIT_NAMES.keys()]
+  for (let draw = 0; draw < k; draw++) {
+    const pick = Math.floor(random() * dims.length)
+    mask[dims.splice(pick, 1)[0]!] = 1
+  }
+  return mask
+}
+
+function wizardConsistency(catalog: Catalog, mask: number[], levels: readonly number[] = WIZARD_LEVELS): { top1: number, top3: number } {
+  const gamma = queryGamma(catalog.rows, mask)
+  const directions = directionsFor(mask)
+  let top1 = 0
+  let top3 = 0
+  for (let i = 0; i < catalog.rows.length; i++) {
+    const query = catalog.rows[i]!.map(value => quantize(value, levels))
+    const ranked = rankAll(catalog, query, mask, gamma, directions)
+    const self = ranked.find(item => item.id === catalog.ids[i])!
+    if (self.rank === 1) top1++
+    if (self.rank <= 3) top3++
+  }
+  const n = catalog.rows.length
+  return { top1: top1 / n, top3: top3 / n }
 }
 
 function time(fn: () => unknown): number {

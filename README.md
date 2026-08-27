@@ -67,7 +67,8 @@ Die beiden Implementierungen sind ausdrücklich **nicht** als derselbe Rechenker
 
 ## Architektur (Kernel-Pipeline)
 
-1. **Trait-Normalisierung:** 12 Merkmale (Drought, Heat, Cold, Disease, N-Efficiency, Salinity, Soil pH, Growing Days, Yield, Water, Root Depth)
+1. **Datengrundlage:** 150 Accessionen im EURISCO-JSON-Format — 12 handkuratierte + 138 deterministisch generierte (`data/generate-150.ts`, Seed 20260827, mit agronomischen Korrelationen). **Modellierte Musterdaten, kein EURISCO-Export** — die C&E-Trait-Matrix existiert dort nicht in diesem Format (M2/Roadmap). Die 12er-Referenz bleibt in `data/sample_eurisco.json`.
+2. **Trait-Normalisierung:** 12 Merkmale (Drought, Heat, Cold, Disease, N-Efficiency, Salinity, Soil pH, Growing Days, Yield, Water, Root Depth)
 2. **RBF-Kernel:** K(x,y) = exp(-γ·||x-y||²) mit γ via Median-Heuristik
 3. **RKHS-Ähnlichkeit (nur Katalog-Kern):** Der RBF-Kernel läuft auf den normalisierten Trait-Vektoren mit **fester** Maske — feste Maske ⇒ PSD ⇒ echter RKHS; der Kernelwert ist der RKHS-Kosinus der Einbettungen (Einheitsdiagonale K(z,z)=1 gegeben; Details: JSDoc zu `dimensionNormalizedRbf` bzw. Guard `assertFixedScoringMask` in `mvp/kernelMath.ts`)
 4. **Query-Scoring (kein Kernel):** Das Ranking einer Anfrage nutzt einseitige Hinge-Terme (Satisficing) im Query-Subraum — asymmetrisch in (Anfrage, Kandidat), keine PSD-Garantie, ausdrücklich kein Kernel und keine RKHS-Lesart (Details: `mvp/scoring.ts`)
@@ -77,16 +78,17 @@ Die beiden Implementierungen sind ausdrücklich **nicht** als derselbe Rechenker
 ## Messwerte (label-freie Eval, 20 Loop-Iterationen)
 
 Alle Zahlen reproduzierbar via `node mvp/eval.ts` bzw. als Pins in `node mvp/selftest.ts`
-(55 Checks). Methodik und Keep/Revert-Entscheidungen: `docs/algo-iterations.md`.
+(55 Checks; Crop-Group-Pins gemessen am 150er-Datensatz). Methodik und Keep/Revert-Entscheidungen: `docs/algo-iterations.md`.
 
 | Kriterium | Wert |
 |---|---|
-| Identity-Retrieval (Anfrage = Sortenprofil, Vollmaske) | **1.0000** (12/12, selftest-gepinnt) |
+| Identity-Retrieval (Anfrage = Sortenprofil, Vollmaske) | **1.0000** (150/150, selftest-gepinnt) |
 | Teilraum-Identity (jedes k ∈ {2,3,4,6,8,12}) | **1.0000** |
 | Identity auf synthetischem Katalog n=100 | 1.0000 |
+| Wizard-Genauigkeit (5-Stufen-Anfragen, Vollmaske / 4 Dims) | top-1 0.947 / top-3 0.587 |
 | LOO Top-3-Stabilität (echte Demo-Anfragen) | 1.0000 |
-| Bedauerns-Rate bei Anfrage-Rauschen ε=0.01 / 0.02 / 0.05 | 0.0000 / 0.0194 / 0.0917 |
-| Top-3-Treue bei Messrauschen in Sorten-Traits (ε=0.02 / 0.05) | 0.8944 / 0.8731 |
+| Bedauerns-Rate bei Anfrage-Rauschen ε=0.01 / 0.05 (n=150, dichter Katalog) | 0.1172 / 0.2971 |
+| Top-3-Treue bei Messrauschen in Sorten-Traits (ε=0.02 / 0.05) | 0.5989 / 0.4896 |
 | γ-Kalibration bei n=5000 (gesampelte Median-Heuristik) | ~99 ms statt ~20 s, Top-1 unverändert |
 
 Grenze (beabsichtigt): exakte Duplikate im Katalog sind von keinem Matcher

@@ -305,6 +305,70 @@ README-Messwerte-Sektion (alle Zahlen via `node mvp/eval.ts` /
 | Top-3-Treue bei Datenrauschen ε=0.02/0.05 | 0.8944 / 0.8731 | eval |
 | γ-Kalibration n=5000 | 99 ms (vorher 20.1 s) | eval |
 
+## Iteration 23 — Wizard-Konsistenz als neue Messachse (n=12, KEEP)
+
+LEVEL-quantisierte Selbst-Retrieval (echter Match-Wizard-Pfad): Vollmaske
+top-1/top-3 = 1.000; 4-Dim 0.861. Feineres 9-Stufen-Raster zeigte bei n=12
+keinen Unterschied (beides 1.000) — der Unterschied kam erst mit Skalierung (It 24).
+
+## Iteration 24 — Katalog-Skalierung auf n=150 (KEEP, User-Auftrag)
+
+**Änderung:** `data/generate-150.ts` — deterministischer Generator (Seed
+20260827) für 138 zusätzliche Accessionen im EURISCO-Format: 12 Originale
+unverändert (EUR-001..012), agronomische Korrelationen (Dürre↔Wurzeltiefe/
+Wasserbedarf, Kälte⇄Hitze-Budget, Leguminosen-N-Vorsprung, fruchtart-
+spezifische Bereiche). **Transparenz-Vertrag:** modellierte Musterdaten,
+Generator wird committet — kein EURISCO-Export (C&E-Traits existieren dort
+nicht in unserem 12-Trait-Format; M2/Roadmap).
+
+**Zwei Realismus-Nachbesserungen, jeweils von Szenario-B gewiesen:**
+1. Herkunfts-Klima-Korrektur (nordisch ⇄ mediterran) — eine griechische faba
+   mit Kälte 10 gewann Szenario B: intern konsistent, agronomisch unplausibel.
+2. Botanische Klima-Grenzen pro Art (Phaseolus cold ≤5, Sorghum ≤4 & heat ≥6 …)
+   — danach gewann B die finnische Kartoffel + Gerste (Nordstern Rang 2): ✓.
+
+**Messung n=150 (vs n=12):**
+```
+                          n=12     n=150
+identity_top1             1.0000   1.0000   ✓ hält
+partial_identity_k4       1.0000   1.0000   ✓ hält
+k=2 / k=3 Teilraum        1.0000   0.8920 / 0.9880  (neu sichtbar: 2-3 grobe
+                           Anfragen unterscheiden bei dichtem Katalog nicht mehr eindeutig)
+LOO (150!)                1.0000   1.0000   ✓ hält (441 Entfernungen)
+regret ε=0.01/0.05        0/0.0917 0.1172/0.2971  (Dichte-Effekt: mehr
+                           Substitutionskandidaten nahe dem Ziel)
+separation                0.1061   0.0444   (dichteres Top-Feld)
+Datenrauschen top-3       0.894    0.599    (ε=0.02; Shortlist rotiert stärker)
+Wizard 4-Dim (4-Stufen)   0.861    0.436    ← die Lücke wurde sichtbar!
+```
+
+**Entscheidung:** Behalten — Deckel skalieren; Dichte-Effekte ehrlich
+dokumentiert; die Wizard-Lücke führt direkt zu It 25.
+
+## Iteration 25 — Wizard-Skala 4 → 5 Stufen (KEEP, Produkt)
+
+**Hypothese (aus It 22 bei n=150):** feineres Anfrage-Raster hebt die
+Wizard-Genauigkeit messbar. 9-Stufen-Referenz: 4-Dim top-3 0.787 vs 0.436.
+
+**Änderung:** traits.ts LEVEL-Map: {low 0.15, moderate 0.45, high 0.75,
+extreme 0.9} → {very_low 0.1, low 0.3, moderate 0.5, high 0.7, extreme 0.9}
+(uniform); Unions um 'very_low' erweitert (abwärtskompatibel — Demo-Szenarios
+unverändert); eval WIZARD_LEVELS synchron aus Produkmap (Object.values(LEVEL)).
+
+**Messung (Produkt-Grid 5 Stufen, n=150):**
+```
+                          4-Stufen  5-Stufen  9-Stufen (Referenz)
+Wizard Vollmaske top-1    0.8600    0.9467    1.0000
+Wizard 4-Dim top-3        0.4356    0.5867    0.7867
+```
+Szenario-Sieger unverändert (A: Sorghum ×2; B: Kartoffel Finnland +
+Nordstern; C: Vicia + Glycine), Selbsttest 55/55.
+
+**Entscheidung:** Behalten — +15 pp auf dem echten Nutzerpfad ohne einzige
+Regression. Verbleibender Gap zum 9-Stufen-Deckel (0.59→0.79) als UX-Option
+dokumentiert (Schieberegler statt 5 Buttons) — bewusst NICHT blind eingebaut,
+weil Label-Semantik („very_low … extreme") für Landwirte getestet werden muss.
+
 **Bilanz:** 11× behalten (4 Produkt-Änderungen: Kernel-Tiebreaker,
 Demo-Migration auf eval-Pfad, gesampelter γ, Duplikat-Guard), 5× verworfen
 (margin-first, min-max-stretch, γ-Faktor ×2-Tests, LEVEL-Softening mit

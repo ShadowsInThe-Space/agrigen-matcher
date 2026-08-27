@@ -21,7 +21,7 @@ import { matrixRank, symmetricEigenvalues } from './metrics.ts'
 import { percentileOf, queryGamma, rankCandidates, scoreCandidate } from './scoring.ts'
 import { buildCatalog, extractRequirements, TRAIT_NAMES, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
 
-const DATA_PATH = new URL('../data/sample_eurisco.json', import.meta.url)
+const DATA_PATH = new URL('../data/eurisco_150.json', import.meta.url)
 
 const TOP_K = 5
 const PSD_TOLERANCE = -1e-10
@@ -36,18 +36,15 @@ interface Scenario {
 }
 
 /**
- * Expectation check (code comment only, never printed, Brief 5): with hinge
- * query scoring, scenario A must promote the drought class — Sorghum
- * bicolor 'DesertKing' (drought 10, heat 10, lowest water requirement)
- * satisfies every requirement exactly, so its score is exactly 1 and the
- * sunflower/maize class follows. Scenario C must rank the legumes Vicia
- * faba (EUR-012) and Glycine max (EUR-005) ahead of the cereals, which only
- * works with group-wise yield normalization (Fix P1) — the old global
- * min-max buried every grain crop at the bottom of the yield axis. The
- * third legume, Phaseolus vulgaris (EUR-009), deliberately ranks further
- * down (~rank 9): it is the legume-group yield minimum (2.8 t/ha → 0) and
- * the high-yieldPriority query charges it a large hinge term — correct
- * satisficing behavior, not a bug.
+ * Expectation check (code comment only, never printed): on the 150-record
+ * catalog, scenario A promotes the drought class — several Sorghum accessions
+ * (and one maize) satisfy every requirement exactly (score 1.000); the kernel
+ * tiebreak then orders them by profile similarity to the query. Scenario B
+ * promotes the Nordic short-season class: potato (cold ceiling 8, short
+ * season) leads, followed by barley from Finland/Sweden — species climate
+ * limits in the generator keep frost-sensitive beans out of the top. Scenario
+ * C ranks the legumes Vicia faba and Glycine max ahead of the cereals, which
+ * only works with group-wise yield normalization (Fix P1).
  */
 const SCENARIOS: Scenario[] = [
   {

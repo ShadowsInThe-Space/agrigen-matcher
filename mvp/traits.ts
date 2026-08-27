@@ -40,12 +40,12 @@ export interface Catalog {
 
 /** Structured farmer requirements — the AgriGen "Match Wizard" input. */
 export interface FarmingRequirements {
-  droughtTolerance?: 'low' | 'moderate' | 'high' | 'extreme'
-  heatTolerance?: 'low' | 'moderate' | 'high' | 'extreme'
-  coldTolerance?: 'low' | 'moderate' | 'high' | 'extreme'
-  diseaseResistance?: 'low' | 'moderate' | 'high' | 'extreme'
-  nitrogenEfficiency?: 'low' | 'moderate' | 'high' | 'extreme'
-  salinityTolerance?: 'low' | 'moderate' | 'high' | 'extreme'
+  droughtTolerance?: 'very_low' | 'low' | 'moderate' | 'high' | 'extreme'
+  heatTolerance?: 'very_low' | 'low' | 'moderate' | 'high' | 'extreme'
+  coldTolerance?: 'very_low' | 'low' | 'moderate' | 'high' | 'extreme'
+  diseaseResistance?: 'very_low' | 'low' | 'moderate' | 'high' | 'extreme'
+  nitrogenEfficiency?: 'very_low' | 'low' | 'moderate' | 'high' | 'extreme'
+  salinityTolerance?: 'very_low' | 'low' | 'moderate' | 'high' | 'extreme'
   soilPh?: 'acidic' | 'neutral' | 'alkaline'
   seasonLength?: 'short' | 'medium' | 'long'
   waterAvailability?: 'low' | 'moderate' | 'high'
@@ -54,7 +54,10 @@ export interface FarmingRequirements {
 }
 
 /** Level → normalized target. Deliberately not 0/1 extremes: a request is a preference, not a bound. */
-const LEVEL: Record<string, number> = { low: 0.15, moderate: 0.45, high: 0.75, extreme: 0.9 }
+/** Wizard level → normalized target. 5 uniform steps (loop It 25): the 4-level grid measurably lost
+ * retrieval fidelity on the 150-record catalog (4-dim wizard top-3 0.436 → 0.787 with finer grids).
+ */
+export const LEVEL: Readonly<Record<string, number>> = { very_low: 0.1, low: 0.3, moderate: 0.5, high: 0.7, extreme: 0.9 }
 
 const idx = (name: string) => TRAIT_NAMES.indexOf(name as (typeof TRAIT_NAMES)[number])
 
@@ -170,7 +173,7 @@ export function extractRequirements(
     if (direction === undefined) throw new Error(`No static trait direction for '${name}'`)
     return direction
   }
-  const level = (value: 'low' | 'moderate' | 'high' | 'extreme') => LEVEL[value]
+  const level = (value: 'very_low' | 'low' | 'moderate' | 'high' | 'extreme') => LEVEL[value]
 
   if (requirements.droughtTolerance) set('drought_tolerance', level(requirements.droughtTolerance), staticDirection('drought_tolerance'))
   if (requirements.heatTolerance) set('heat_tolerance', level(requirements.heatTolerance), staticDirection('heat_tolerance'))

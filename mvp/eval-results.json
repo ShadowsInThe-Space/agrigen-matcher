@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-08-27T12:37:13.631Z",
+  "timestamp": "2026-08-27T13:13:20.548Z",
   "node": "v22.22.3",
   "metrics": {
     "identity_top1": 1,
@@ -7,30 +7,30 @@
     "identity_mrr": 1,
     "partial_identity_top1_k4": 1,
     "loo_top3_jaccard": 1,
-    "noise_flip_rate_eps005": 0.4806,
-    "noise_regret_rate_eps005": 0.0917,
+    "noise_flip_rate_eps005": 0.8036,
+    "noise_regret_rate_eps005": 0.2971,
     "noise_sweep": [
       {
         "epsilon": 0.01,
-        "flip": 0.3889,
-        "regret": 0
+        "flip": 0.6762,
+        "regret": 0.1172
       },
       {
         "epsilon": 0.02,
-        "flip": 0.4083,
-        "regret": 0.0194
+        "flip": 0.7346,
+        "regret": 0.1943
       },
       {
         "epsilon": 0.05,
-        "flip": 0.4806,
-        "regret": 0.0917
+        "flip": 0.8036,
+        "regret": 0.2971
       },
       {
         "epsilon": 0.1,
-        "flip": 0.5431,
-        "regret": 0.1625
+        "flip": 0.857,
+        "regret": 0.3962
       }
     ],
-    "separation_mean_gap": 0.1061
+    "separation_mean_gap": 0.0444
   }
 }
