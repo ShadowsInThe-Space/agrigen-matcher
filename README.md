@@ -69,8 +69,9 @@ Die beiden Implementierungen sind ausdrücklich **nicht** als derselbe Rechenker
 
 1. **Trait-Normalisierung:** 12 Merkmale (Drought, Heat, Cold, Disease, N-Efficiency, Salinity, Soil pH, Growing Days, Yield, Water, Root Depth)
 2. **RBF-Kernel:** K(x,y) = exp(-γ·||x-y||²) mit γ via Median-Heuristik
-3. **RKHS-Ähnlichkeit:** Der maskierte Kernel-Score ist die RKHS-Kosinusähnlichkeit — jedoch nur unter PSD **und** Einheitsdiagonale K(z,z)=1, beides garantiert bei fester Scoring-Maske (Details: JSDoc zu `dimensionNormalizedRbf` bzw. Guard `assertFixedScoringMask` in `mvp/kernelMath.ts`)
-4. **Terminal-Demo:** 3 Szenarien (Dürre/Süd-EU, Kälte/Nord-EU, Leguminosen-Screening)
+3. **RKHS-Ähnlichkeit (nur Katalog-Kern):** Der RBF-Kernel läuft auf den normalisierten Trait-Vektoren mit **fester** Maske — feste Maske ⇒ PSD ⇒ echter RKHS; der Kernelwert ist der RKHS-Kosinus der Einbettungen (Einheitsdiagonale K(z,z)=1 gegeben; Details: JSDoc zu `dimensionNormalizedRbf` bzw. Guard `assertFixedScoringMask` in `mvp/kernelMath.ts`)
+4. **Query-Scoring (kein Kernel):** Das Ranking einer Anfrage nutzt einseitige Hinge-Terme (Satisficing) im Query-Subraum — asymmetrisch in (Anfrage, Kandidat), keine PSD-Garantie, ausdrücklich kein Kernel und keine RKHS-Lesart (Details: `mvp/scoring.ts`)
+5. **Terminal-Demo:** 3 Szenarien (Dürre/Süd-EU, Kälte/Nord-EU, Leguminosen-Screening)
 
 ## Ziel
 

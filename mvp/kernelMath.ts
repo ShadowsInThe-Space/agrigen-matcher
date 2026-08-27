@@ -2,9 +2,11 @@
  * Pure Hilbert-space kernel utilities.
  *
  * Port of the SeedShuffle production kernel. Source of truth:
- * `seedshuffle_aistudio/server/utils/kernelMath.ts`, covered by that repo's
- * test suite (`seedshuffle_aistudio/tests/unit/kernelMath.spec.ts`, 39 unit
- * tests — count verifiable via `grep -c "it(" <spec path>`).
+ * `seedshuffle_aistudio/server/utils/kernelMath.ts` at commit 4437dfc,
+ * 2026-08-19 — the last commit touching that file, verifiable via
+ * `git log -1 --format="%h %ci" -- server/utils/kernelMath.ts`. Covered by
+ * that repo's test suite (`seedshuffle_aistudio/tests/unit/kernelMath.spec.ts`,
+ * 39 unit tests — count verifiable via `grep -c "it(" <spec path>`).
  *
  * The port is semantically identical to the source; the complete diff is:
  *   - removal of the strain-specific ACTIVE_FEATURES constant (domain
@@ -219,6 +221,12 @@ export function dimensionNormalizedRbf(
  * Median heuristic using exactly the mean-squared metric used at runtime.
  * Pairwise masks are intersected, zero-variance dimensions removed, and pairs
  * with no comparable feature skipped. Degenerate data gets a safe width.
+ *
+ * Scaling (M5): builds all n(n−1)/2 pairwise distances — O(n²) pairs and
+ * O(n²·d) time per call. The demo's PSD diagnosis on top calls
+ * symmetricEigenvalues (mvp/metrics.ts), a Jacobi eigensolver at O(n³) per
+ * sweep. Fine for catalogs up to ~10⁴ candidates; beyond that, sampled pair
+ * statistics and ANN retrieval need to be researched before use.
  */
 export function medianHeuristicGamma(
   rows: readonly number[][],

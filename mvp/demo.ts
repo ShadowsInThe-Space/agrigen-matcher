@@ -40,10 +40,14 @@ interface Scenario {
  * query scoring, scenario A must promote the drought class — Sorghum
  * bicolor 'DesertKing' (drought 10, heat 10, lowest water requirement)
  * satisfies every requirement exactly, so its score is exactly 1 and the
- * sunflower/maize class follows. Scenario C must rank the legumes (Vicia
- * faba, Glycine max) ahead of cereals, which only works with group-wise
- * yield normalization (Fix P1) — the old global min-max buried every grain
- * crop at the bottom of the yield axis.
+ * sunflower/maize class follows. Scenario C must rank the legumes Vicia
+ * faba (EUR-012) and Glycine max (EUR-005) ahead of the cereals, which only
+ * works with group-wise yield normalization (Fix P1) — the old global
+ * min-max buried every grain crop at the bottom of the yield axis. The
+ * third legume, Phaseolus vulgaris (EUR-009), deliberately ranks further
+ * down (~rank 9): it is the legume-group yield minimum (2.8 t/ha → 0) and
+ * the high-yieldPriority query charges it a large hinge term — correct
+ * satisficing behavior, not a bug.
  */
 const SCENARIOS: Scenario[] = [
   {
@@ -201,7 +205,9 @@ function main(): void {
           + `(Score-Abstand < ${TIE_THRESHOLD.toFixed(3)})`,
         )
       }
-    } else {
+    } else if (matches.length >= 2) {
+      // Guard (M1): no rank-2 exists on catalogs smaller than 2 entries —
+      // skip the gap line instead of crashing on second!.
       const [first, second] = matches
       console.log(
         `  → Abstand Rang 1 zu Rang 2: ${(first!.score - second!.score).toFixed(3)} `
