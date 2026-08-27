@@ -478,3 +478,24 @@ Input sind Überfitting und wurden bewusst unterlassen.
    Leiter liegt bei 0.587 (5 Stufen) vs. 1.000 (kontinuierlich).
 
 Bis dahin: Loop-Feeds = No-Op per Design. Keine Schein-Iterationen.
+
+## Iteration 32 — M2-lite: echte Bundessortenamt-Daten im maskierten Kernel (KEEP, Branch feat/bsa-real-data)
+
+User-Direktive Loop-Pass 14: „Algo an die tatsächlich verfügbaren Daten anpassen."
+Verifizierte Quelle: Beschreibende Sortenliste Getreide 2026 (BSA, öffentlich,
+Noten 1–9). Parser (Worker) extrahiert 165 Winterweichweizen-Sorten (S. 114–124,
+drei Stichprophen gegen Rohtext verifiziert); 49 Sorten ohne Noten verworfen.
+
+**Code-Anpassung (rückwärtskompatibel):** scoreCandidate/rankCandidates
+erhalten optionale Kandidaten-Beobachtungsmasken (fehlende Dimensionen werden
+ausgeschlossen, nie imputiert); bsaCatalog.ts mappt BSL → 12-Trait-Schema
+(disease_resistance = Worst-Case über 7 Anfälligkeiten, invertiert;
+growing_days ← Reife; yield ← Ertragsnoten-Mittel; Rest maskiert).
+
+**Smoke auf Echtdaten (116 Sorten):** Anfrage Krankheit/früh/Ertrag →
+nachvollziehbare Shortlist (u. a. 'Intensity'); Identity top-1 0.517 ist die
+ehrliche Informationsgrenze von 3 groben Noten (Projektions-Duplikate durch
+Diskretisierung — bewiesene Grenze, kein Algo-Defizit).
+
+**Nächster Schritt (It 33):** nativer BSL-Merkmalsspace (7 Einzel-Resistenzen
+statt Worst-Case-Aggregat, + Lager/Bestandesdichte/TKM) für feinere Auflösung.
