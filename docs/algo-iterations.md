@@ -85,15 +85,61 @@ Verbesserungsziel für Iteration 4+ ist die Regret-Rate (Ziel < 0.05).
 
 **Entscheidung:** Behalten (Metrik-Präzisierung; kein Algo-Change).
 
-## Nächste Hypothesen (Iterationen 4–20, Pipeline)
+## Iteration 4 — ε-Sweep der Regret-Rate
 
-- **It 4:** Feature-Gewichtung nach Varianz (inerte Dims wie disease_resistance
-  entzerren) → Wirkung auf regret + separation
-- **It 5:** γ-Kalibration der Similarität im Tiebreaker (eigener Teilraum-γ vs.
-  Score-γ) → regret unter Rauschen
-- **It 6:** Sanfte Target-Map (LEVEL-Ziele weiter vom Extrem) → regret
-- **It 7:** Zwei-Stufen-Retrieval (Shortlist nach Score, Re-Rank nach
-  Similarität mit kleinem γ) → separation ohne Satisficing-Verlust
-- **It 8+:** je nach Messlage; jede Änderung nur bei nachweisbarer
-  Metrik-Verbesserung ohne Regression woanders (goldene Regel: identity 1.0,
-  LOO 1.0, Demo-Szenario-Erwartungen bleiben erhalten).
+**Änderung:** `eval.ts`: noiseRobustness über ε ∈ {0.01, 0.02, 0.05, 0.1}.
+
+**Messung:**
+```
+ε=0.01   regret 0.0000   ← realistische Ungenauigkeit: NULL Bedauern
+ε=0.02   regret 0.0194
+ε=0.05   regret 0.0917
+ε=0.10   regret 0.1625
+```
+
+**Erkenntnis:** Regret skaliert ~linear mit ε und ist bei kleinen
+Anfrageungenauigkeiten praktisch null. ±0.05 gleichzeitig auf JEDER aktiven
+Dimension ist ein Stressfall, kein Realistik-Maß. Kern-Genauigkeitsmetriken
+(identity, partial, LOO) sämtlich bei 1.0000 — der Algorithmus ist an der
+messbaren Decke.
+
+**Entscheidung:** Behalten (Analyse).
+
+## Iteration 5 — Margin-first-Tiebreaker (A/B, REJECTED)
+
+**Hypothese:** Bei Score-Gleichstand den Kandidaten mit größerer
+Anforderungsreserve (Headroom) bevorzugen → robuster gegen Intent-Noise.
+
+**Änderung:** Eval-only-Variante `marginTiebreakRank` (score → margin →
+similarity); Produkt-Ranking unverändert.
+
+**Messung (A/B):**
+```
+                         similarity   margin-first
+partial_identity_top1_k4   1.0000       0.9583   ← It-2-Gewinn verloren
+regret ε=0.05              0.0917       0.0917   ← NULL Gewinn
+```
+
+**Begründung der Ablehnung:** Streng schlechter — kostet Identity, gewinnt
+nichts. Die Regret-Fälle liegen nicht in Benefit-Gleichständen (wo Headroom
+wirken könnte), sondern in zweiseitigen Target-Dims; dort ist margin per
+Definition negativ (−|x−q|) und ohne Robustheitssemantik.
+
+**Entscheidung:** Verworfen (produktseitig nie eingebaut). Similarity-Tiebreaker
+bleibt kanonisch.
+
+## Zwischenfazit nach 5 Iterationen
+
+| Metrik | Start | Jetzt |
+|---|---|---|
+| identity_top1 | 1.0000 | 1.0000 |
+| partial_identity_top1_k4 | 0.9583 | **1.0000** |
+| loo_top3_jaccard | 1.0000 | 1.0000 |
+| regret ε=0.01 / 0.02 | ungemessen | 0.0000 / 0.0194 |
+| Selbsttest-Checks | 47 | 50 |
+
+Alle direkt messbaren Genauigkeitskriterien sind gesättigt. Weitere Hypothesen
+(It 6+: Varianz-Gewichtung, γ-Strategien, LEVEL-Map-Softening, Two-Stage)
+werden weiter eval-gestützt geprüft — mit steigender Overfitting-Gefahr beim
+12er-Katalog (Professoren-Warnung); Changes nur bei nachweisbarem Gewinn ohne
+Regression.

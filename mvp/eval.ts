@@ -70,7 +70,7 @@ function identityAccuracy(catalog: Catalog): { top1: number, top3: number, meanR
 }
 
 /** M2: identity with random k-dim masks, averaged over seeds. */
-function partialIdentityAccuracy(catalog: Catalog, k: number, seeds: number): number {
+function partialIdentityAccuracy(catalog: Catalog, k: number, seeds: number, ranker: typeof rankAll = rankAll): number {
   const n = catalog.rows.length
   let top1 = 0
   let trials = 0
@@ -85,7 +85,7 @@ function partialIdentityAccuracy(catalog: Catalog, k: number, seeds: number): nu
     const gamma = queryGamma(catalog.rows, mask)
     const directions = directionsFor(mask)
     for (let i = 0; i < n; i++) {
-      const ranked = rankAll(catalog, catalog.rows[i]!, mask, gamma, directions)
+      const ranked = ranker(catalog, catalog.rows[i]!, mask, gamma, directions)
       if (ranked[0]!.id === catalog.ids[i]) top1++
       trials++
     }
@@ -126,7 +126,7 @@ function looStability(catalog: Catalog, scenarios: number[][]): number {
  * rate counts only perturbations where the new top-1 strictly misses a
  * requirement the old top-1 satisfied (score drop > 1e-9).
  */
-function noiseRobustness(catalog: Catalog, scenarios: number[][], epsilon: number, trials: number): { flipRate: number, regretRate: number } {
+function noiseRobustness(catalog: Catalog, scenarios: number[][], epsilon: number, trials: number, ranker: typeof rankAll = rankAll): { flipRate: number, regretRate: number } {
   let flips = 0
   let regrets = 0
   let total = 0
@@ -136,12 +136,12 @@ function noiseRobustness(catalog: Catalog, scenarios: number[][], epsilon: numbe
     for (let seed = 100; seed < 100 + trials; seed++) {
       const random = rng(seed)
       for (const query of catalog.rows) {
-        const baseline = rankAll(catalog, query, mask, gamma, directions)
+        const baseline = ranker(catalog, query, mask, gamma, directions)
         const baselineTop = baseline[0]!
         const baselineScoreById = new Map(baseline.map(item => [item.id, item.score]))
         const noisy = query.map((value, index) =>
           mask[index] ? Math.min(1, Math.max(0, value + (random() * 2 - 1) * epsilon)) : value)
-        const winner = rankAll(catalog, noisy, mask, gamma, directions)[0]!
+        const winner = ranker(catalog, noisy, mask, gamma, directions)[0]!
         if (winner.id !== baselineTop.id) flips++
         // Regret: does the noisy pick satisfy the ORIGINAL requirements less
         // than the baseline pick did? (both scored against the original query)
@@ -153,7 +153,38 @@ function noiseRobustness(catalog: Catalog, scenarios: number[][], epsilon: numbe
   return { flipRate: flips / total, regretRate: regrets / total }
 }
 
-/** M5: mean top1−top2 score gap for identity queries (self vs. rest, full mask). */
+/**
+ * Iteration 5 experiment: margin-first tiebreak vs similarity tiebreak.
+ * Among equal hinge scores, margin-first prefers candidates with larger
+ * requirement headroom (robustness to intent under-specification), at the
+ * cost of exact-profile identity retrieval. Eval-only — product ranking
+ * (rankCandidates) stays similarity-based unless this experiment wins.
+ */
+function marginTiebreakRank(catalog: Catalog, query: number[], mask: number[], gamma: number, directions: Record<string, 'benefit' | 'cost' | 'target'>): Scored[] {
+  const margins = catalog.rows.map(row => {
+    let headroom = 0
+    let active = 0
+    for (let index = 0; index < row.length; index++) {
+      if (!mask[index]) continue
+      const name = TRAIT_NAMES[index]!
+      const direction = directions[name]!
+      const q = query[index]!
+      const x = row[index]!
+      headroom += direction === 'benefit' ? x - q : direction === 'cost' ? q - x : -Math.abs(x - q)
+      active++
+    }
+    return active === 0 ? 0 : headroom / active
+  })
+  return rankCandidates(catalog.rows, query, mask, gamma, directions)
+    .map((item, position) => ({ item, position, margin: margins[item.index]! }))
+    .sort((a, b) =>
+      b.item.score - a.item.score ||
+      b.margin - a.margin ||
+      b.item.similarity - a.item.similarity)
+    .map(({ item }) => item)
+    .map(item => ({ id: catalog.ids[item.index]!, score: item.score }))
+    .map((item, index) => ({ ...item, rank: index + 1 }))
+}
 function separation(catalog: Catalog): number {
   const fullMask = TRAIT_NAMES.map(() => 1)
   const gamma = queryGamma(catalog.rows, fullMask)
@@ -182,6 +213,12 @@ function main(): void {
   const loo = looStability(catalog, scenarioMasks)
   const noise = noiseRobustness(catalog, scenarioMasks, 0.05, 20)
   const sep = separation(catalog)
+  // ε-sweep: regret as a function of perturbation magnitude (iteration 4).
+  const sweep = [0.01, 0.02, 0.05, 0.1].map(epsilon => ({
+    epsilon,
+    flip: round(noiseRobustness(catalog, scenarioMasks, epsilon, 20).flipRate),
+    regret: round(noiseRobustness(catalog, scenarioMasks, epsilon, 20).regretRate),
+  }))
   const results = {
     timestamp: new Date().toISOString(),
     node: process.version,
@@ -193,14 +230,26 @@ function main(): void {
       loo_top3_jaccard: round(loo),
       noise_flip_rate_eps005: round(noise.flipRate),
       noise_regret_rate_eps005: round(noise.regretRate),
+      noise_sweep: sweep,
       separation_mean_gap: round(sep),
     },
   }
   writeFileSync(new URL('./eval-results.json', import.meta.url), JSON.stringify(results, null, 2) + '\n')
   console.log('AgriGen Eval — Baseline-Metriken (siehe mvp/eval-results.json)')
   for (const [key, value] of Object.entries(results.metrics)) {
+    if (key === 'noise_sweep') continue
     console.log(`  ${key.padEnd(32)} ${value}`)
   }
+  for (const point of results.metrics.noise_sweep as typeof sweep) {
+    console.log(`  ε=${String(point.epsilon).padEnd(6)} flip ${String(point.flip).padEnd(8)} regret ${point.regret}`)
+  }
+
+  // Iteration 5 experiment: margin-first vs similarity tiebreak (A/B).
+  const variantPartial = partialIdentityAccuracy(catalog, 4, 10, marginTiebreakRank)
+  const variantNoise = noiseRobustness(catalog, scenarioMasks, 0.05, 20, marginTiebreakRank)
+  console.log('  ── Iteration-5-Experiment: Margin-first-Tiebreaker (Produkt unverändert) ──')
+  console.log(`  partial_identity_top1_k4   similarity ${(results.metrics.partial_identity_top1_k4 as number).toFixed(4)}  vs margin-first ${round(variantPartial).toFixed(4)}`)
+  console.log(`  regret eps=0.05            similarity ${(results.metrics.noise_regret_rate_eps005 as number).toFixed(4)}  vs margin-first ${round(variantNoise.regretRate).toFixed(4)}`)
 }
 
 function round(value: number): number {
