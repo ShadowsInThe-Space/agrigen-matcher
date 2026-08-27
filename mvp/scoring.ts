@@ -11,7 +11,7 @@
  * against one farmer query on the active query dimensions.
  */
 
-import { medianHeuristicGamma, validateGamma, type FeatureMask } from './kernelMath.ts'
+import { dimensionNormalizedRbf, medianHeuristicGamma, validateGamma, type FeatureMask } from './kernelMath.ts'
 import { TRAIT_NAMES } from './traits.ts'
 
 export type TraitDirection = 'benefit' | 'cost' | 'target'
@@ -111,4 +111,37 @@ export function percentileOf(score: number, allScores: readonly number[]): numbe
   if (allScores.length === 0) return 50
   const below = allScores.reduce((count, value) => count + (value < score ? 1 : 0), 0)
   return (100 * below) / allScores.length
+}
+
+export interface RankedCandidate {
+  index: number
+  /** Primary key: hinge satisficing score (see scoreCandidate). */
+  score: number
+  /** Tiebreak key: masked RBF similarity on the active subspace (fixed mask ⇒ PSD ⇒ RKHS cosine). */
+  similarity: number
+}
+
+/**
+ * Rank all catalog rows against one query: primary = requirement satisfaction
+ * (hinge score), secondary = overall profile similarity in the active
+ * subspace (RBF kernel). The tiebreak resolves score ties — e.g. several
+ * candidates fully satisfying a benefits-only query — toward the candidate
+ * whose trait profile is closest to the query point. It does NOT override the
+ * satisficing semantics: a candidate that misses a requirement can never
+ * outrank one that satisfies it, however similar it is.
+ */
+export function rankCandidates(
+  catalogRows: readonly number[][],
+  query: number[],
+  queryMask: FeatureMask,
+  gamma: number,
+  directions: Readonly<Record<string, TraitDirection>>,
+): RankedCandidate[] {
+  return catalogRows
+    .map((row, index) => ({
+      index,
+      score: scoreCandidate(query, row, queryMask, gamma, directions),
+      similarity: dimensionNormalizedRbf(query, row, queryMask, gamma),
+    }))
+    .sort((a, b) => b.score - a.score || b.similarity - a.similarity)
 }

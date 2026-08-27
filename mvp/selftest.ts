@@ -14,7 +14,7 @@ import {
   reciprocalRankFusion, rbfKernel, validateAlpha, validateFeatureRanges, validateGamma,
 } from './kernelMath.ts'
 import { matrixRank, symmetricEigenvalues } from './metrics.ts'
-import { percentileOf, queryGamma, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
+import { percentileOf, queryGamma, rankCandidates, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
 import {
   buildCatalog, CROP_GROUPS, extractRequirements, TRAIT_NAMES,
   type AccessionRecord, type Catalog, type FarmingRequirements,
@@ -123,6 +123,28 @@ const gammaFull = medianHeuristicGamma(gammaRows)
 const gammaSub = queryGamma(gammaRows, [1, 0, 0])
 check('queryGamma: Teilraum-γ weicht ab, endlich und > 0',
   gammaSub !== gammaFull && Number.isFinite(gammaSub) && gammaSub > 0)
+
+// ── Loop-Iteration 2: Kernel-Tiebreaker in rankCandidates ────────────────
+{
+  const twoDimMask = TRAIT_NAMES.map(trait => trait === 'drought_tolerance' || trait === 'root_depth' ? 1 : 0)
+  const dir2 = { drought_tolerance: 'benefit', root_depth: 'benefit' }
+  const row = (drought: number, root: number): number[] => {
+    const vector = new Array<number>(TRAIT_NAMES.length).fill(0)
+    vector[TRAIT_NAMES.indexOf('drought_tolerance')] = drought
+    vector[TRAIT_NAMES.indexOf('root_depth')] = root
+    return vector
+  }
+  const query = row(0.9, 0.5)
+  const tie = rankCandidates([row(1.0, 0.9), row(1.0, 0.5)], query, twoDimMask, 1, dir2)
+  check('Tiebreaker: Score-Gleichstand wird nach Profilähnlichkeit aufgelöst',
+    tie[0]!.score === tie[1]!.score && tie[0]!.similarity > tie[1]!.similarity)
+  const prio = rankCandidates([row(0.89, 0.5), row(1.0, 0.9)], query, twoDimMask, 1, dir2)
+  check('Tiebreaker überschreibt Satisficing nicht: Fehlbetrag verliert trotz höherer Ähnlichkeit',
+    prio[0]!.score > prio[1]!.score && prio[0]!.similarity < prio[1]!.similarity)
+  const selfFirst = rankCandidates([row(1.0, 0.9), query], query, twoDimMask, 1, dir2)
+  check('Tiebreaker: Selbst-Retrieval gewinnt den Gleichstand (Similarität exakt 1)',
+    selfFirst[0]!.similarity === 1)
+}
 
 const req = extractRequirements({
   nitrogenEfficiency: 'extreme', yieldPriority: 'high', waterAvailability: 'moderate', seasonLength: 'short',

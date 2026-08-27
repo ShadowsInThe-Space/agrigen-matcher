@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-08-27T12:35:22.076Z",
+  "node": "v22.22.3",
+  "metrics": {
+    "identity_top1": 1,
+    "identity_top3": 1,
+    "identity_mrr": 1,
+    "partial_identity_top1_k4": 1,
+    "loo_top3_jaccard": 1,
+    "noise_flip_rate_eps005": 0.4806,
+    "noise_regret_rate_eps005": 0.0917,
+    "separation_mean_gap": 0.1061
+  }
+}
