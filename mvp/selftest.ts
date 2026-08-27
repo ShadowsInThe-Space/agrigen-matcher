@@ -325,6 +325,9 @@ check('Toleranzband: Fehlbetrag zählt erst ab Bandkante (exp(−0.01), milder a
   Math.abs(scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.3), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }) - Math.exp(-0.04)) < 1e-12)
 check('Toleranzband: target-Dim zweiseitig mit Dead-Zone',
   Math.abs(scoreCandidate(vecAt('soil_ph_min', 0.5), vecAt('soil_ph_min', 0.62), maskOf('soil_ph_min'), 1, { soil_ph_min: 'target' }, 0.1) - Math.exp(-0.0004)) < 1e-12)
+check('Null-Überlappung: Kandidat ohne gemeinsame Beobachtung ist KEIN Match (Score 0)',
+  scoreCandidate(vecAt('drought_tolerance', 0.9), vecAt('drought_tolerance', 0.5), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }, 0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) === 0)
+
 check('Toleranzband: negatives δ wird abgelehnt',
   throws(() => scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.5), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }, -0.1)))
 

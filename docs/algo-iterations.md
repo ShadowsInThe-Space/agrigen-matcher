@@ -522,3 +522,33 @@ Shortlist (Intensity 0.993, Shrek, SU Horizon …).
 Aggregation, nicht der Daten — 15 Einzel-Noten reichen für eindeutige
 Selbst-Identifikation aller 116 Sorten. „Extrem hohe Genauigkeit" jetzt auf
 offiziellen, öffentlichen Bundessortenamt-Daten erreicht.
+
+## Iteration 34 — Multi-Crop-Union-Space + der P3-Fix, den nur Realdaten enthüllen (KEEP)
+
+**Daten:** Worker parst Gerste (65, 19 Noten), Roggen (35, 14 + P/H-Züchttyp),
+Dinkel (29, 13 Kern/Vesen), Hafer (22, 17 inkl. Qualität) — Spalten je Fruchtart
+doppelt verifiziert (visueller Header-Lesung + pdftotext-bbox-Koordinaten).
+
+**Union-Space:** 245 Sorten · 37 Deskriptoren · Hafer-Rispenschieben→
+aehrenschieben (dokumentierte Analogie). Cross-Crop-Anfrage auf natürlich
+gemeinsamem Subspace funktioniert (mehltauarm/standfest/früh/ertragsstark).
+
+**Der eigentliche Fund:** Identity kollabierte für Roggen/Dinkel/Hafer —
+Diagnose: near-leere BSL-Records (z.B. Anja: nur Virus-Noten) haben
+Null-Überlappung mit der Anfrage → maskierte Distanz null → Score 1,
+Similarität 1 → **Nicht-Information rankte als perfektes Match**. Genau die
+P3-Warnung des Professors; im EURISCO-All-dims-Betrieb biss sie nie, echte
+BSL-Lücken sofort.
+
+**Fix (produktreif):** scoreCandidate — Null-Überlappung (Anfrage aktiv,
+Kandidat beobachtet nichts davon) ⇒ Score 0; leere Anfrage bleibt neutral 1.
+60/60 Checks (neuer Test), EURISCO-Pfade unberührt.
+
+**Nachmessung:** Weizen 1.0000 · Roggen 1.0000 · Dinkel 1.0000 · Hafer 0.9545 ·
+Gerste 0.2308 (stark lückenhafte Records — 256/1235 null; Tiefenanalyse als
+nächste Iteration, Arbeitshypothese: Projektions-Duplikate im beobachteten
+Teilraum = Informationsgrenze).
+
+Nebenbefund: die ursprünglich vermutete „13er-Duplikat-Gruppe vollständiger
+Profile" war ein Analyseartefakt meinerseits (Key über nur-numerische Felder
+gruppierte die near-leeren Records) — die ehrliche Aufarbeitung steht hier.

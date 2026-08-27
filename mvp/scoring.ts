@@ -87,8 +87,10 @@ export function scoreCandidate(
   }
   let total = 0
   let active = 0
+  let queryActive = 0
   for (let index = 0; index < query.length; index++) {
     if (queryMask[index] === 0) continue
+    queryActive++
     // Real-source data (BSL): dimensions the candidate does not observe are
     // excluded instead of imputed — masked distance, never an invented value.
     if (candidateMask !== undefined && candidateMask[index] === 0) continue
@@ -108,7 +110,11 @@ export function scoreCandidate(
     total += hinge * hinge
     active++
   }
-  if (active === 0) return 1
+  if (queryActive === 0) return 1
+  // Zero overlap (query asks, candidate observes none of it) is NO match —
+  // "no information" must never rank as a perfect one (professor P3,
+  // exposed by real BSL gap patterns; only the empty QUERY stays neutral).
+  if (active === 0) return 0
   return Math.exp(-gamma * (total / active))
 }
 

@@ -200,3 +200,88 @@ export function loadBsaNativeCatalog(): BsaCatalog {
     readFileSync(new URL('../data/bsa/winterweizen.json', import.meta.url), 'utf8'))
   return buildBsaNativeCatalog(records)
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Union trait space across all five BSL crops (It 34): every descriptor any
+// crop observes becomes a dimension; varieties mask what they lack. Cross-
+// crop queries run on the naturally shared subspace (mehltau, lager, reife,
+// bestandesdichte, kornertrag …) — the masked kernel needs no schema rape.
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const UNION_TRAIT_NAMES = [
+  'aehrenschieben', 'reife', 'reifeverzoegerung_stroh', 'pflanzenlaenge', 'lager',
+  'halmknicken', 'aehrenknicken', 'mehltau', 'gelbrost', 'braunrost', 'blattseptoria',
+  'aehrenfusarium', 'drechslera', 'pseudocercosporella', 'netzflecken', 'rhynchosporium',
+  'ramularia', 'zwergrost', 'gelbmosaik_baymv1', 'gelbmosaik_baymv2',
+  'gerstengelbverzwergung', 'mutterkorn', 'bestandesdichte', 'kornzahl_aehre',
+  'kernzahl_aehre', 'kornzahl_rispe', 'tausendkornmasse', 'tausendkernmasse',
+  'kornertrag_st1', 'kornertrag_st2', 'vesenertrag_st1', 'vesenertrag_st2',
+  'sortierung_2_0', 'sortierung_2_5', 'hektolitergewicht', 'spelzenanteil',
+  'anteil_nicht_entspelzter_koerner',
+] as const
+
+/** Hafer: Rispenschieben ist das phänologische Pendant zum Ährenschieben (dokumentierte Analogie). */
+const UNION_ALIASES: Readonly<Record<string, string>> = { rispenschieben: 'aehrenschieben' }
+
+export const UNION_DIRECTIONS: Readonly<Record<string, 'benefit' | 'cost' | 'target'>> = {
+  aehrenschieben: 'target', reife: 'cost', reifeverzoegerung_stroh: 'target',
+  pflanzenlaenge: 'target', bestandesdichte: 'target', spelzenanteil: 'target',
+  lager: 'cost', halmknicken: 'cost', aehrenknicken: 'cost',
+  mehltau: 'cost', gelbrost: 'cost', braunrost: 'cost', blattseptoria: 'cost',
+  aehrenfusarium: 'cost', drechslera: 'cost', pseudocercosporella: 'cost',
+  netzflecken: 'cost', rhynchosporium: 'cost', ramularia: 'cost', zwergrost: 'cost',
+  gelbmosaik_baymv1: 'cost', gelbmosaik_baymv2: 'cost', gerstengelbverzwergung: 'cost',
+  mutterkorn: 'cost', anteil_nicht_entspelzter_koerner: 'cost',
+  kornzahl_aehre: 'benefit', kernzahl_aehre: 'benefit', kornzahl_rispe: 'benefit',
+  tausendkornmasse: 'benefit', tausendkernmasse: 'benefit',
+  kornertrag_st1: 'benefit', kornertrag_st2: 'benefit',
+  vesenertrag_st1: 'benefit', vesenertrag_st2: 'benefit',
+  sortierung_2_0: 'benefit', sortierung_2_5: 'benefit', hektolitergewicht: 'benefit',
+}
+
+type LooseRecord = Record<string, unknown> & { sortenname: string; section: string; zuechtyp?: string | null }
+
+const CROP_FILES: ReadonlyArray<[string, string, string]> = [
+  ['winterweizen.json', 'Triticum aestivum', 'Weizen'],
+  ['wintergerste.json', 'Hordeum vulgare', 'Gerste'],
+  ['winterroggen.json', 'Secale cereale', 'Roggen'],
+  ['dinkel.json', 'Triticum spelta', 'Dinkel'],
+  ['hafer.json', 'Avena sativa', 'Hafer'],
+]
+
+export interface UnionCatalog extends BsaCatalog {
+  crops: string[]
+}
+
+export function loadBsaUnionCatalog(): UnionCatalog {
+  const rows: number[][] = []
+  const observationMasks: number[][] = []
+  const ids: string[] = []
+  const labels: string[] = []
+  const crops: string[] = []
+  for (const [file, latin, crop] of CROP_FILES) {
+    const records = JSON.parse(readFileSync(new URL(`../data/bsa/${file}`, import.meta.url), 'utf8')) as LooseRecord[]
+    for (const record of records) {
+      const row = new Array<number>(UNION_TRAIT_NAMES.length).fill(0)
+      const mask = new Array<number>(UNION_TRAIT_NAMES.length).fill(0)
+      let observed = 0
+      for (const [rawKey, rawValue] of Object.entries(record)) {
+        const key = UNION_ALIASES[rawKey] ?? rawKey
+        const index = UNION_TRAIT_NAMES.indexOf(key as (typeof UNION_TRAIT_NAMES)[number])
+        if (index >= 0 && typeof rawValue === 'number') {
+          row[index] = (rawValue - 1) / 8
+          mask[index] = 1
+          observed++
+        }
+      }
+      if (observed === 0) continue
+      const typeSuffix = typeof record.zuechtyp === 'string' && record.zuechtyp ? ` [${record.zuechtyp}]` : ''
+      ids.push(record.sortenname.replace(/\s+/g, '-'))
+      labels.push(`${latin} '${record.sortenname}'${typeSuffix} (${crop})`)
+      crops.push(crop)
+      rows.push(row)
+      observationMasks.push(mask)
+    }
+  }
+  return { ids, labels, rows, observationMasks, crops }
+}

@@ -10,7 +10,7 @@ import { rankCandidates, queryGamma, scoreCandidate, percentileOf, TRAIT_DIRECTI
 import { medianHeuristicGamma } from './kernelMath.ts'
 import { dimensionNormalizedRbf } from './kernelMath.ts'
 import { TRAIT_NAMES } from './traits.ts'
-import { loadBsaCatalog, loadBsaNativeCatalog, BSL_TRAIT_NAMES, BSL_DIRECTIONS } from './bsaCatalog.ts'
+import { loadBsaCatalog, loadBsaNativeCatalog, loadBsaUnionCatalog, BSL_TRAIT_NAMES, BSL_DIRECTIONS, UNION_TRAIT_NAMES, UNION_DIRECTIONS } from './bsaCatalog.ts'
 
 const catalog = loadBsaCatalog()
 const n = catalog.rows.length
@@ -123,4 +123,70 @@ console.log(`Teilraum-γ = ${nGamma.toFixed(4)} · δ = 0.1 · aktiveDims ${nqMa
 console.log('Rang  Sorte                                Score   Perzentil')
 for (const [position, item] of nRanked.entries()) {
   console.log(`${String(position + 1).padEnd(5)}${native.labels[item.index]!.padEnd(52).slice(0, 50)}${item.score.toFixed(3).padEnd(7)}besser als ${percentileOf(item.score, nScores).toFixed(1)} %`)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Union-Space über 5 Fruchtarten (It 34): Cross-Crop-Matching auf echten Daten
+// ═══════════════════════════════════════════════════════════════════════════
+console.log('\n═══ Union-Space: 5 Fruchtarten, echte BSL-2026-Daten ═══')
+const union = loadBsaUnionCatalog()
+const uDims = UNION_TRAIT_NAMES.length
+const byCrop: Record<string, number[]> = {}
+union.crops.forEach((crop, index) => { (byCrop[crop] ??= []).push(index) })
+console.log(`${union.rows.length} Sorten gesamt über ${Object.keys(byCrop).length} Fruchtarten · ${uDims} Union-Deskriptoren`)
+for (const [crop, indexes] of Object.entries(byCrop)) {
+  console.log(`  ${crop.padEnd(8)} ${String(indexes.length).padStart(3)} Sorten`)
+}
+
+// Per-Crop Identity im Union-Space — mit Duplikat-Gruppen-Analyse:
+// exakt identische BSL-Beschreibungsvektoren sind von KEINEM Matcher
+// unterscheidbar (It-14-Grenze, hier von echten BSL-Daten bestätigt:
+// 13 Elite-Gersten teilen wortgleich dasselbe Beschreibungsprofil).
+const uFullMask = UNION_TRAIT_NAMES.map((_, index) => union.observationMasks.some(m => m[index] === 1) ? 1 : 0)
+const uGamma = medianHeuristicGamma(union.rows, union.observationMasks, uFullMask)
+console.log('\nIdentity-Retrieval je Fruchtart (Union-Space, maskiert):')
+for (const [crop, indexes] of Object.entries(byCrop)) {
+  let top1 = 0
+  const profileKey = (i: number) => union.rows[i]!.map((v, d) => union.observationMasks[i]![d] ? v.toFixed(4) : 'x').join('|')
+  const profileCount = new Map<string, number>()
+  for (const i of indexes) profileCount.set(profileKey(i), (profileCount.get(profileKey(i)) ?? 0) + 1)
+  for (const i of indexes) {
+    // Identity semantics: the query specifies exactly what the variety itself
+    // observes (own mask) — never zero-values on foreign dimensions.
+    const ranked = rankCandidates(union.rows, union.rows[i]!, union.observationMasks[i]!, uGamma, UNION_DIRECTIONS, 0, union.observationMasks, UNION_TRAIT_NAMES)
+    if (ranked[0]!.index === i) top1++
+  }
+  const uniqueProfiles = profileCount.size
+  const inDupGroups = [...profileCount.values()].filter(c => c > 1).reduce((a, b) => a + b, 0)
+  console.log(`  ${crop.padEnd(8)} top-1 ${(top1 / indexes.length).toFixed(4)} (${top1}/${indexes.length}) · ${uniqueProfiles} einzigartige Profile` +
+    (inDupGroups > 0 ? ` · ${inDupGroups} Sorten in Beschreibungs-Duplikat-Gruppen (BSL-Informationsgrenze, kein Algo-Defizit)` : ''))
+}
+
+// Cross-Crop-Anfrage auf natürlich gemeinsamem Subspace
+console.log('\nANFRAGE (cross-crop): mehltauarm, standfest, früh, ertragsstark (Stufe 2)')
+const uq = new Array<number>(uDims).fill(0)
+const uqMask = new Array<number>(uDims).fill(0)
+for (const [name, target] of [
+  ['mehltau', 0.3], ['lager', 0.25], ['reife', 0.25], ['pflanzenlaenge', 0.5],
+  ['kornertrag_st2', 0.85], ['bestandesdichte', 0.55],
+] as [string, number][]) {
+  const index = UNION_TRAIT_NAMES.indexOf(name as (typeof UNION_TRAIT_NAMES)[number])
+  uq[index] = target
+  uqMask[index] = 1
+}
+const uqGamma = queryGamma(union.rows, uqMask)
+const uScores = union.rows.map((row, index) => scoreCandidate(uq, row, uqMask, uqGamma, UNION_DIRECTIONS, 0.1, union.observationMasks[index], UNION_TRAIT_NAMES))
+const uRanked = union.rows
+  .map((row, index) => ({
+    index,
+    score: uScores[index]!,
+    similarity: dimensionNormalizedRbf(uq, row, uqMask, uqGamma, union.observationMasks[index]),
+  }))
+  .sort((a, b) => b.score - a.score || b.similarity - a.similarity)
+  .slice(0, 10)
+console.log(`Teilraum-γ = ${uqGamma.toFixed(4)} · δ = 0.1`)
+console.log('Rang  Sorte                                            Frucht    Score   Perzentil')
+for (const [position, item] of uRanked.entries()) {
+  const crop = union.crops[item.index]!.padEnd(8)
+  console.log(`${String(position + 1).padEnd(5)}${union.labels[item.index]!.padEnd(48).slice(0, 46)}${crop}${item.score.toFixed(3).padEnd(8)}besser als ${percentileOf(item.score, uScores).toFixed(1)} %`)
 }
