@@ -1,17 +1,24 @@
 /**
  * Port self-test: verifies the kernel core invariants after the SeedShuffle →
  * AgriGen port and the query-scoring semantics (scoring.ts/traits.ts), using
- * only pure functions. Run (Node >= 22.18, no flags):
+ * only pure functions — plus gold values pinned against a REAL run on the
+ * EURISCO sample catalog (γ, min-λ, per-scenario Top-1), the PSD
+ * counterexample for varying masks, and the Jacobi eigenvalue solver.
+ * Run (Node >= 22.18, no flags):
  *   node mvp/selftest.ts
  */
 
+import { readFileSync } from 'node:fs'
 import {
-  cosineSimilarity, dimensionNormalizedRbf, medianHeuristicGamma, reciprocalRankFusion,
-  rbfKernel, validateAlpha, validateFeatureRanges, validateGamma,
+  assertFixedScoringMask, cosineSimilarity, dimensionNormalizedRbf, medianHeuristicGamma,
+  reciprocalRankFusion, rbfKernel, validateAlpha, validateFeatureRanges, validateGamma,
 } from './kernelMath.ts'
 import { matrixRank, symmetricEigenvalues } from './metrics.ts'
 import { percentileOf, queryGamma, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
-import { buildCatalog, CROP_GROUPS, extractRequirements, TRAIT_NAMES, type AccessionRecord } from './traits.ts'
+import {
+  buildCatalog, CROP_GROUPS, extractRequirements, TRAIT_NAMES,
+  type AccessionRecord, type Catalog, type FarmingRequirements,
+} from './traits.ts'
 
 let passed = 0
 let failed = 0
@@ -59,6 +66,22 @@ check('Rang(All-Einsen-Matrix) = 1', matrixRank([[1, 1, 1], [1, 1, 1], [1, 1, 1]
 const eig = symmetricEigenvalues(identity(4))
 check('Eigenwerte der Einheitsmatrix alle 1', eig.every(value => Math.abs(value - 1) < 1e-9))
 
+// Jacobi solver on a NON-trivial symmetric matrix (Fix M4): A = Q·diag(1,2,3)·Qᵀ
+// with Q = G₁₂(0.7)·G₀₁(0.3) — a product of two Givens rotations (orthogonal by
+// construction) that occupies every off-diagonal cell of A. Eigenvalues of A are
+// rotation-invariant, so they must come back as exactly {1, 2, 3}.
+const matMul = (a: number[][], b: number[][]) =>
+  a.map(row => b[0]!.map((_, j) => row.reduce((sum, v, k) => sum + v * b[k]![j]!, 0)))
+const c1 = Math.cos(0.3), s1 = Math.sin(0.3), c2 = Math.cos(0.7), s2 = Math.sin(0.7)
+const rotation = matMul([[1, 0, 0], [0, c2, -s2], [0, s2, c2]], [[c1, -s1, 0], [s1, c1, 0], [0, 0, 1]])
+const rotatedDiagonal = matMul(
+  matMul(rotation, [[1, 0, 0], [0, 2, 0], [0, 0, 3]]),
+  rotation[0]!.map((_, j) => rotation.map(row => row[j]!)),
+)
+const jacobiEigenvalues = symmetricEigenvalues(rotatedDiagonal).sort((x, y) => x - y)
+check('Jacobi: rotierte diag(1,2,3) → Eigenwerte {1,2,3} je ±1e-9',
+  jacobiEigenvalues.every((value, i) => Math.abs(value - (i + 1)) < 1e-9))
+
 console.log('Query-Scoring (Hinge) & Trait-Richtungen')
 console.log('─'.repeat(64))
 
@@ -87,6 +110,9 @@ check('Nur aktive Query-Dimensionen zählen',
   scoreCandidate(vecAt('drought_tolerance', 0.9, 0.9), vecAt('drought_tolerance', 0.9, 0.1), maskOf('drought_tolerance'), 5, { drought_tolerance: 'benefit' }) === 1)
 check('Aktive Dimension ohne Richtung wird abgelehnt',
   throws(() => scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.5), maskOf('drought_tolerance'), 1, {})))
+check('Hinge benefit asymmetrisch: score(q,x) < score(x,q) — deklariert (Query-Scoring, kein Kernel)',
+  scoreCandidate(vecAt('drought_tolerance', 0.9), vecAt('drought_tolerance', 0.5), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }) === Math.exp(-0.16) &&
+  scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.9), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }) === 1)
 
 check('percentileOf: Anteil strikt kleinerer Scores', percentileOf(0.5, [0.1, 0.5, 0.9]) === 100 / 3)
 check('percentileOf: bester Score = 100', percentileOf(1, [0.1, 0.2]) === 100)
@@ -125,6 +151,104 @@ const groupCatalog = buildCatalog([mkRecord('Triticum', 6), mkRecord('Zea', 12),
 check('Crop-Group-Ertrag: Gruppen-min 0 / Gruppen-max 1 / Einzelgruppe neutral 0.5',
   groupCatalog.rows[0]![yieldIndex] === 0 && groupCatalog.rows[1]![yieldIndex] === 1 &&
   groupCatalog.rows[2]![yieldIndex] === 0.5)
+
+console.log('assertFixedScoringMask — feste Maske als PSD-Voraussetzung')
+console.log('─'.repeat(64))
+
+const fixedMask = [1, 0, 1]
+check('assertFixedScoringMask: identische Masks (undefined ausgenommen) akzeptiert',
+  !throws(() => assertFixedScoringMask([fixedMask, undefined, fixedMask])))
+check('assertFixedScoringMask: alle undefined akzeptiert',
+  !throws(() => assertFixedScoringMask([undefined, undefined])))
+check('assertFixedScoringMask: variierende Masks werfen',
+  throws(() => assertFixedScoringMask([fixedMask, [0, 1, 1]])))
+
+// PSD counterexample from the professor's review — the documented limit of
+// VARYING per-point masks. The mask is attached to the point; mask-disjoint
+// pairs are neutralized to K = 1 while mask-sharing pairs see the real
+// projected distance. Construction: 4 points [1,0],[0,1],[0,0],[1,0] with
+// masks (1,0),(0,1),(1,0),(0,1) and γ = 50 gives
+//   K(1,3) = K(2,4) = exp(−50·1) ≈ 1.9e−22, all other entries 1,
+// i.e. unit diagonal but spectrum {3, 1, 1, exp(−γ)−1} → min-λ ≈ −1 < 0.
+// NOTE: the literal points [1,0],[0,1],[1,0],[0,1] from the brief yield the
+// all-ones matrix (rank 1, min-λ = 0, PSD at the boundary, NOT indefinite)
+// because mask-sharing pairs coincide — the mask partners must be apart by 1
+// in their shared dimension for indefiniteness to materialize. This test pins
+// the boundary: K(z,z) = 1 everywhere ALONE does not make an RKHS cosine.
+const psdPoints = [[1, 0], [0, 1], [0, 0], [1, 0]]
+const psdMasks = [[1, 0], [0, 1], [1, 0], [0, 1]]
+const psdGamma = 50
+const psdMatrix = psdPoints.map((p, i) =>
+  psdPoints.map((q, j) => dimensionNormalizedRbf(p, q, psdMasks[i]!, psdGamma, psdMasks[j]!)))
+const psdMinEigenvalue = Math.min(...symmetricEigenvalues(psdMatrix))
+check(`PSD-Gegenbeispiel (variierende Masks): K(z,z)=1 überall, aber min-λ = ${psdMinEigenvalue.toFixed(3)} < 0`,
+  psdMatrix.every((row, i) => row[i] === 1) && psdMinEigenvalue < 0)
+
+console.log('Goldwerte — echter EURISCO-Katalog (Stand f8a2c09)')
+console.log('─'.repeat(64))
+
+/**
+ * Gold values extracted from a REAL run at commit f8a2c09 against
+ * data/sample_eurisco.json (12 accessions). Regenerate by replicating demo.ts:
+ *   catalog:  buildCatalog(JSON.parse(readFileSync('../data/sample_eurisco.json')))
+ *   γ:        medianHeuristicGamma(catalog.rows)                       [volle Maske]
+ *   min-λ:    symmetricEigenvalues over K = dimensionNormalizedRbf(a, b, fullMask, γ)
+ *   Top-1:    extractRequirements → queryGamma(catalog.rows, mask) →
+ *             scoreCandidate je Zeile → Sortierung desc → ids[0]         (je Szenario)
+ * Tolerances: γ |diff| < 5e-4 (1e-3 raster), min-λ strict > 0, Top-1 exact
+ * string compare. A Top-1 flip or γ drift beyond tolerance is a scoring
+ * regression and must fail this suite.
+ */
+const GOLD_CATALOG_GAMMA = 3.528030806361295
+const GOLD_TOP1: Readonly<Record<'A' | 'B' | 'C', string>> = { A: 'EUR-006', B: 'EUR-003', C: 'EUR-012' }
+
+const DATA_PATH = new URL('../data/sample_eurisco.json', import.meta.url)
+function loadCatalog(): Catalog {
+  const records: AccessionRecord[] = JSON.parse(readFileSync(DATA_PATH, 'utf8'))
+  if (!Array.isArray(records) || records.length === 0) throw new Error('EURISCO dataset is empty')
+  return buildCatalog(records)
+}
+
+const goldCatalog = loadCatalog()
+validateFeatureRanges(goldCatalog.rows)
+const goldDimensions = goldCatalog.rows[0]!.length
+const goldFullMask = new Array<number>(goldDimensions).fill(1)
+const goldGamma = medianHeuristicGamma(goldCatalog.rows)
+check(`Gold: Katalog-γ (Median-Heuristik, volle Maske) = ${goldGamma.toFixed(4)} ± 5e-4`,
+  Math.abs(goldGamma - GOLD_CATALOG_GAMMA) < 5e-4)
+const goldKernel = goldCatalog.rows.map(rowA =>
+  goldCatalog.rows.map(rowB => dimensionNormalizedRbf(rowA, rowB, goldFullMask, goldGamma)))
+const goldMinEigenvalue = Math.min(...symmetricEigenvalues(goldKernel))
+check(`Gold: Kernel-Matrix PSD, min-λ = ${goldMinEigenvalue.toExponential(2)} strikt > 0`,
+  goldMinEigenvalue > 0)
+
+const GOLD_SCENARIOS: ReadonlyArray<['A' | 'B' | 'C', FarmingRequirements]> = [
+  ['A', { droughtTolerance: 'extreme', heatTolerance: 'high', waterAvailability: 'low', salinityTolerance: 'moderate' }],
+  ['B', { coldTolerance: 'extreme', seasonLength: 'short', diseaseResistance: 'high' }],
+  ['C', { nitrogenEfficiency: 'extreme', yieldPriority: 'high', waterAvailability: 'moderate' }],
+]
+/** Replicates demo.ts rankedMatches ranking semantics (score sort desc, stable). */
+function topAccession(catalog: Catalog, requirements: FarmingRequirements): string {
+  const { vector, mask, directions } = extractRequirements(requirements)
+  const gamma = queryGamma(catalog.rows, mask)
+  return catalog.ids
+    .map((id, index) => ({ id, score: scoreCandidate(vector, catalog.rows[index]!, mask, gamma, directions) }))
+    .sort((a, b) => b.score - a.score)[0]!.id
+}
+for (const [key, requirements] of GOLD_SCENARIOS) {
+  check(`Gold: Szenario ${key} Top-1 = ${GOLD_TOP1[key]}`,
+    topAccession(goldCatalog, requirements) === GOLD_TOP1[key])
+}
+
+const goldRowOf = (id: string): number[] => goldCatalog.rows[goldCatalog.ids.indexOf(id)]!
+check(`Crop-Group real: Weizen-Ertrag = (9.2−6.0)/(12.5−6.0) = ${((9.2 - 6.0) / (12.5 - 6.0)).toFixed(4)} ± 1e-9`,
+  Math.abs(goldRowOf('EUR-001')![yieldIndex]! - (9.2 - 6.0) / (12.5 - 6.0)) < 1e-9)
+check('Crop-Group real: Beta = 1.0 (root_tuber-Gruppenmaximum, Frischmasse 75 t/ha)',
+  goldRowOf('EUR-007')![yieldIndex]! === 1)
+check('Crop-Group real: Solanum = 0.0 (root_tuber-Gruppenminimum)',
+  goldRowOf('EUR-004')![yieldIndex]! === 0)
+check('Crop-Group real: Helianthus = 0.5 (Einzelgruppe oilseed, neutral)',
+  goldRowOf('EUR-010')![yieldIndex]! === 0.5)
 
 console.log('─'.repeat(64))
 console.log(`Ergebnis: ${passed} PASS, ${failed} FAIL`)
