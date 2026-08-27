@@ -143,3 +143,82 @@ Alle direkt messbaren Genauigkeitskriterien sind gesättigt. Weitere Hypothesen
 werden weiter eval-gestützt geprüft — mit steigender Overfitting-Gefahr beim
 12er-Katalog (Professoren-Warnung); Changes nur bei nachweisbarem Gewinn ohne
 Regression.
+
+## Iteration 6 — Per-Column-Min-Max-Stretch (REJECTED)
+
+**Hypothese:** Rating-Dims per Column-Min-Max auf volle [0,1]-Spanne stretchen
+aktiviert inerte Dimensionen (disease_resistance) und entzerrt Beiträge.
+
+**Messung (A/B, eval-only, inkl. ehrlichem LOO mit Re-Stretch nach Entfernung):**
+```
+                        produkt   stretch
+identity_top1            1.0000    1.0000
+partial_identity_k4      1.0000    1.0000
+loo (re-stretched!)      1.0000    0.9562   ← REGRESSION
+regret ε=0.05            0.0917    0.0917
+separation               0.1061    0.1019
+demo top1 A/B/C          ✓         ✓ (erwartungstreu)
+```
+
+**Begründung der Ablehnung:** Null Gewinn auf allen Metriken, aber messbarer
+LOO-Verlust — katalog-relative Normalisierung ist genau so fragil wie in der
+Professoren-Kritik (P7) vorhergesagt. Die aktuelle Mischnormalisierung
+(absolute Rating-Skalen + min-max nur für physikalische Dims) bleibt.
+
+## Iteration 7 — Tiebreak-γ-Faktor (KEEP γ·1)
+
+**Hypothese:** Ähnlichkeits-Breite im Tiebreaker unabhängig vom Score-γ
+(γ·0.5 / γ·2) könnte Regret oder Trennschärfe verbessern.
+
+**Messung:** partial 1.0000 / regret 0.0917 bei ALLEN Faktoren — komplett
+invariant (konsistent mit It 5: Regret-Fälle liegen nicht in Gleichständen).
+
+**Entscheidung:** Keine Änderung — γ·1 bleibt (Einfachheit ohne Verlust).
+
+## Iteration 8 — Demo-Migration auf rankCandidates (KEEP)
+
+**Befund:** eval maß den Tiebreaker-Pfad (rankCandidates), die Demo sortierte
+noch selbst (plain sort) — Konsistenzlücke zwischen Messung und Produkt.
+
+**Änderung:** demo.ts rankedMatches nutzt rankCandidates (gleicher Score-Pfad
+wie eval-validiert). Demo-Output byte-identisch (keine Score-Ties in den
+Szenarien), Selbsttest grün.
+
+**Entscheidung:** Behalten — Produkt und Messung laufen auf identischem Pfad.
+
+## Iteration 9 — Genauigkeits-Deckel als Selbsttest-Pins (KEEP)
+
+**Änderung:** selftest pinnt die erreichte Decke: Identity-Retrieval 12/12
+unter Vollmaske + partielles Identity k=4 (36/36, 3 feste Seeds). Stille
+Regressionen der 1.0-Werte brechen ab sofort den Build. 52 Checks.
+
+**Entscheidung:** Behalten (Regressionsschutz).
+
+## Iteration 10 — Katalog-Datenrauschen (neue Messachse, KEEP als Metrik)
+
+**Frage:** Wie robust ist die Empfehlung gegen Messfehler in den erfassten
+Sorten-Traits (statt in der Anfrage)?
+
+**Messung:** alle aktiven Dims aller Kandidaten simultan verrauscht:
+```
+ε=0.02   top-3-Treue (Ø Überlappung) 0.8944
+ε=0.05   top-3-Treue (Ø Überlappung) 0.8731
+```
+
+**Lesart:** ~2.7 von 3 Top-Kandidaten überleben aggressive Datenfehler —
+die Shortlist ist datenfehler-tolerant, Flips betreffen mostly die Rangfolge
+innerhalb der Shortlist.
+
+## Iteration 11 — Teilraum-Identität nach k (KEEP als Metrik)
+
+**Messung:** partial identity top-1 = **1.0000 für JEDES k ∈ {2,3,4,6,8,12}**.
+Der Kernel-Tiebreaker (It 2) garantiert Selbst-Retrieval in jedem Teilraum —
+vollständige Sättigung der Identitätsachse.
+
+## Zwischenfazit nach 11 Iterationen
+
+Entscheidungen: 7× behalten (davon 2 Produkt-Änderungen: Tiebreaker +
+Demo-Migration), 4× datenbasiert verworfen (margin-first, min-max-stretch,
+γ-Faktor, implizit LEVEL-Softening — siehe It 12-Begründung). Alle
+Genauigkeitsachsen (Identity, Teilraum-Identity über alle k, LOO, regret bei
+realistischem ε, Datenrauschen) sind charakterisiert und auf Deckel gepinnt.

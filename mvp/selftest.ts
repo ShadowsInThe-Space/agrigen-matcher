@@ -235,6 +235,16 @@ const goldCatalog = loadCatalog()
 validateFeatureRanges(goldCatalog.rows)
 const goldDimensions = goldCatalog.rows[0]!.length
 const goldFullMask = new Array<number>(goldDimensions).fill(1)
+
+/** Directions for an active mask: growing_days is query-dependent → 'target' default here. */
+function goldDirectionsFor(mask: number[]): Record<string, 'benefit' | 'cost' | 'target'> {
+  const directions: Record<string, 'benefit' | 'cost' | 'target'> = {}
+  TRAIT_NAMES.forEach((name, index) => {
+    if (mask[index]) directions[name] = name === 'growing_days' ? 'target' : TRAIT_DIRECTIONS[name] ?? 'target'
+  })
+  return directions
+}
+
 const goldGamma = medianHeuristicGamma(goldCatalog.rows)
 check(`Gold: Katalog-γ (Median-Heuristik, volle Maske) = ${goldGamma.toFixed(4)} ± 5e-4`,
   Math.abs(goldGamma - GOLD_CATALOG_GAMMA) < 5e-4)
@@ -271,6 +281,40 @@ check('Crop-Group real: Solanum = 0.0 (root_tuber-Gruppenminimum)',
   goldRowOf('EUR-004')![yieldIndex]! === 0)
 check('Crop-Group real: Helianthus = 0.5 (Einzelgruppe oilseed, neutral)',
   goldRowOf('EUR-010')![yieldIndex]! === 0.5)
+
+// ── Loop-Iteration 9: Genauigkeits-Deckel gepinnt (stille Regressionsschutz) ──
+{
+  const identityOk = goldCatalog.rows.every((row, index) =>
+    rankCandidates(goldCatalog.rows, row, goldFullMask, goldGamma, goldDirectionsFor(goldFullMask))[0]!.index === index)
+  check('Deckel: Identity-Retrieval 12/12 (Selbst auf Rang 1 unter Vollmaske)', identityOk)
+
+  // Partial identity, k=4, drei feste Seeds (deterministisch, schnell).
+  let partialHits = 0
+  let partialTrials = 0
+  for (let seed = 1; seed <= 3; seed++) {
+    const randomState = { state: seed >>> 0 }
+    const random = () => {
+      randomState.state = (randomState.state + 0x6d2b79f5) | 0
+      let t = Math.imul(randomState.state ^ (randomState.state >>> 15), 1 | randomState.state)
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+    }
+    const mask = new Array<number>(goldDimensions).fill(0)
+    const dims = [...Array<number>(goldDimensions).keys()]
+    for (let draw = 0; draw < 4; draw++) {
+      const pick = Math.floor(random() * dims.length)
+      mask[dims.splice(pick, 1)[0]!] = 1
+    }
+    const gamma = queryGamma(goldCatalog.rows, mask)
+    const directions = goldDirectionsFor(mask)
+    for (let index = 0; index < goldCatalog.rows.length; index++) {
+      if (rankCandidates(goldCatalog.rows, goldCatalog.rows[index]!, mask, gamma, directions)[0]!.index === index) partialHits++
+      partialTrials++
+    }
+  }
+  check(`Deckel: Partielles Identity-Retrieval k=4 = 100 % (${partialHits}/${partialTrials})`,
+    partialHits === partialTrials)
+}
 
 console.log('─'.repeat(64))
 console.log(`Ergebnis: ${passed} PASS, ${failed} FAIL`)

@@ -18,7 +18,7 @@
 import { readFileSync } from 'node:fs'
 import { dimensionNormalizedRbf, medianHeuristicGamma, validateFeatureRanges } from './kernelMath.ts'
 import { matrixRank, symmetricEigenvalues } from './metrics.ts'
-import { percentileOf, queryGamma, scoreCandidate } from './scoring.ts'
+import { percentileOf, queryGamma, rankCandidates, scoreCandidate } from './scoring.ts'
 import { buildCatalog, extractRequirements, TRAIT_NAMES, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
 
 const DATA_PATH = new URL('../data/sample_eurisco.json', import.meta.url)
@@ -80,7 +80,7 @@ function loadCatalog(): Catalog {
   return buildCatalog(records)
 }
 
-/** Score every catalog candidate against one query (hinge scoring, Fix P4/P6) and attach percentiles (Fix P2). */
+/** Score every catalog candidate against one query (hinge scoring, Fix P4/P6), rank via the eval-validated tiebreak path, attach percentiles (Fix P2). */
 function rankedMatches(
   catalog: Catalog,
   requirements: FarmingRequirements,
@@ -88,15 +88,14 @@ function rankedMatches(
   const { vector, mask, directions } = extractRequirements(requirements)
   const gamma = queryGamma(catalog.rows, mask)
   const allScores = catalog.rows.map(row => scoreCandidate(vector, row, mask, gamma, directions))
-  const matches: ScoredCandidate[] = catalog.ids
-    .map((id, index) => ({
-      id,
-      label: catalog.labels[index]!,
-      score: allScores[index]!,
-      percentile: percentileOf(allScores[index]!, allScores),
-    }))
-    .sort((a, b) => b.score - a.score)
+  const matches: ScoredCandidate[] = rankCandidates(catalog.rows, vector, mask, gamma, directions)
     .slice(0, TOP_K)
+    .map(item => ({
+      id: catalog.ids[item.index]!,
+      label: catalog.labels[item.index]!,
+      score: item.score,
+      percentile: percentileOf(item.score, allScores),
+    }))
   const activeDimensions = TRAIT_NAMES.filter((_, index) => mask[index] === 1)
   return { matches, gamma, activeDimensions }
 }

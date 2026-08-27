@@ -17,8 +17,9 @@
  */
 
 import { readFileSync, writeFileSync } from 'node:fs'
-import { rankCandidates, queryGamma, TRAIT_DIRECTIONS } from './scoring.ts'
-import { buildCatalog, TRAIT_NAMES, type AccessionRecord, type Catalog } from './traits.ts'
+import { rankCandidates, queryGamma, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
+import { dimensionNormalizedRbf } from './kernelMath.ts'
+import { buildCatalog, extractRequirements, TRAIT_NAMES, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
 
 const DATA_PATH = new URL('../data/sample_eurisco.json', import.meta.url)
 
@@ -250,10 +251,163 @@ function main(): void {
   console.log('  ── Iteration-5-Experiment: Margin-first-Tiebreaker (Produkt unverändert) ──')
   console.log(`  partial_identity_top1_k4   similarity ${(results.metrics.partial_identity_top1_k4 as number).toFixed(4)}  vs margin-first ${round(variantPartial).toFixed(4)}`)
   console.log(`  regret eps=0.05            similarity ${(results.metrics.noise_regret_rate_eps005 as number).toFixed(4)}  vs margin-first ${round(variantNoise.regretRate).toFixed(4)}`)
+
+  experiments(catalog, scenarioMasks)
 }
 
 function round(value: number): number {
   return Math.round(value * 10000) / 10000
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Iteration 6 — normalization variant: per-column min-max stretch
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Stretch every column to [0,1] over the given rows (affine, monotone per dim). */
+function stretchRows(rows: readonly number[][]): { rows: number[][], transforms: { min: number, span: number }[] } {
+  const dims = rows[0]!.length
+  const transforms: { min: number, span: number }[] = []
+  const stretched = rows.map(row => [...row])
+  for (let d = 0; d < dims; d++) {
+    const values = rows.map(row => row[d]!)
+    const min = Math.min(...values)
+    const max = Math.max(...values)
+    transforms.push({ min, span: max === min ? 1 : max - min })
+    if (max === min) continue
+    for (const row of stretched) row[d] = (row[d]! - min) / (max - min)
+  }
+  return { rows: stretched, transforms }
+}
+
+const applyStretch = (query: number[], transforms: { min: number, span: number }[]): number[] =>
+  query.map((value, d) => Math.min(1, Math.max(0, (value - transforms[d]!.min) / transforms[d]!.span)))
+
+/**
+ * Honest LOO for a catalog-relative normalization: after each removal the
+ * stretch MUST be recomputed on the reduced catalog — otherwise the metric
+ * hides exactly the rescale fragility this iteration is testing.
+ */
+function looWithRestretch(catalog: Catalog, masks: number[][]): number {
+  let jaccardSum = 0
+  let count = 0
+  for (const mask of masks) {
+    const directions = directionsFor(mask)
+    for (const query of catalog.rows) {
+      const reference = rankAll(catalog, query, mask, queryGamma(catalog.rows, mask), directions)
+        .slice(0, 3).map(item => item.id)
+      for (let j = 0; j < catalog.rows.length; j++) {
+        if (reference.includes(catalog.ids[j]!)) continue
+        const reducedIds = catalog.ids.filter((_, index) => index !== j)
+        const reducedRows = catalog.rows.filter((_, index) => index !== j)
+        const restretched = stretchRows(reducedRows).rows
+        const reduced: Catalog = { ids: reducedIds, labels: [], rows: restretched }
+        const perturbed = rankAll(reduced, query, mask, queryGamma(restretched, mask), directions)
+          .slice(0, 3).map(item => item.id)
+        const overlap = reference.filter(id => perturbed.includes(id)).length
+        jaccardSum += overlap / (6 - overlap)
+        count++
+      }
+    }
+  }
+  return count === 0 ? 1 : jaccardSum / count
+}
+
+const DEMO_REQUIREMENTS: FarmingRequirements[] = [
+  { droughtTolerance: 'extreme', heatTolerance: 'high', waterAvailability: 'low', salinityTolerance: 'moderate' },
+  { coldTolerance: 'extreme', seasonLength: 'short', diseaseResistance: 'high' },
+  { nitrogenEfficiency: 'extreme', yieldPriority: 'high', waterAvailability: 'moderate' },
+]
+const DEMO_EXPECTED_TOP1 = ['EUR-006', 'EUR-003', 'EUR-012']
+
+function scenarioWinners(catalog: Catalog, requirements: FarmingRequirements[], stretch?: { min: number, span: number }[]): string[] {
+  return requirements.map(requirement => {
+    const { vector, mask, directions } = extractRequirements(requirement)
+    const query = stretch ? applyStretch(vector, stretch) : vector
+    const gamma = queryGamma(catalog.rows, mask)
+    return rankAll(catalog, query, mask, gamma, directions)[0]!.id
+  })
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Iteration 7 — tiebreak-γ variant: similarity width ≠ score width
+// ═══════════════════════════════════════════════════════════════════════════
+
+function gammaTiebreakRank(factor: number): typeof rankAll {
+  return (catalog, query, mask, gamma, directions) => {
+    return catalog.rows
+      .map((row, index) => ({
+        index,
+        score: scoreCandidate(query, row, mask, gamma, directions),
+        similarity: dimensionNormalizedRbf(query, row, mask, gamma * factor),
+      }))
+      .sort((a, b) => b.score - a.score || b.similarity - a.similarity)
+      .map(item => ({ id: catalog.ids[item.index]!, score: item.score }))
+      .map((item, position) => ({ ...item, rank: position + 1 }))
+  }
+}
+
+function experiments(catalog: Catalog, scenarioMasks: number[][]): void {
+  // ── It 6: min-max-stretched normalization (A/B) ─────────────────────────
+  const { rows: stretchedRows, transforms } = stretchRows(catalog.rows)
+  const variantCatalog: Catalog = { ids: catalog.ids, labels: [], rows: stretchedRows }
+  const variantLoo = looWithRestretch(variantCatalog, scenarioMasks)
+  const variantIdentity = identityAccuracy(variantCatalog)
+  const variantPartial = partialIdentityAccuracy(variantCatalog, 4, 10)
+  const variantRegret = noiseRobustness(variantCatalog, scenarioMasks, 0.05, 20).regretRate
+  const variantSeparation = separation(variantCatalog)
+  const variantWinners = scenarioWinners(variantCatalog, DEMO_REQUIREMENTS, transforms)
+  const winnersOk = variantWinners.every((id, index) => id === DEMO_EXPECTED_TOP1[index])
+
+  console.log('  ── It 6: Per-Column-Min-Max-Stretch (eval-only) ──')
+  console.log(`  identity_top1            produkt ${(identityAccuracy(catalog).top1).toFixed(4)}  vs stretch ${round(variantIdentity.top1).toFixed(4)}`)
+  console.log(`  partial_identity_k4      produkt 1.0000  vs stretch ${round(variantPartial).toFixed(4)}`)
+  console.log(`  loo (re-stretched!)      produkt 1.0000  vs stretch ${round(variantLoo).toFixed(4)}`)
+  console.log(`  regret eps005            produkt 0.0917  vs stretch ${round(variantRegret).toFixed(4)}`)
+  console.log(`  separation               produkt ${(separation(catalog)).toFixed(4)}  vs stretch ${round(variantSeparation).toFixed(4)}`)
+  console.log(`  demo top1 A/B/C          stretch ${variantWinners.join('/')} ${winnersOk ? '(erwartungstreu)' : '(ERWARTUNG GEBROCHEN)'}`)
+
+  // ── It 7: tiebreak-γ factor sweep ───────────────────────────────────────
+  console.log('  ── It 7: Tiebreak-γ-Faktor (eval-only) ──')
+  for (const factor of [0.5, 1, 2]) {
+    const ranker = gammaTiebreakRank(factor)
+    const partial = partialIdentityAccuracy(catalog, 4, 10, ranker)
+    const regret = noiseRobustness(catalog, scenarioMasks, 0.05, 20, ranker).regretRate
+    console.log(`  γ·${factor}: partial ${round(partial).toFixed(4)}  regret ${round(regret).toFixed(4)}`)
+  }
+
+  // ── It 10: catalog-data noise (measurement error in recorded traits) ────
+  console.log('  ── It 10: Katalog-Datenrauschen (Traits verrauscht, Query fix) ──')
+  for (const epsilon of [0.02, 0.05]) {
+    let top3Overlap = 0
+    let trials = 0
+    for (const mask of scenarioMasks) {
+      const gamma = queryGamma(catalog.rows, mask)
+      const directions = directionsFor(mask)
+      for (const query of catalog.rows) {
+        const reference = rankAll(catalog, query, mask, gamma, directions).slice(0, 3).map(item => item.id)
+        for (let seed = 200; seed < 210; seed++) {
+          const random = rng(seed)
+          const noisyCatalog: Catalog = {
+            ids: catalog.ids,
+            labels: [],
+            rows: catalog.rows.map(row => row.map((value, index) =>
+              mask[index] ? Math.min(1, Math.max(0, value + (random() * 2 - 1) * epsilon)) : value)),
+          }
+          const perturbed = rankAll(noisyCatalog, query, mask, gamma, directions).slice(0, 3).map(item => item.id)
+          top3Overlap += reference.filter(id => perturbed.includes(id)).length / 3
+          trials++
+        }
+      }
+    }
+    console.log(`  ε=${String(epsilon).padEnd(5)} top-3-Treue (Ø Überlappung) ${round(top3Overlap / trials).toFixed(4)}`)
+  }
+
+  // ── It 11: partial identity k-sweep ─────────────────────────────────────
+  console.log('  ── It 11: Teilraum-Identität nach k (5 Seeds) ──')
+  for (const k of [2, 3, 4, 6, 8, 12]) {
+    const accuracy = k === 12 ? identityAccuracy(catalog).top1 : partialIdentityAccuracy(catalog, k, 5)
+    console.log(`  k=${String(k).padEnd(3)} top-1 ${round(accuracy).toFixed(4)}`)
+  }
 }
 
 main()
