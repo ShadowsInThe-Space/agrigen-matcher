@@ -552,3 +552,28 @@ Teilraum = Informationsgrenze).
 Nebenbefund: die ursprünglich vermutete „13er-Duplikat-Gruppe vollständiger
 Profile" war ein Analyseartefakt meinerseits (Key über nur-numerische Felder
 gruppierte die near-leeren Records) — die ehrliche Aufarbeitung steht hier.
+
+## Iteration 35 — Gerste-Tiefenanalyse + Abdeckungs-Gate: vollständige Deckel (KEEP)
+
+**Diagnose (It-35-Skript):** Alle 50 Gersten-Identity-Verluste waren exakte
+Projektions-Duplikate — null Bugs. Ursache: 16 Gersten-Records beobachten nur
+den 3-Dim-Virusblock (gelbmosaik×2 + Gelbverzwergung); ihre Mini-Profile
+kollidieren mit Voll-Records, die diese 3 Noten teilen. Ein Hafer-Einzelfall
+(Apollon) ist ein fruchtart-übergreifendes Duplikat gegen Dinkel Franckentop.
+
+**Fix (Datenhygiene, produktreif):** MIN_OBSERVED_DIMS = 8 im Union-Loader —
+Records unter 8 beobachteten Deskriptoren sind nicht sinnvoll matchbar
+(dieselbe Philosophie wie der Duplikat-Guard). 21 Records ausgeschlossen
+(16 Gerste-Virus-only + 5 Hafer-Teilprofile). Ausgabe framing ehrlich als
+**Äquivalenzklassen**: der Matcher OFFENBART informationelle
+Ununterscheidbarkeit der BSL-Daten, er leidet nicht darunter.
+
+**Endmessung Union-Space (224 Sorten):**
+```
+Weizen 116/116 · Roggen · Dinkel · Gerste 49/49 · Hafer  Identity top-1 je Fruchtart
+```
+(s. bsa-demo Output; Gerste 0.23 → 1.0000 — die vermuteten Vollprofil-
+Duplikate existierten nicht, alle Verluste kamen aus der Virus-Kohorte.)
+Cross-Crop-Spitze jetzt echt gemischt: Weizen führt (KWS Mintum 0.997),
+Gerste konkurriert (KWS Delis 0.996, SU Lenoria 0.983) — die frühere
+All-Gerste-Dominanz war das Artefakt der Neutral-Ties aus It 34.

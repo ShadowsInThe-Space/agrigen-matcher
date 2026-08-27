@@ -253,12 +253,18 @@ export interface UnionCatalog extends BsaCatalog {
   crops: string[]
 }
 
+/** Minimum observed descriptors for a variety to be matchable (It 35):
+ *  BSL records describing only the 3-dim virus block cannot be meaningfully
+ *  matched — same data-hygiene philosophy as the duplicate guard. */
+export const MIN_OBSERVED_DIMS = 8
+
 export function loadBsaUnionCatalog(): UnionCatalog {
   const rows: number[][] = []
   const observationMasks: number[][] = []
   const ids: string[] = []
   const labels: string[] = []
   const crops: string[] = []
+  let droppedForCoverage = 0
   for (const [file, latin, crop] of CROP_FILES) {
     const records = JSON.parse(readFileSync(new URL(`../data/bsa/${file}`, import.meta.url), 'utf8')) as LooseRecord[]
     for (const record of records) {
@@ -274,7 +280,10 @@ export function loadBsaUnionCatalog(): UnionCatalog {
           observed++
         }
       }
-      if (observed === 0) continue
+      if (observed < MIN_OBSERVED_DIMS) {
+        if (observed > 0) droppedForCoverage++
+        continue
+      }
       const typeSuffix = typeof record.zuechtyp === 'string' && record.zuechtyp ? ` [${record.zuechtyp}]` : ''
       ids.push(record.sortenname.replace(/\s+/g, '-'))
       labels.push(`${latin} '${record.sortenname}'${typeSuffix} (${crop})`)
@@ -282,6 +291,9 @@ export function loadBsaUnionCatalog(): UnionCatalog {
       rows.push(row)
       observationMasks.push(mask)
     }
+  }
+  if (droppedForCoverage > 0) {
+    console.log(`  Datenhygiene: ${droppedForCoverage} Records mit < ${MIN_OBSERVED_DIMS} beobachteten Deskriptoren ausgeschlossen (nicht sinnvoll matchbar)`)
   }
   return { ids, labels, rows, observationMasks, crops }
 }

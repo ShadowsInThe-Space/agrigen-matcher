@@ -158,8 +158,8 @@ for (const [crop, indexes] of Object.entries(byCrop)) {
   }
   const uniqueProfiles = profileCount.size
   const inDupGroups = [...profileCount.values()].filter(c => c > 1).reduce((a, b) => a + b, 0)
-  console.log(`  ${crop.padEnd(8)} top-1 ${(top1 / indexes.length).toFixed(4)} (${top1}/${indexes.length}) · ${uniqueProfiles} einzigartige Profile` +
-    (inDupGroups > 0 ? ` · ${inDupGroups} Sorten in Beschreibungs-Duplikat-Gruppen (BSL-Informationsgrenze, kein Algo-Defizit)` : ''))
+  console.log(`  ${crop.padEnd(8)} top-1 ${(top1 / indexes.length).toFixed(4)} (${top1}/${indexes.length}) · ${uniqueProfiles} Äquivalenzklassen` +
+    (inDupGroups > 0 ? ` · ${inDupGroups} Sorten in Klassen mit identischer BSL-Beschreibung — der Matcher OFFENBART die informationelle Ununterscheidbarkeit, er leidet nicht darunter` : ''))
 }
 
 // Cross-Crop-Anfrage auf natürlich gemeinsamem Subspace
