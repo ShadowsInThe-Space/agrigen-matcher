@@ -70,12 +70,11 @@ EU-Land eingetragen“); 16 Zeilen mit null-Werten (0 komplett null), **256/1235
 Fußnoten-Marker: 10 (u. a. `1) Hybridsorte`); Sortierung je Abschnitt alphabetisch OK.
 
 ### Scope-Entscheidungen Gerste
-- **Aufgabenseite „S. 26–41“ korrigiert:** Mehrzeilig endet auf S. 30 (letzte Sorte
-  Venezia). Ab S. 36 folgt **„Wintergerste – zweizeilig –“** (S. 36/38, 56 weitere
-  Sorten, identisches 19-Spalten-Schema) — eine andere Gerstenform, **nicht**
-  extrahiert, da die Aufgabe explizit „mehrzeilig“ benennt. Kann bei Bedarf mit
-  demselben Spec (Seiten 36/38) ergänzt werden.
-- **Öko-Notentabelle S. 42** („Im ökologischen Landbau geprüft“, 20 Spalten mit
+- **Aufgabenseite „S. 26–41” korrigiert:** Mehrzeilig endet auf S. 30 (letzte Sorte
+  Venezia). Ab S. 36 folgt **„Wintergerste – zweizeilig –“** (S. 36/38, 57 weitere
+  Sorten, identisches 19-Spalten-Schema) — eigene Gerstenform, separat extrahiert
+  als `wintergerste2.json`, siehe **Abschnitt 5**.
+- **Öko-Notentabelle S. 42** („Im ökologischen Landbau geprüft”, 20 Spalten mit
   Massebildung/Bodendeckungsgrad): außerhalb des parse-Bereichs, zudem abweichendes
   Schema — bewusst nicht extrahiert (analog S. 132 beim Weizen).
 - **Sommergerste S. 46–51:** weicht ab (zweizeilig, nur **16** Notenspalten, kein
@@ -221,18 +220,94 @@ Qualitätsspalten der EU-Sorten); `is_new`: 0; Fußnoten-Marker: 0; Sortierung O
 
 ---
 
-## Ergebnis-Übersicht
+## 5. Wintergerste zweizeilig — `wintergerste2.json` (PDF S. 36–41, Notentabellen S. 36+38)
+
+**Bildquelle:** `pdftoppm -r 100` S. 36 (`hdr36-036.png`), visuell gelesen.
+**Spalten-Schema:** identisch mit mehrzeilig (Abschnitt 1) — **19 Spalten, wieder
+Ährenschieben vor Reife**. Doppelt verifiziert: visuell (S. 36) **und** per
+`pdftotext -bbox` auf S. 36 **und** S. 38 (identische Header-x-Lagen 120,7–350,2 pt,
+Spaltenabstand ~12,6 pt, lückenlos — dieselben 19 Labels wie S. 26). Feld-Schema wie
+`wintergerste.json`, zusätzlich **`form: "zweizeilig"`** auf jeder Zeile.
+
+Token-Check: 1. Datenzeile `neu Agostina 5 5 4 5 3 4 5 4 5 5 5 1 9 9 9 2 8 8 8`
+= **19 Noten**. ✓
+Seiten mit Notentabellen: 36, 38 (S. 37/39 = Qualitätstabellen, max. Run 14 ×30;
+S. 40–41 = Ergänzende Angaben — die Aufgaben-Vermutung „Notentabelle S. 40" traf
+nicht zu, S. 40 enthält nur Ergänzende Angaben).
+
+**Sonderfall Wert-Asterisk:** `Aretha` trägt in der Spalte „Gelbmosaik BaYMV-1,
+BaMMV" den Wert `1*` (Fußnote S. 36: „* keine Resistenz gegen BaMMV") → Note 1
+plus `footnotes: ["*"]` (einziger Asterisk-Fall im Kapitel; Parser-Guard erlaubt
+höchstens einen Asterisk pro Zeile und verwirft sonst). Ohne erweitertes
+Wert-Token-Regex (`[1-9-]\*?`) wäre die Zeile verloren gegangen, weil der
+Trailing-Run an `1*` bricht — exakt 57 statt 56 Zeilen.
+
+**Stichproben (json = rohtext = erwartung):**
+- Erste Sorte: `Agostina` (S. 36, `is_new: true`) — `5 5 4 5 3 4 5 4 5 5 5 1 9 9 9 2 8 8 8`
+- Sonderfall: `Aretha` (S. 36, `footnotes: ["*"]`) — `4 5 4 6 6 4 5 4 3 5 4 1 1 9 8 2 7 7 7`
+- Letzte Sorte: `Suez` (S. 38, Abschnitt EU-Land) — `6 6 4 4 4 2 3 5 5 4 4 1 9 9 9 1 6 4 4`
+
+**Statistik:** 57 Sorten (55 „Mit Voraussetzung … zugelassen" + 2 „In einem anderen
+EU-Land eingetragen": `LG Campus`, `Suez`); 10 Zeilen mit null-Werten (0 komplett
+null), **130/1083 null-Zellen** (Sorten ohne aktuelle Prüfdaten tragen meist nur
+den Virusresistenz-Block); `is_new`: 7; Fußnoten-Marker: 1 (`*`); Sortierung je
+Abschnitt alphabetisch OK. (Die frühere Schätzung „56 weitere Sorten" aus
+Abschnitt 1 war um eins zu niedrig.)
+
+---
+
+## 6. Sommerweichweizen — **nicht extrahiert** (Schema-Abweichung, PDF S. 138–143)
+
+Aufgabe: Prüfung gegen das Winterweizen-Schema (16 Noten, Spaltenfolge aus
+`parse-wheat.ts`). **Befund: abweichend → nicht geparsed** (Regel „sauber lieber
+als komplett").
+
+Kapitelstruktur: Notentabelle S. 138 + S. 140 oben (nur `Winx`, `Zenon`), Qualität
+S. 140 unten/S. 141, Ergänzende Angaben S. 142–143; Öko-Abschnitt ab S. 144
+außerhalb des Aufgabenbereichs.
+
+Verifikation wie etabliert — visuell (`pdftoppm -r 100` S. 138, `hdr138-138.png`)
+**und** `pdftotext -bbox` (S. 138 **und** S. 140, identisch: 15 Header bei
+x = 130,0–329,x pt, Spaltenabstand ~14,5 pt, lückenlos; Wert-Cluster 132–332).
+Token-Check erste Datenzeile: `Akvitan 5 5 5 4 5 6 - 5 5 5 5 4 8 5 5` =
+**15 Noten** ≠ 16. Drei Schema-Abweichungen gegenüber Winterweizen:
+
+| # | Sommerweichweizen (S. 138) | Winterweizen (S. 114) |
+|---|---|---|
+| 1 | **Ährenschieben** (x 130) | **Reife** |
+| 2 | **Reife** (x 145) | Ährenschieben |
+| 6 | Blattseptoria | Blattseptoria |
+| 7 | **Drechslera tritici-repentis** (x 216; 2026 komplett `-`) | Ährenfusarium |
+| 8 | Gelbrost | Drechslera |
+| 9 | Braunrost | **Pseudocercosporella** (fehlt im Sommerweizen!) |
+| 10 | Ährenfusarium | Bestandesdichte |
+| — | **15 Spalten** | **16 Spalten** |
+
+(a) keine Pseudocercosporella-Spalte (15 ≠ 16 Noten), (b) Ährenschieben vor Reife
+(Winterweizen: Reife zuerst), (c) „Drechslera tritici-repentis" (DTR-Blattdürre)
+als eigene Spalte zwischen Blattseptoria und Gelbrost — im Winterweizen heißt die
+Spalte nur „Drechslera" und steht zwei Positionen später. Eine Übernahme in
+`sommerweizen.json` mit dem 16er-Winterweizen-Schema wäre fachlich falsch (Spalten
+würden verrutschen); eine Aufnahme ist nur mit eigenem 15-Spalten-Spec sinnvoll.
+(Größenordnung für evtl. Nachschärfung: 32 Sorten, nur Abschnitt „Mit
+Voraussetzung …", kein EU-Teil; Fußnoten 1) begrannt, 2) Eignung für
+Herbstaussaat, 3) Resistenz gegen Orangerote Weizengallmücke.)
+
+---
+
 
 | Datei | Fruchtart | Sorten | Notenspalten | Erste–Letzte Sorte | null-Zellen |
 |---|---|---|---|---|---|
 | `wintergerste.json` | Wintergerste mehrzeilig | 65 | 19 | Agathe–Venezia | 256/1235 |
+| `wintergerste2.json` | Wintergerste zweizeilig (+ `form`) | 57 | 19 | Agostina–Suez | 130/1083 |
 | `winterroggen.json` | Winterroggen (+ `zuechtyp`) | 35 | 14 | Conduct–SU Torvi | 176/490 |
 | `dinkel.json` | Winterspelz/Winterdinkel | 29 | 13 | Alarich–Zollernspelz | 133/377 |
 | `hafer.json` | Sommerhafer (+ `spelzenfarbe`) | 22 | 17 | Apollon–Stephan | 70/374 |
 
-Nicht extrahiert (Schema-Abweichung, siehe Abschnitte oben): Sommergerste
-zweizeilig (S. 46), Wintergerste zweizeilig (S. 36/38), Sommerroggen (S. 90),
-Winterhafer/Silonutzung (S. 72), alle Öko-Notentabellen (S. 42/70/84).
+Nicht extrahiert (Schema-Abweichung, siehe Abschnitte oben): Sommerweichweizen
+(S. 138/140, 15 statt 16 Noten — Abschnitt 6), Sommergerste zweizeilig (S. 46),
+Sommerroggen (S. 90), Winterhafer/Silonutzung (S. 72), alle Öko-Notentabellen
+(S. 42/70/84/132).
 
 Alle Stichproben (json vs. Rohtext der Quellseite vs. manuell gelesene Erwartung)
 sowie Zeilenzahl-Guards: **OK** (Ausgabe des Parser-Laufs).

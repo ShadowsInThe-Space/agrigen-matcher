@@ -7,6 +7,7 @@
  * data/bsa/bsl_getreide_2026.pdf:
  *
  *   wintergerste.json  Wintergerste, mehrzeilig   PDF S. 26-30  (19 Notenspalten)
+ *   wintergerste2.json Wintergerste, zweizeilig   PDF S. 36-38  (19 Notenspalten, form-Feld)
  *   winterroggen.json  Winterroggen               PDF S. 78-83  (Typ P/H + 14 Notenspalten)
  *   dinkel.json        Winterspelz/Winterdinkel   PDF S. 96-98  (13 Notenspalten)
  *   hafer.json         Sommerhafer                PDF S. 68-71  (Spelzenfarbe + 17 Notenspalten)
@@ -19,10 +20,17 @@
  * data/bsa/PARSE-NOTES.md for the full verification protocol and spot checks.
  *
  * Scope decisions (details in PARSE-NOTES.md):
- *  - Wintergerste: only the MEHRZEILIG table (S. 26-30, ends with "Venezia").
- *    Page 36 starts "Wintergerste - zweizeilig -" (identical 19-column schema,
- *    56 further varieties) which is a different barley form and was NOT
- *    extracted; the Öko-Notentabelle (S. 42, 20 columns) is out of range.
+ *  - Wintergerste: the MEHRZEILIG table (S. 26-30, ends with "Venezia") and the
+ *    ZWEIZEILIG table (S. 36-38, ends with "Suez", 57 varieties, identical
+ *    19-column schema verified on S. 36/38) are extracted separately into
+ *    wintergerste.json / wintergerste2.json; the latter carries form:"zweizeilig".
+ *    The zweizeilig value "1*" (Aretha) encodes footnote "* keine Resistenz
+ *    gegen BaMMV" -> value 1 plus footnotes entry "*".
+ *    The Öko-Notentabelle (S. 42, 20 columns) is out of range.
+ *  - Sommerweichweizen (S. 138-143) is NOT extracted: its score table has a
+ *    different schema than winter wheat (15 instead of 16 columns, Ährenschieben
+ *    before Reife, no Pseudocercosporella, "Drechslera tritici-repentis" between
+ *    Blattseptoria and Gelbrost — verified visually and via -bbox on S. 138/140).
  *  - Sommergerste (S. 46 ff.) is zweizeilig with only 16 score columns (no
  *    virus-resistance block) -> different schema, intentionally omitted.
  *  - Sommerroggen (S. 90) lacks "Mutterkorn" (13 instead of 14 score columns)
@@ -35,9 +43,10 @@
  *    (their trailing value-run length differs) — they are reported, not parsed.
  *
  * Row rule (same robustness strategy as parse-wheat.ts): a line is a data row
- * iff its maximal trailing run of tokens, each exactly "1"-"9" or "-", equals
- * the crop's score-column count; for rye the token before that run must be
- * P|H (Hybrid-/Populationssorte), for oat g|w|s (Spelzenfarbe). Everything
+ * iff its maximal trailing run of tokens, each exactly "1"-"9" or "-" (for the
+ * zweizeilige Wintergerste optionally with a trailing "*" footnote marker),
+ * equals the crop's score-column count; for rye the token before that run must
+ * be P|H (Hybrid-/Populationssorte), for oat g|w|s (Spelzenfarbe). Everything
  * else (repeated headers, footnotes, quality/supplementary tables) is skipped.
  *
  * Run: node data/bsa/parse-cereals.ts   (Node >= 22.18, no dependencies)
@@ -57,8 +66,8 @@ interface CerealRow {
   sortenname: string;
   section: string;
   is_new: boolean;
-  footnotes: number[];
-  [field: string]: Cell | boolean | number[];
+  footnotes: (number | string)[];
+  [field: string]: Cell | boolean | number[] | (number | string)[];
 }
 
 interface CropSpec {
@@ -69,6 +78,14 @@ interface CropSpec {
   lastPage: number;
   /** Score fields in exact left-to-right header order (verified per crop). */
   fields: readonly string[];
+  /** Constant form marker added to every row (e.g. "zweizeilig"). */
+  form?: string;
+  /**
+   * zweizeilige Wintergerste: value tokens may carry a trailing "*" (footnote
+   * "* keine Resistenz gegen BaMMV" on the Gelbmosaik BaYMV-1/BaMMV column).
+   * The asterisk is stripped from the value and recorded as footnotes entry "*".
+   */
+  asteriskMarker?: boolean;
   /** roggen: token P|H between name and scores -> field zuechtyp. */
   typeTokenField?: "zuechtyp";
   /** hafer: token g|w|s between name and scores -> field spelzenfarbe. */
@@ -83,7 +100,7 @@ interface CropSpec {
     zuechtyp?: string | null;
     spelzenfarbe?: string | null;
     is_new?: boolean;
-    footnotes?: number[];
+    footnotes?: number[] | (number | string)[];
     section?: string;
   }>;
 }
@@ -101,36 +118,56 @@ const SECTION_HEADERS: Array<[RegExp, string]> = [
 // left to right, each verified on the cited header page.
 // ---------------------------------------------------------------------------
 
+const GERSTE_FIELDS = [
+  "aehrenschieben",          // 1  Ährenschieben  (bei Gerste vor Reife!)
+  "reife",                   // 2  Reife
+  "pflanzenlaenge",          // 3  Pflanzenlänge
+  "lager",                   // 4  Neigung zu Lager
+  "halmknicken",             // 5  Halmknicken
+  "aehrenknicken",           // 6  Ährenknicken
+  "mehltau",                 // 7  Mehltau
+  "netzflecken",             // 8  Netzflecken
+  "rhynchosporium",          // 9  Rhynchosporium
+  "ramularia",               // 10 Ramularia
+  "zwergrost",               // 11 Zwergrost
+  "gelbmosaik_baymv1",       // 12 Gelbmosaik BaYMV-1, BaMMV (Virusresistenz)
+  "gelbmosaik_baymv2",       // 13 Gelbmosaik BaYMV-2          (Virusresistenz)
+  "gerstengelbverzwergung",  // 14 Gerstengelbverzwergung      (Virusresistenz)
+  "bestandesdichte",         // 15 Bestandesdichte
+  "kornzahl_aehre",          // 16 Kornzahl/Ähre
+  "tausendkornmasse",        // 17 Tausendkornmasse
+  "kornertrag_st1",          // 18 Kornertrag Stufe 1
+  "kornertrag_st2",          // 19 Kornertrag Stufe 2
+] as const;
+
 const WINTERGERSTE: CropSpec = {
   out: "wintergerste",
   label: "Wintergerste, mehrzeilig (S. 26-30; Header verifiziert auf S. 26)",
   firstPage: 26,
   lastPage: 30,
-  fields: [
-    "aehrenschieben",          // 1  Ährenschieben
-    "reife",                   // 2  Reife
-    "pflanzenlaenge",          // 3  Pflanzenlänge
-    "lager",                   // 4  Neigung zu Lager
-    "halmknicken",             // 5  Halmknicken
-    "aehrenknicken",           // 6  Ährenknicken
-    "mehltau",                 // 7  Mehltau
-    "netzflecken",             // 8  Netzflecken
-    "rhynchosporium",          // 9  Rhynchosporium
-    "ramularia",               // 10 Ramularia
-    "zwergrost",               // 11 Zwergrost
-    "gelbmosaik_baymv1",       // 12 Gelbmosaik BaYMV-1, BaMMV (Virusresistenz)
-    "gelbmosaik_baymv2",       // 13 Gelbmosaik BaYMV-2          (Virusresistenz)
-    "gerstengelbverzwergung",  // 14 Gerstengelbverzwergung      (Virusresistenz)
-    "bestandesdichte",         // 15 Bestandesdichte
-    "kornzahl_aehre",          // 16 Kornzahl/Ähre
-    "tausendkornmasse",        // 17 Tausendkornmasse
-    "kornertrag_st1",          // 18 Kornertrag Stufe 1
-    "kornertrag_st2",          // 19 Kornertrag Stufe 2
-  ],
+  fields: GERSTE_FIELDS,
   expectedRows: 65,
   spotChecks: [
     { name: "Agathe", page: 26, is_new: true, values: "5 5 4 3 3 3 4 4 7 6 6 1 9 9 6 5 6 8 8", section: "Mit Voraussetzung des landeskulturellen Wertes in Deutschland zugelassen" },
     { name: "Venezia", page: 30, values: "5 5 6 5 5 4 3 6 7 6 4 1 1 9 4 5 7 6 7", section: "In einem anderen EU-Land eingetragen" },
+  ],
+};
+
+const WINTERGERSTE2: CropSpec = {
+  out: "wintergerste2",
+  label: "Wintergerste, zweizeilig (S. 36-41, Notentabellen S. 36+38; Header auf S. 36/38 verifiziert)",
+  firstPage: 36,
+  lastPage: 38,
+  fields: GERSTE_FIELDS,
+  form: "zweizeilig",
+  asteriskMarker: true,
+  expectedRows: 57,
+  spotChecks: [
+    { name: "Agostina", page: 36, is_new: true, values: "5 5 4 5 3 4 5 4 5 5 5 1 9 9 9 2 8 8 8", section: "Mit Voraussetzung des landeskulturellen Wertes in Deutschland zugelassen" },
+    // Sonderfall: Wert "1*" (Gelbmosaik BaYMV-1/BaMMV) = Note 1 + Fußnoten-Marker "*"
+    // ("keine Resistenz gegen BaMMV", Fußnote S. 36).
+    { name: "Aretha", page: 36, footnotes: ["*"], values: "4 5 4 6 6 4 5 4 3 5 4 1 1 9 8 2 7 7 7", section: "Mit Voraussetzung des landeskulturellen Wertes in Deutschland zugelassen" },
+    { name: "Suez", page: 38, values: "6 6 4 4 4 2 3 5 5 4 4 1 9 9 9 1 6 4 4", section: "In einem anderen EU-Land eingetragen" },
   ],
 };
 
@@ -222,16 +259,22 @@ const HAFER: CropSpec = {
   ],
 };
 
-const CROPS = [WINTERGERSTE, WINTERROGGEN, DINKEL, HAFER];
+const CROPS = [WINTERGERSTE, WINTERGERSTE2, WINTERROGGEN, DINKEL, HAFER];
 
 // ---------------------------------------------------------------------------
 // Parser engine (mirrors parse-wheat.ts)
 // ---------------------------------------------------------------------------
 
 const VALUE_TOKEN_RE = /^[1-9-]$/;
+/** zweizeilige Wintergerste: Wert darf Fußnoten-Asterisk tragen ("1*"). */
+const VALUE_TOKEN_ASTERISK_RE = /^[1-9-]\*?$/;
 const FOOTNOTE_TOKEN_RE = /^(\d+)\)[.,;]?$/;
 const RYE_TYPE_RE = /^[PH]$/;
 const OAT_COLOR_RE = /^[gws]$/;
+
+function valueTokenRe(spec: CropSpec): RegExp {
+  return spec.asteriskMarker ? VALUE_TOKEN_ASTERISK_RE : VALUE_TOKEN_RE;
+}
 
 function pdftotext(first: number, last: number): string {
   return execFileSync(
@@ -242,16 +285,16 @@ function pdftotext(first: number, last: number): string {
 }
 
 /** Length of the maximal trailing run of single-value tokens ([1-9] or "-"). */
-function trailingValueRun(tokens: string[]): number {
+function trailingValueRun(tokens: string[], re: RegExp = VALUE_TOKEN_RE): number {
   let n = 0;
-  for (let i = tokens.length - 1; i >= 0 && VALUE_TOKEN_RE.test(tokens[i]!); i--) n++;
+  for (let i = tokens.length - 1; i >= 0 && re.test(tokens[i]!); i--) n++;
   return n;
 }
 
 function parseLine(rawLine: string, section: string, spec: CropSpec): CerealRow | null {
   const tokens = rawLine.trim().split(/\s+/u);
   const n = spec.fields.length;
-  const run = trailingValueRun(tokens);
+  const run = trailingValueRun(tokens, valueTokenRe(spec));
   if (run !== n) return null;
 
   const valueTokens = tokens.slice(tokens.length - n);
@@ -286,7 +329,7 @@ function parseLine(rawLine: string, section: string, spec: CropSpec): CerealRow 
   }
 
   // Trailing footnote markers on the name, e.g. "SU Torvi 1)".
-  const footnotes: number[] = [];
+  const footnotes: (number | string)[] = [];
   while (nameTokens.length > 0) {
     const m = FOOTNOTE_TOKEN_RE.exec(nameTokens[nameTokens.length - 1]!);
     if (!m) break;
@@ -298,11 +341,19 @@ function parseLine(rawLine: string, section: string, spec: CropSpec): CerealRow 
   // Safety net: variety names start with a capital letter.
   if (!/^[A-ZÄÖÜ]/.test(sortenname) || nameTokens.length === 0) return null;
 
+  // zweizeilige Wintergerste: trailing "*" on a value token = footnote marker
+  // "* keine Resistenz gegen BaMMV" (only column 12, Gelbmosaik BaYMV-1/BaMMV).
+  if (spec.asteriskMarker && valueTokens.some((t) => t.endsWith("*"))) {
+    if (valueTokens.filter((t) => t.endsWith("*")).length > 1) return null;
+    footnotes.push("*");
+  }
+
   const row: CerealRow = { sortenname, section, is_new: isNew, footnotes };
+  if (spec.form) row.form = spec.form;
   if (spec.typeTokenField) row[spec.typeTokenField] = zuechtyp;
   if (spec.prefixTokenField) row[spec.prefixTokenField] = spelzenfarbe;
   spec.fields.forEach((field, i) => {
-    const t = valueTokens[i]!;
+    const t = valueTokens[i]!.replace(/\*$/u, "");
     row[field] = t === "-" ? null : Number(t);
   });
   return row;
@@ -332,7 +383,7 @@ function parseCrop(spec: CropSpec) {
     }
 
     const tokens = line.split(/\s+/u);
-    const run = trailingValueRun(tokens);
+    const run = trailingValueRun(tokens, valueTokenRe(spec));
     if (run >= 10) skippedLongRuns.set(run, (skippedLongRuns.get(run) ?? 0) + 1);
   }
   return { rows, skippedLongRuns };
@@ -369,7 +420,12 @@ function verify(spec: CropSpec, rows: CerealRow[]): boolean {
       continue;
     }
     const rawTokens = rawLine.trim().split(/\s+/u);
-    const rawValues = rawTokens.slice(rawTokens.length - spec.fields.length).join(" ");
+    // Normalize away the zweizeilig asterisk marker ("1*" -> "1") before comparing;
+    // the marker itself is verified via the footnotes spot check.
+    const rawValues = rawTokens
+      .slice(rawTokens.length - spec.fields.length)
+      .map((t) => t.replace(/\*$/u, ""))
+      .join(" ");
     const jsonValues = rowValuesAsString(jsonRow, spec);
     const valuesOk = jsonValues === check.values && rawValues === check.values;
     const metaOk =
@@ -436,6 +492,7 @@ function runCrop(spec: CropSpec): boolean {
   const last = rows[rows.length - 1]!;
   console.log(`\n=== ${spec.label} ===`);
   console.log(` ${spec.out}.json: ${rows.length} Sorten, ${spec.fields.length} Notenspalten` +
+    (spec.form ? ` + form="${spec.form}"` : "") +
     (spec.typeTokenField ? " + zuechtyp" : "") + (spec.prefixTokenField ? " + spelzenfarbe" : ""));
   for (const [sec, cnt] of perSection) console.log(`   - [${cnt}] ${sec}`);
   console.log(` Erste Sorte: ${first.sortenname} | Letzte: ${last.sortenname}` +
