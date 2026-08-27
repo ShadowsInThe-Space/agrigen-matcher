@@ -15,6 +15,7 @@ import {
 } from './kernelMath.ts'
 import { matrixRank, symmetricEigenvalues } from './metrics.ts'
 import { percentileOf, queryGamma, queryGammaSampled, rankCandidates, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
+import { loadBsaUnionCatalog, UNION_TRAIT_NAMES, UNION_DIRECTIONS } from './bsaCatalog.ts'
 import {
   buildCatalog, CROP_GROUPS, extractRequirements, TRAIT_NAMES, WIZARD_TOLERANCE,
   type AccessionRecord, type Catalog, type FarmingRequirements,
@@ -315,6 +316,27 @@ check('Crop-Group real: Helianthus = 0.5385 (oilseed, 8-Member-Gruppe)',
   }
   check(`Deckel: Partielles Identity-Retrieval k=4 = 100 % (${partialHits}/${partialTrials})`,
     partialHits === partialTrials)
+}
+
+// ── Loop-It 36: BSA-Echtdaten-Deckel gepinnt (224 offizielle BSL-2026-Sorten) ──
+{
+  const union = loadBsaUnionCatalog()
+  const unionGamma = medianHeuristicGamma(union.rows, union.observationMasks, UNION_TRAIT_NAMES.map(() => 1))
+  check(`BSA-Real: 224 Sorten über 5 Fruchtarten im Union-Space (aktuell ${union.rows.length})`,
+    union.rows.length === 224)
+  const byCrop: Record<string, number[]> = {}
+  union.crops.forEach((crop, index) => { (byCrop[crop] ??= []).push(index) })
+  const ceilings: Record<string, number> = { Weizen: 1, Gerste: 1, Roggen: 1, Dinkel: 1, Hafer: 0.94 }
+  for (const [crop, indexes] of Object.entries(byCrop)) {
+    let top1 = 0
+    for (const i of indexes) {
+      const ranked = rankCandidates(union.rows, union.rows[i]!, union.observationMasks[i]!, unionGamma, UNION_DIRECTIONS, 0, union.observationMasks, UNION_TRAIT_NAMES)
+      if (ranked[0]!.index === i) top1++
+    }
+    const observed = top1 / indexes.length
+    check(`BSA-Real: Identity ${crop} top-1 ${(observed).toFixed(4)} ≥ ${(ceilings[crop] ?? 1).toFixed(2)} (${top1}/${indexes.length})`,
+      observed >= (ceilings[crop] ?? 1) - 1e-9)
+  }
 }
 
 // ── Loop-It 29: Toleranzband (Dead-Zone δ) ────────────────────────────────

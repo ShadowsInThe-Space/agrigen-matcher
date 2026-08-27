@@ -577,3 +577,10 @@ Duplikate existierten nicht, alle Verluste kamen aus der Virus-Kohorte.)
 Cross-Crop-Spitze jetzt echt gemischt: Weizen führt (KWS Mintum 0.997),
 Gerste konkurriert (KWS Delis 0.996, SU Lenoria 0.983) — die frühere
 All-Gerste-Dominanz war das Artefakt der Neutral-Ties aus It 34.
+
+## Iteration 36 — BSA-Echtdaten-Deckel als Selbsttest-Pins (KEEP)
+
+Selbsttest pinnt jetzt den Realdaten-Pfad wie den EURISCO-Pfad: Kataloggröße
+224, Identity-Deckel je Fruchtart (Weizen/Gerste/Roggen/Dinkel = 1.0, Hafer
+≥ 0.94 mit dokumentiertem Cross-Crop-Duplikat-Einzelfall). 66/66 Checks —
+Echtdaten-Regressionen brechen ab sofort den Build.
