@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-08-27T13:44:16.182Z",
+  "timestamp": "2026-08-27T18:02:40.266Z",
   "node": "v22.22.3",
   "metrics": {
     "identity_top1": 1,
@@ -33,5 +33,16 @@
     ],
     "deep_regret_rate_eps005": 0,
     "separation_mean_gap": 0.0114
+  },
+  "text_metrics": {
+    "text_identity_top1": 1,
+    "text_corpus_size": 200,
+    "text_official_pairs": 17,
+    "text_official_top5": 0.4118,
+    "text_official_top10": 0.4706,
+    "traitsrbf_official_pairs": 15,
+    "traitsrbf_official_top5": 0.2,
+    "traitsrbf_official_top10": 0.2,
+    "rrf_fusion_identity": 1
   }
 }
