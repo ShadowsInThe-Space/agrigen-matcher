@@ -27,8 +27,7 @@ const TOP_K = 5
 const PSD_TOLERANCE = -1e-10
 const TIE_THRESHOLD = 0.01
 const NAME_WIDTH = 38
-const SCORE_HEADER = 'Kernel-Score (dim.)'
-const PERFECT_SCORE_LABEL = 'Anforderungsprofil vollständig erfüllt'
+const SCORE_HEADER = 'Query-Score (dim.)'
 
 interface Scenario {
   title: string
@@ -100,19 +99,21 @@ function rankedMatches(
 
 /**
  * Exact 1.0 means every hinge term is zero, i.e. the candidate fulfills ALL
- * requirements (over-fulfillment is free). Shown as its own label instead of
- * a naked 1.000 so it cannot be misread as a "100% match".
+ * requirements (over-fulfillment is free). The cell stays a plain number;
+ * the fulfillment is flagged in a footnote line below the table, so rows
+ * keep a compact fixed width and 1.000 cannot be misread as a "100% match".
  */
 function scoreCell(score: number): string {
-  return score === 1 ? PERFECT_SCORE_LABEL : score.toFixed(3)
+  return score.toFixed(3)
 }
 
-/** 1-based rank where the first run of practically tied candidates (gap < threshold) starts, or null. */
-function tieRunStart(matches: ScoredCandidate[], threshold: number): number | null {
+/** 1-based rank pairs of consecutive candidates that are practically tied (gap < threshold). */
+function tiedPairs(matches: ScoredCandidate[], threshold: number): Array<[number, number]> {
+  const pairs: Array<[number, number]> = []
   for (let index = 1; index < matches.length; index++) {
-    if (matches[index - 1]!.score - matches[index]!.score < threshold) return index
+    if (matches[index - 1]!.score - matches[index]!.score < threshold) pairs.push([index, index + 1])
   }
-  return null
+  return pairs
 }
 
 /** Print a comma-separated list wrapped at `width`, continuation lines indented by 4 spaces. */
@@ -187,9 +188,19 @@ function main(): void {
         + `${scoreCell(match.score).padEnd(scoreWidth)} besser als ${match.percentile.toFixed(1)} % des Katalogs`,
       )
     })
-    const tie = tieRunStart(matches, TIE_THRESHOLD)
-    if (tie !== null) {
-      console.log(`  → praktisch gleichwertige Kandidaten ab Rang ${tie} (Score-Abstand < ${TIE_THRESHOLD.toFixed(3)})`)
+    for (const [position, match] of matches.entries()) {
+      if (match.score === 1) {
+        console.log(`  * Rang ${position + 1} erfüllt das Anforderungsprofil vollständig`)
+      }
+    }
+    const ties = tiedPairs(matches, TIE_THRESHOLD)
+    if (ties.length > 0) {
+      for (const [upperRank, lowerRank] of ties) {
+        console.log(
+          `  → Rang ${upperRank} und ${lowerRank} praktisch gleichwertig `
+          + `(Score-Abstand < ${TIE_THRESHOLD.toFixed(3)})`,
+        )
+      }
     } else {
       const [first, second] = matches
       console.log(
@@ -201,8 +212,8 @@ function main(): void {
   }
 
   console.log()
-  console.log('Katalog-Ähnlichkeit: RBF-Kernel K(x,y)=exp(−γ·d̄²) — bei fester Maske positiv definit, damit echter RKHS; Kernelwert = RKHS-Kosinus.')
-  console.log('Anfrage-Scoring: einseitige Hinge-Terme (Satisficing) im selben normalisierten Trait-Raum — Query-Scoring, kein Kernel.')
+  console.log('Katalog-Ähnlichkeit: RBF-Kernel — feste Maske → positiv definit → echter RKHS; Kernelwert = RKHS-Kosinus.')
+  console.log('Anfrage-Scoring: einseitige Hinge-Terme (Satisficing) im Query-Subraum — Query-Scoring, kein Kernel.')
 }
 
 main()
