@@ -19,7 +19,7 @@ import { readFileSync } from 'node:fs'
 import { dimensionNormalizedRbf, medianHeuristicGamma, validateFeatureRanges } from './kernelMath.ts'
 import { matrixRank, symmetricEigenvalues } from './metrics.ts'
 import { percentileOf, queryGamma, rankCandidates, scoreCandidate } from './scoring.ts'
-import { buildCatalog, extractRequirements, TRAIT_NAMES, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
+import { buildCatalog, extractRequirements, TRAIT_NAMES, WIZARD_TOLERANCE, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
 
 const DATA_PATH = new URL('../data/eurisco_150.json', import.meta.url)
 
@@ -84,8 +84,8 @@ function rankedMatches(
 ): { matches: ScoredCandidate[], gamma: number, activeDimensions: string[] } {
   const { vector, mask, directions } = extractRequirements(requirements)
   const gamma = queryGamma(catalog.rows, mask)
-  const allScores = catalog.rows.map(row => scoreCandidate(vector, row, mask, gamma, directions))
-  const matches: ScoredCandidate[] = rankCandidates(catalog.rows, vector, mask, gamma, directions)
+  const allScores = catalog.rows.map(row => scoreCandidate(vector, row, mask, gamma, directions, WIZARD_TOLERANCE))
+  const matches: ScoredCandidate[] = rankCandidates(catalog.rows, vector, mask, gamma, directions, WIZARD_TOLERANCE)
     .slice(0, TOP_K)
     .map(item => ({
       id: catalog.ids[item.index]!,

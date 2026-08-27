@@ -45,12 +45,18 @@ function assertFinite(value: number, label: string): void {
 
 /**
  * Masked, dimension-normalized hinge score over the ACTIVE query dimensions:
- *   benefit: (max(0, q_i − x_i))²   shortfall penalized, surplus free
- *   cost:    (max(0, x_i − q_i))²   surplus penalized, headroom free
- *   target:  (x_i − q_i)²           two-sided distance
+ *   benefit: (max(0, (q_i − δ) − x_i))²   shortfall beyond δ penalized, surplus free
+ *   cost:    (max(0, x_i − (q_i + δ)))²   surplus beyond δ penalized, headroom free
+ *   target:  (max(0, |x_i − q_i| − δ))²   two-sided distance beyond δ
  * score = exp(−γ · mean(term_i)). Query scoring (see module doc), not a
  * kernel in (q, x). No active query dimension → neutral 1, consistent with
  * dimensionNormalizedRbf mapping a null masked distance to 1.
+ *
+ * `tolerance` δ (loop It 28/29): a symmetric dead zone around the query
+ * target. Queries stated at the wizard's resolution (LEVEL step 0.2) are
+ * RANGES, not points — δ = half the step makes "moderate" mean [0.4, 0.6].
+ * Default 0 keeps the exact point semantics (all pre-loop tests rely on it);
+ * the product path passes WIZARD_TOLERANCE from traits.ts.
  */
 export function scoreCandidate(
   query: number[],
@@ -58,6 +64,7 @@ export function scoreCandidate(
   queryMask: FeatureMask,
   gamma: number,
   directions: Readonly<Record<string, TraitDirection>>,
+  tolerance = 0,
 ): number {
   validateGamma(gamma)
   if (query.length !== candidate.length) {
@@ -65,6 +72,9 @@ export function scoreCandidate(
   }
   if (queryMask.length !== query.length) {
     throw new Error('scoreCandidate: query mask must have the same dimension as its feature vector')
+  }
+  if (!Number.isFinite(tolerance) || tolerance < 0) {
+    throw new Error('scoreCandidate: tolerance must be a finite number >= 0')
   }
   let total = 0
   let active = 0
@@ -80,9 +90,9 @@ export function scoreCandidate(
     assertFinite(q, 'Query component')
     assertFinite(x, 'Candidate component')
     const hinge =
-      direction === 'benefit' ? Math.max(0, q - x) :
-      direction === 'cost' ? Math.max(0, x - q) :
-      x - q
+      direction === 'benefit' ? Math.max(0, (q - tolerance) - x) :
+      direction === 'cost' ? Math.max(0, x - (q + tolerance)) :
+      Math.max(0, Math.abs(x - q) - tolerance)
     total += hinge * hinge
     active++
   }
@@ -169,11 +179,12 @@ export function rankCandidates(
   queryMask: FeatureMask,
   gamma: number,
   directions: Readonly<Record<string, TraitDirection>>,
+  tolerance = 0,
 ): RankedCandidate[] {
   return catalogRows
     .map((row, index) => ({
       index,
-      score: scoreCandidate(query, row, queryMask, gamma, directions),
+      score: scoreCandidate(query, row, queryMask, gamma, directions, tolerance),
       similarity: dimensionNormalizedRbf(query, row, queryMask, gamma),
     }))
     .sort((a, b) => b.score - a.score || b.similarity - a.similarity)

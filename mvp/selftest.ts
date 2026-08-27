@@ -16,7 +16,7 @@ import {
 import { matrixRank, symmetricEigenvalues } from './metrics.ts'
 import { percentileOf, queryGamma, queryGammaSampled, rankCandidates, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
 import {
-  buildCatalog, CROP_GROUPS, extractRequirements, TRAIT_NAMES,
+  buildCatalog, CROP_GROUPS, extractRequirements, TRAIT_NAMES, WIZARD_TOLERANCE,
   type AccessionRecord, type Catalog, type FarmingRequirements,
 } from './traits.ts'
 
@@ -222,7 +222,7 @@ console.log('─'.repeat(64))
  * regression and must fail this suite.
  */
 const GOLD_CATALOG_GAMMA = 4.595706962331078
-const GOLD_TOP1: Readonly<Record<'A' | 'B' | 'C', string>> = { A: 'EUR-120', B: 'EUR-102', C: 'EUR-066' }
+const GOLD_TOP1: Readonly<Record<'A' | 'B' | 'C', string>> = { A: 'EUR-116', B: 'EUR-102', C: 'EUR-066' }
 
 const DATA_PATH = new URL('../data/eurisco_150.json', import.meta.url)
 function loadCatalog(): Catalog {
@@ -263,7 +263,7 @@ const GOLD_SCENARIOS: ReadonlyArray<['A' | 'B' | 'C', FarmingRequirements]> = [
 function topAccession(catalog: Catalog, requirements: FarmingRequirements): string {
   const { vector, mask, directions } = extractRequirements(requirements)
   const gamma = queryGamma(catalog.rows, mask)
-  return catalog.ids[rankCandidates(catalog.rows, vector, mask, gamma, directions)[0]!.index]!
+  return catalog.ids[rankCandidates(catalog.rows, vector, mask, gamma, directions, WIZARD_TOLERANCE)[0]!.index]!
 }
 for (const [key, requirements] of GOLD_SCENARIOS) {
   check(`Gold: Szenario ${key} Top-1 = ${GOLD_TOP1[key]}`,
@@ -286,7 +286,7 @@ check('Crop-Group real: Helianthus = 0.5385 (oilseed, 8-Member-Gruppe)',
 // ── Loop-Iteration 9: Genauigkeits-Deckel gepinnt (stille Regressionsschutz) ──
 {
   const identityOk = goldCatalog.rows.every((row, index) =>
-    rankCandidates(goldCatalog.rows, row, goldFullMask, goldGamma, goldDirectionsFor(goldFullMask))[0]!.index === index)
+    rankCandidates(goldCatalog.rows, row, goldFullMask, goldGamma, goldDirectionsFor(goldFullMask), WIZARD_TOLERANCE)[0]!.index === index)
   check('Deckel: Identity-Retrieval 12/12 (Selbst auf Rang 1 unter Vollmaske)', identityOk)
 
   // Partial identity, k=4, drei feste Seeds (deterministisch, schnell).
@@ -309,13 +309,24 @@ check('Crop-Group real: Helianthus = 0.5385 (oilseed, 8-Member-Gruppe)',
     const gamma = queryGamma(goldCatalog.rows, mask)
     const directions = goldDirectionsFor(mask)
     for (let index = 0; index < goldCatalog.rows.length; index++) {
-      if (rankCandidates(goldCatalog.rows, goldCatalog.rows[index]!, mask, gamma, directions)[0]!.index === index) partialHits++
+      if (rankCandidates(goldCatalog.rows, goldCatalog.rows[index]!, mask, gamma, directions, WIZARD_TOLERANCE)[0]!.index === index) partialHits++
       partialTrials++
     }
   }
   check(`Deckel: Partielles Identity-Retrieval k=4 = 100 % (${partialHits}/${partialTrials})`,
     partialHits === partialTrials)
 }
+
+// ── Loop-It 29: Toleranzband (Dead-Zone δ) ────────────────────────────────
+check('Toleranzband: Kandidat innerhalb des Bands ist frei',
+  scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.42), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }, 0.1) === 1)
+check('Toleranzband: Fehlbetrag zählt erst ab Bandkante (exp(−0.01), milder als ohne Band exp(−0.04))',
+  Math.abs(scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.3), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }, 0.1) - Math.exp(-0.01)) < 1e-12 &&
+  Math.abs(scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.3), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }) - Math.exp(-0.04)) < 1e-12)
+check('Toleranzband: target-Dim zweiseitig mit Dead-Zone',
+  Math.abs(scoreCandidate(vecAt('soil_ph_min', 0.5), vecAt('soil_ph_min', 0.62), maskOf('soil_ph_min'), 1, { soil_ph_min: 'target' }, 0.1) - Math.exp(-0.0004)) < 1e-12)
+check('Toleranzband: negatives δ wird abgelehnt',
+  throws(() => scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.5), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }, -0.1)))
 
 // ── Loop-It 16/18: gesampelter γ + Duplikat-Guard ─────────────────────────
 {

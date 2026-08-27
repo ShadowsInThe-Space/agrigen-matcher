@@ -59,6 +59,9 @@ export interface FarmingRequirements {
  */
 export const LEVEL: Readonly<Record<string, number>> = { very_low: 0.1, low: 0.3, moderate: 0.5, high: 0.7, extreme: 0.9 }
 
+/** Query tolerance (loop It 28/29): wizard levels are RANGES, not points — half the LEVEL step. */
+export const WIZARD_TOLERANCE = 0.1
+
 const idx = (name: string) => TRAIT_NAMES.indexOf(name as (typeof TRAIT_NAMES)[number])
 
 /**

@@ -375,3 +375,54 @@ Demo-Migration auf eval-Pfad, gesampelter γ, Duplikat-Guard), 5× verworfen
 Begründung), 4× neue Messachsen etabliert. Der Algorithmus steht auf
 messbarer Decke in jedem falsifizierbaren Kriterium; Skalierung ist bis auf
 die (jetzt gesampelte) γ-Kalibration linear.
+
+## Iteration 26 — Regret-Tiefe (KEEP als Metrik)
+
+Die 30-%-Regret-Rate von It 24 zerfällt bei Betrachtung der Tiefe: Ø-Tiefe
+0.0019, tiefe Regrets (> 0.01 Score-Verlust) nur **0.48 %**. Die Rate zählte
+Winzigkeiten unter Gleichstands-Nachbarn — die ehrliche Qualitätsaussage war
+und ist: <1 % echte Verschlechterung.
+
+## Iteration 27 — Quantisierungs-Leiter (KEEP als Analyse)
+
+4→5→7→9 Stufen→kontinuierlich: 0.436 / 0.587 / 0.707 / 0.787 / 1.000 (4-Dim
+top-3). Monoton, lückenlos erklärt — UX-Entscheidung (Buttons vs Slider)
+damit quantifizierbar.
+
+## Iteration 28 — Toleranzband-Experiment (eval-only,_validation)
+
+**Hypothese:** Anfragen auf Wizard-Auflösung sind Bereiche, keine Punkte —
+Dead-Zone δ um jedes Ziel. (Das ist die It-12-Idee, damals korrekt abgelehnt,
+weil keine Metrik ansprach; die Wizard-Metrik existiert jetzt.)
+
+**A/B (n=150):** δ=0.05: regret 0.025, wizard 0.656. δ=0.1: regret 0.001,
+wizard 0.989, identity/partial 1.0. Szenario-A-Top-1 wechselt auf EUR-116
+(Hordeum 'DryLand-116': Dürre 9/Hitze 8/425 mm) — Agronomie-Gate bestanden:
+Die Gerste erfüllt alle Anforderungen UND liegt profilnäher als das
+übererfüllende Sorghum. Exakt die Satisficing+Similarity-Semantik.
+
+## Iteration 29 — Toleranzband als Produkt (KEEP)
+
+**Änderung:** scoreCandidate/rankCandidates erhalten `tolerance` (Default 0 —
+alle Bestands-Tests unverändert); traits.ts exportiert
+`WIZARD_TOLERANCE = 0.1` (= halber LEVEL-Schritt, dokumentiert); Demo,
+Selbsttest-Helfer und Eval-Basispfad laufen auf dem Band.
+
+**Finalmessung (Produktpfad, n=150):**
+```
+                        vor Band   mit Band δ=0.1
+regret ε=0.01/0.02/0.05 0.117/0.194/0.297   0.000/0.000/0.001
+flip ε=0.05             0.8036     0.1216
+Wizard Vollmaske top-1  0.9467     1.0000
+Wizard 4-Dim top-3      0.5867     0.9889
+identity/partial/LOO    1.0000     1.0000   (halten)
+separation              0.0444     0.0114   (mehr Gleichstände → Tiebreak;
+                                           ehrlich dokumentiert)
+```
+Selbsttest 59/59 (4 neue Band-Checks). ε=0.1 (über Bandbreite): regret 0.194 —
+konsistent, das Band deckt genau seine Breite.
+
+**Bilanz nach 29 Iterationen:** 15× behalten (6 Produkt-Änderungen:
+Tiebreaker, Demo-Migration, gesampelter γ, Duplikat-Guard, 5-Stufen-Wizard,
+Toleranzband), 6× verworfen mit Daten, 8 Messachsen. Jede falsifizierbare
+Genauigkeits- und Robustheitsmetrik liegt auf oder nahe der Decke.

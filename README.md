@@ -85,9 +85,9 @@ Alle Zahlen reproduzierbar via `node mvp/eval.ts` bzw. als Pins in `node mvp/sel
 | Identity-Retrieval (Anfrage = Sortenprofil, Vollmaske) | **1.0000** (150/150, selftest-gepinnt) |
 | Teilraum-Identity (jedes k ∈ {2,3,4,6,8,12}) | **1.0000** |
 | Identity auf synthetischem Katalog n=100 | 1.0000 |
-| Wizard-Genauigkeit (5-Stufen-Anfragen, Vollmaske / 4 Dims) | top-1 0.947 / top-3 0.587 |
+| Wizard-Genauigkeit (5-Stufen + Toleranzband, Vollmaske / 4 Dims) | top-1 1.000 / top-3 0.989 |
 | LOO Top-3-Stabilität (echte Demo-Anfragen) | 1.0000 |
-| Bedauerns-Rate bei Anfrage-Rauschen ε=0.01 / 0.05 (n=150, dichter Katalog) | 0.1172 / 0.2971 |
+| Bedauerns-Rate bei Anfrage-Rauschen ε=0.01 / 0.02 / 0.05 (Toleranzband δ=0.1) | 0.0000 / 0.0000 / 0.0010 |
 | Top-3-Treue bei Messrauschen in Sorten-Traits (ε=0.02 / 0.05) | 0.5989 / 0.4896 |
 | γ-Kalibration bei n=5000 (gesampelte Median-Heuristik) | ~99 ms statt ~20 s, Top-1 unverändert |
 

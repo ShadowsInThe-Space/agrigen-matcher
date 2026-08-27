@@ -19,7 +19,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { rankCandidates, queryGamma, queryGammaSampled, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
 import { dimensionNormalizedRbf, medianHeuristicGamma } from './kernelMath.ts'
-import { buildCatalog, extractRequirements, LEVEL, TRAIT_NAMES, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
+import { buildCatalog, extractRequirements, LEVEL, TRAIT_NAMES, WIZARD_TOLERANCE, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
 
 const DATA_PATH = new URL('../data/eurisco_150.json', import.meta.url)
 
@@ -46,7 +46,7 @@ interface Scored { id: string, score: number, rank: number }
 
 /** Rank via rankCandidates (hinge score + kernel tiebreak), mapped to ids. */
 function rankAll(catalog: Catalog, query: number[], mask: number[], gamma: number, directions: Record<string, 'benefit' | 'cost' | 'target'>): Scored[] {
-  return rankCandidates(catalog.rows, query, mask, gamma, directions)
+  return rankCandidates(catalog.rows, query, mask, gamma, directions, WIZARD_TOLERANCE)
     .map(item => ({ id: catalog.ids[item.index]!, score: item.score }))
     .map((item, index) => ({ ...item, rank: index + 1 }))
 }
@@ -127,9 +127,11 @@ function looStability(catalog: Catalog, scenarios: number[][]): number {
  * rate counts only perturbations where the new top-1 strictly misses a
  * requirement the old top-1 satisfied (score drop > 1e-9).
  */
-function noiseRobustness(catalog: Catalog, scenarios: number[][], epsilon: number, trials: number, ranker: typeof rankAll = rankAll, seedBase = 100): { flipRate: number, regretRate: number } {
+function noiseRobustness(catalog: Catalog, scenarios: number[][], epsilon: number, trials: number, ranker: typeof rankAll = rankAll, seedBase = 100): { flipRate: number, regretRate: number, regretDepthMean: number, deepRegretRate: number } {
   let flips = 0
   let regrets = 0
+  let depthSum = 0
+  let deepRegrets = 0
   let total = 0
   for (const mask of scenarios) {
     const gamma = queryGamma(catalog.rows, mask)
@@ -146,12 +148,22 @@ function noiseRobustness(catalog: Catalog, scenarios: number[][], epsilon: numbe
         if (winner.id !== baselineTop.id) flips++
         // Regret: does the noisy pick satisfy the ORIGINAL requirements less
         // than the baseline pick did? (both scored against the original query)
-        if (baselineScoreById.get(winner.id)! < baselineTop.score - 1e-9) regrets++
+        const drop = baselineTop.score - baselineScoreById.get(winner.id)!
+        if (drop > 1e-9) {
+          regrets++
+          depthSum += drop
+          if (drop > 0.01) deepRegrets++
+        }
         total++
       }
     }
   }
-  return { flipRate: flips / total, regretRate: regrets / total }
+  return {
+    flipRate: flips / total,
+    regretRate: regrets / total,
+    regretDepthMean: regrets === 0 ? 0 : depthSum / regrets,
+    deepRegretRate: deepRegrets / total,
+  }
 }
 
 /**
@@ -499,6 +511,113 @@ function experiments(catalog: Catalog, scenarioMasks: number[][]): void {
   console.log(`  ── It 22: Feineres LEVEL-Raster (9 Stufen) A/B ──`)
   console.log(`  volle Maske:  top-1 ${round(fineWizardFull.top1).toFixed(4)}  top-3 ${round(fineWizardFull.top3).toFixed(4)}`)
   console.log(`  4-Dim-Masken: top-3 Ø ${round(fineWizardPartialAvg).toFixed(4)} (3 Seeds; 4-Stufen-Raster: ${round(wizardPartialAvg).toFixed(4)})`)
+
+  // ── It 26: regret depth — magnitude, not just frequency ─────────────────
+  const noiseDetailed = noiseRobustness(catalog, scenarioMasks, 0.05, 20)
+  console.log('  ── It 26: Regret-Tiefe (ε=0.05) ──')
+  console.log(`  Rate ${round(noiseDetailed.regretRate).toFixed(4)} · Ø-Tiefe ${round(noiseDetailed.regretDepthMean).toFixed(4)} · tiefe Regrets (>0.01) ${round(noiseDetailed.deepRegretRate).toFixed(4)}`)
+
+  // ── It 27: quantization ladder (4→5→7→9 levels → continuous) ───────────
+  console.log('  ── It 27: Quantisierungs-Leiter (4-Dim top-3) ──')
+  const ladder: [string, number[] | null][] = [
+    ['4 Stufen', [0.15, 0.45, 0.75, 0.9]],
+    ['5 Stufen (Produkt)', Object.values(LEVEL)],
+    ['7 Stufen', [0.1, 0.2333, 0.3667, 0.5, 0.6333, 0.7667, 0.9]],
+    ['9 Stufen', fineLevels],
+    ['kontinuierlich', null],
+  ]
+  for (const [label, levels] of ladder) {
+    const consistency = levels
+      ? [1, 2, 3].reduce((sum, seed) => sum + wizardConsistency(catalog, randomMask(4, seed), levels).top3, 0) / 3
+      : [1, 2, 3].reduce((sum, seed) => sum + partialIdentityAccuracy(catalog, 4, 3 + seed % 2), 0) / 3
+    console.log(`  ${label.padEnd(20)} top-3 ${round(consistency).toFixed(4)}`)
+  }
+
+  // ── It 28: tolerance-band scoring (dead zone around query targets) ──────
+  // The It-12 rejection of LEVEL softening was correct THEN (no falsifiable
+  // metric responded); the wizard metric now provides one. Band of ±δ makes
+  // "moderate ≈ 0.5" a range, matching how humans actually state levels.
+  console.log('  ── It 28: Toleranzband-Scoring (Dead-Zone δ) A/B ──')
+  for (const delta of [0.05, 0.1]) {
+    const ranker = bandRanker(delta)
+    const bandIdentity = identityAccuracyWith(catalog, ranker)
+    const bandPartial = partialIdentityAccuracy(catalog, 4, 10, ranker)
+    const bandNoise = noiseRobustness(catalog, scenarioMasks, 0.05, 20, ranker)
+    const bandWizard = [1, 2, 3].reduce((sum, seed) => {
+      const mask = randomMask(4, seed)
+      return sum + wizardConsistencyWith(catalog, mask, WIZARD_LEVELS, ranker).top3
+    }, 0) / 3
+    const winners = DEMO_REQUIREMENTS.map(requirement => {
+      const { vector, mask, directions } = extractRequirements(requirement)
+      const gamma = queryGamma(catalog.rows, mask)
+      return ranker(catalog, vector, mask, gamma, directions)[0]!.id
+    })
+    const winnersOk = winners.every((id, index) => id === DEMO_EXPECTED_TOP1[index])
+    console.log(`  δ=${String(delta).padEnd(5)} identity ${round(bandIdentity.top1).toFixed(4)}  partial ${round(bandPartial).toFixed(4)}  regret ${round(bandNoise.regretRate).toFixed(4)} (tief ${round(bandNoise.deepRegretRate).toFixed(4)})  wizard4Dim ${round(bandWizard).toFixed(4)}  demo-top1 ${winnersOk ? 'stabil' : `GEÄNDERT ${winners.join('/')}`}`)
+  }
+}
+
+/** Hinge score with a symmetric dead zone δ around the query target. */
+function bandedScore(query: number[], candidate: number[], mask: number[], gamma: number, directions: Record<string, 'benefit' | 'cost' | 'target'>, delta: number): number {
+  let total = 0
+  let active = 0
+  for (let index = 0; index < query.length; index++) {
+    if (mask[index] === 0) continue
+    const direction = directions[TRAIT_NAMES[index]!]!
+    const q = query[index]!
+    const x = candidate[index]!
+    const hinge =
+      direction === 'benefit' ? Math.max(0, (q - delta) - x) :
+      direction === 'cost' ? Math.max(0, x - (q + delta)) :
+      Math.max(0, Math.abs(x - q) - delta)
+    total += hinge * hinge
+    active++
+  }
+  return active === 0 ? 1 : Math.exp(-gamma * (total / active))
+}
+
+/** Ranker variant with dead-zone scoring, similarity tiebreak unchanged. */
+function bandRanker(delta: number): typeof rankAll {
+  return (catalog, query, mask, gamma, directions) => {
+    return catalog.rows
+      .map((row, index) => ({
+        index,
+        score: bandedScore(query, row, mask, gamma, directions, delta),
+        similarity: dimensionNormalizedRbf(query, row, mask, gamma),
+      }))
+      .sort((a, b) => b.score - a.score || b.similarity - a.similarity)
+      .map(item => ({ id: catalog.ids[item.index]!, score: item.score }))
+      .map((item, position) => ({ ...item, rank: position + 1 }))
+  }
+}
+
+/** Identity accuracy with an injectable ranker (band experiment). */
+function identityAccuracyWith(catalog: Catalog, ranker: typeof rankAll): { top1: number } {
+  const fullMask = TRAIT_NAMES.map(() => 1)
+  const gamma = queryGamma(catalog.rows, fullMask)
+  const directions = directionsFor(fullMask)
+  let top1 = 0
+  for (let i = 0; i < catalog.rows.length; i++) {
+    if (ranker(catalog, catalog.rows[i]!, fullMask, gamma, directions)[0]!.id === catalog.ids[i]) top1++
+  }
+  return { top1: top1 / catalog.rows.length }
+}
+
+/** Wizard consistency with an injectable ranker (band experiment). */
+function wizardConsistencyWith(catalog: Catalog, mask: number[], levels: readonly number[], ranker: typeof rankAll): { top1: number, top3: number } {
+  const gamma = queryGamma(catalog.rows, mask)
+  const directions = directionsFor(mask)
+  let top1 = 0
+  let top3 = 0
+  for (let i = 0; i < catalog.rows.length; i++) {
+    const query = catalog.rows[i]!.map(value => quantize(value, levels))
+    const ranked = ranker(catalog, query, mask, gamma, directions)
+    const self = ranked.find(item => item.id === catalog.ids[i])!
+    if (self.rank === 1) top1++
+    if (self.rank <= 3) top3++
+  }
+  const n = catalog.rows.length
+  return { top1: top1 / n, top3: top3 / n }
 }
 
 /** Mirror of the product wizard scale (traits.LEVEL) so the metric tracks the shipped grid. */
