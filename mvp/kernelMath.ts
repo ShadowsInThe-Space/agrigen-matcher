@@ -1,10 +1,21 @@
 /**
  * Pure Hilbert-space kernel utilities.
  *
- * Ported verbatim from the SeedShuffle production kernel
- * (seedshuffle_aistudio/server/utils/kernelMath.ts, battle-tested by 27
- * unit tests). Domain-general core — the only change is the removal of the
- * strain-specific ACTIVE_FEATURES constant, which lives in traits.ts here.
+ * Port of the SeedShuffle production kernel. Source of truth:
+ * `seedshuffle_aistudio/server/utils/kernelMath.ts`, covered by that repo's
+ * test suite (`seedshuffle_aistudio/tests/unit/kernelMath.spec.ts`, 39 unit
+ * tests — count verifiable via `grep -c "it(" <spec path>`).
+ *
+ * The port is semantically identical to the source; the complete diff is:
+ *   - removal of the strain-specific ACTIVE_FEATURES constant (domain
+ *     feature list lives in traits.ts here),
+ *   - renames strain → candidate (parameter/local names in
+ *     dimensionNormalizedRbf),
+ *   - adapted error message in validateFeatureRanges
+ *     ("canonical Hilbert launch dataset" → "catalog dataset"),
+ *   - adjusted comments/JSDoc (including the RKHS-cosine preconditions on
+ *     dimensionNormalizedRbf and the new assertFixedScoringMask guard).
+ * No behavior was changed relative to the source.
  *
  * Values and masks must share one feature order. A non-zero mask value means
  * observed/active. Missing observations never become an invented midpoint.
@@ -150,9 +161,44 @@ export function getNonConstantFeatureMask(
 }
 
 /**
+ * Guard for the fixed-scoring-mask precondition of the RKHS-cosine reading:
+ * every mask defined in a scoring run must be pairwise identical to the
+ * others (element-wise, length included); `undefined` entries are exempt.
+ * All-undefined passes. Throws when two defined masks differ — pairwise
+ * varying masks break kernel PSD (and with it the RKHS interpretation),
+ * even when K(x,x) = 1 holds for every pair.
+ */
+export function assertFixedScoringMask(masks: (readonly number[] | undefined)[]): void {
+  const reference = masks.find(mask => mask !== undefined)
+  if (reference === undefined) return
+  for (const mask of masks) {
+    if (mask === undefined) continue
+    const sameLength = mask.length === reference.length
+    const sameValues = mask.every((value, index) => value === reference[index])
+    if (!sameLength || !sameValues) {
+      throw new Error(
+        'assertFixedScoringMask: masks must be pairwise identical (element-wise) or undefined — '
+        + 'pairwise varying masks break kernel PSD, so scores are no RKHS cosine similarities',
+      )
+    }
+  }
+}
+
+/**
  * Masked RBF: query intent, candidate observations, and catalog activity must
  * all agree before a dimension contributes. No comparable dimension is neutral.
- * For RBF, K(x,x) = 1, so this kernel value IS the RKHS cosine similarity.
+ *
+ * RKHS-cosine identity: the returned value equals the RKHS cosine similarity
+ * K(x,y)/sqrt(K(x,x)·K(y,y)) only under BOTH conditions:
+ * (a) the kernel is PSD — guaranteed with one FIXED mask shared by all pairs,
+ *     because the masked RBF is then a Gaussian kernel on the projected
+ *     subspace (assert via assertFixedScoringMask);
+ * (b) unit diagonal K(z,z) = 1 for all z — holds here since distance 0 maps
+ *     to exp(0) = 1, including the "no comparable dimension" neutral case.
+ * K(x,x) = 1 ALONE is not sufficient: with pairwise different masks a matrix
+ * can have unit diagonal yet be indefinite (counterexample: unit diagonal,
+ * min eigenvalue −0.997), in which case no RKHS exists and scores must not
+ * be read as cosine similarities.
  */
 export function dimensionNormalizedRbf(
   query: number[],

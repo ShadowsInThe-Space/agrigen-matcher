@@ -1,34 +1,75 @@
 # AgriGen Matcher
 
-KI-gestützte Sortenempfehlung durch RBF-Kernel-Projektion in den Reproducing Kernel Hilbert Space (RKHS).
+KI-gestützte Sortenempfehlung durch RBF-Kernel-Projektion in den Reproducing Kernel Hilbert Space (RKHS) — 12 quantitative Nutzpflanzen-Traits auf EURISCO-Musterdaten.
 
 ## Status: PoC (Proof of Concept) — funktionierend
 
 ## Schnellstart
 
+### TypeScript-MVP (primärer Einstieg)
+
+Zero Dependencies, lauffähig ab **Node ≥ 22.18 ohne Flags** (Type-Stripping ist ab dieser Version standardmäßig aktiv):
+
 ```bash
-# Auf neobox:
-cd ~/agrigen-matcher
-source .venv/bin/activate
-python3 core/matcher.py
+node mvp/demo.ts        # Terminal-Demo: 3 Szenarien (vom Repo-Root)
+node mvp/selftest.ts    # Port-Selbsttest: Kernel-Invarianten
+
+# alternativ im mvp/-Ordner:
+cd mvp
+npm run demo
+npm run selftest
 ```
+
+### Python-Kern
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install pytest pytest-cov scikit-learn scipy numpy   # identisch zur CI
+python core/cli.py
+```
+
+Entry-Point ist **`core/cli.py`** (nicht `core/matcher.py`). Hinweis: `python -m core.cli` funktioniert nicht, weil `core/` Flat-Imports verwendet — daher der Skript-Aufruf wie oben.
 
 ## Struktur
 
 ```
 agrigen-matcher/
+├── mvp/                        # TypeScript-Referenz-Port (primärer Einstieg, zero deps)
+│   ├── kernelMath.ts           # Kernel-Kern — Port des SeedShuffle-Kernels (s. Header dort)
+│   ├── traits.ts               # 12-Trait-Raum, Query-Extraktion, Katalog-Normalisierung
+│   ├── metrics.ts              # Rang & Eigenwerte (Jacobi) für die Kernel-Diagnose
+│   ├── demo.ts                 # Terminal-Demo (3 Szenarien)
+│   ├── selftest.ts             # Port-Selbsttest (Kernel-Invarianten)
+│   └── package.json            # npm run demo / npm run selftest (Node ≥ 22.18)
+├── core/                       # SOLID Python-Rebuild (Strategy/DI)
+│   ├── cli.py                  # Entry-Point der Python-Demo
+│   ├── matcher.py              # HilbertMatcher — Orchestrierung (skalieren → kernel → ranken)
+│   ├── kernel.py               # RBFKernel + KernelStrategy (scikit-learn/scipy)
+│   ├── scaler.py               # TraitScaler (StandardScaler)
+│   ├── data_loader.py          # JSONLoader
+│   └── models.py               # Datenmodelle
+├── tests/                      # 130 Pytest-Tests (7 Dateien)
 ├── data/
-│   └── sample_eurisco.json    # EURISCO-Musterdaten (12 Accessionen, 12 Traits)
-├── core/
-│   └── matcher.py             # Rechenkern: RBF-Kernel + Hilbert-Raum-Matching
-└── README.md                  # This file
+│   └── sample_eurisco.json     # EURISCO-Musterdaten (12 Accessionen, 12 Traits)
+├── docs/
+│   ├── architecture.md         # Architektur-Doku
+│   └── ci-fix-report.md        # CI-Nachbesserungs-Report
+└── .github/workflows/ci.yml    # CI: pytest + Coverage (≥ 68 %), ruff lint + format
 ```
 
-## Architektur
+## Zwei Implementierungen — bewusst nicht derselbe Rechenkern
 
-1. **Trait-Normalisierung:** StandardScaler über 12 Merkmale (Drought, Heat, Cold, Disease, N-Efficiency, Salinity, Soil pH, Growing Days, Yield, Water, Root Depth)
-2. **RBF-Kernel:** K(x,y) = exp(-γ·||x-y||²) mit Median-Heuristik für γ
-3. **RKHS-Ähnlichkeit:** Cosine Similarity im Hilbert-Raum → Match-Score (%)
+- **`mvp/` — Reference-Port (TypeScript):** Semantisch identischer Port des produktionserprobten SeedShuffle-Kernels (`seedshuffle_aistudio/server/utils/kernelMath.ts`). Das vollständige Diff ist im Header von `mvp/kernelMath.ts` dokumentiert: Renames strain → candidate, angepasste `validateFeatureRanges`-Fehlermeldung, Auslagerung der domänenspezifischen Feature-Liste nach `traits.ts`. Das Verhalten wird durch die Test-Suite des Quell-Repos abgedeckt (`tests/unit/kernelMath.spec.ts`, 39 Unit-Tests).
+- **`core/` — SOLID Python-Rebuild:** Unabhängige Neuimplementierung nach Dependency-Inversion (injizierte `KernelStrategy`, `TraitScaler`, Loader), abgesichert durch 130 Pytest-Tests und CI.
+
+Die beiden Implementierungen sind ausdrücklich **nicht** als derselbe Rechenkern behauptet: Normalisierungen (TS: Rating-/min-max-Skalierung auf [0,1]; Python: StandardScaler) und γ-Kalibrierungen unterscheiden sich — die Scores sind nicht numerisch identisch. Der TS-Port dient als verifizierbare Referenz des produktionserprobten Kernel-Verhaltens, der Python-Kern als testbare Architektur-Basis.
+
+## Architektur (Kernel-Pipeline)
+
+1. **Trait-Normalisierung:** 12 Merkmale (Drought, Heat, Cold, Disease, N-Efficiency, Salinity, Soil pH, Growing Days, Yield, Water, Root Depth)
+2. **RBF-Kernel:** K(x,y) = exp(-γ·||x-y||²) mit γ via Median-Heuristik
+3. **RKHS-Ähnlichkeit:** Der maskierte Kernel-Score ist die RKHS-Kosinusähnlichkeit — jedoch nur unter PSD **und** Einheitsdiagonale K(z,z)=1, beides garantiert bei fester Scoring-Maske (Details: JSDoc zu `dimensionNormalizedRbf` bzw. Guard `assertFixedScoringMask` in `mvp/kernelMath.ts`)
 4. **Terminal-Demo:** 3 Szenarien (Dürre/Süd-EU, Kälte/Nord-EU, Leguminosen-Screening)
 
 ## Ziel
