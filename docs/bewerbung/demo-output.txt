@@ -1,0 +1,69 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║ AgriGen Matcher — kernel-basiertes Sorten-Matching (MVP)               ║
+║ RBF-Katalog-Kern · Hinge-Query-Scoring · Perzentil-Ranking             ║
+╚════════════════════════════════════════════════════════════════════════╝
+Katalog: 150 EURISCO-Accessionen × 12 Traits (normalisiert [0,1])
+Katalog-Kern γ (Median-Heuristik, volle Maske) = 4.5957
+Kernel-Matrix 150×150 (Diagnose): Rang 150/150 · Spur 150.000 · min-λ = 1.27e-3 (PSD ✓)
+──────────────────────────────────────────────────────────────────────────
+
+SZENARIO A — Dürre & Hitze (Südeuropa)
+  Extreme Trockenheit, hohe Hitze, knappe Wasserressourcen, mäßige Salinität
+  Aktive Query-Dimensionen (4/12): drought_tolerance, heat_tolerance,
+    salinity_tolerance, water_requirement
+  Teilraum-γ (Median-Heuristik im Query-Subraum) = 4.7391
+  Rang  Accession   Sorte                                  Query-Score (dim.) Perzentil
+  1     EUR-116     Hordeum vulgare 'DryLand-116' (German… 1.000              besser als 94.7 % des Katalogs
+  2     EUR-103     Zea mays 'SaharaLine-103' (Portugal)   1.000              besser als 94.7 % des Katalogs
+  3     EUR-021     Sorghum bicolor 'DryLand-21' (Denmark) 1.000              besser als 94.7 % des Katalogs
+  4     EUR-141     Secale cereale 'SaharaLine-141' (Fran… 1.000              besser als 94.7 % des Katalogs
+  5     EUR-120     Sorghum bicolor 'SaharaLine-120' (Ger… 1.000              besser als 94.7 % des Katalogs
+  * Rang 1 erfüllt das Anforderungsprofil vollständig
+  * Rang 2 erfüllt das Anforderungsprofil vollständig
+  * Rang 3 erfüllt das Anforderungsprofil vollständig
+  * Rang 4 erfüllt das Anforderungsprofil vollständig
+  * Rang 5 erfüllt das Anforderungsprofil vollständig
+  → Rang 1 und 2 praktisch gleichwertig (Score-Abstand < 0.010)
+  → Rang 2 und 3 praktisch gleichwertig (Score-Abstand < 0.010)
+  → Rang 3 und 4 praktisch gleichwertig (Score-Abstand < 0.010)
+  → Rang 4 und 5 praktisch gleichwertig (Score-Abstand < 0.010)
+──────────────────────────────────────────────────────────────────────────
+
+SZENARIO B — Kälte & kurze Saison (Nordeuropa)
+  Extreme Kälte, kurze Vegetationsperiode, hoher Resistenzzüchtungsdruck
+  Aktive Query-Dimensionen (3/12): cold_tolerance, disease_resistance,
+    growing_days
+  Teilraum-γ (Median-Heuristik im Query-Subraum) = 5.8608
+  Rang  Accession   Sorte                                  Query-Score (dim.) Perzentil
+  1     EUR-102     Solanum tuberosum 'DryLand-102' (Finl… 0.999              besser als 99.3 % des Katalogs
+  2     EUR-031     Hordeum vulgare 'AquaSave-31' (Sweden) 0.997              besser als 98.7 % des Katalogs
+  3     EUR-139     Solanum tuberosum 'SaharaLine-139' (R… 0.995              besser als 98.0 % des Katalogs
+  4     EUR-092     Hordeum vulgare 'SaharaLine-92' (Finl… 0.994              besser als 96.7 % des Katalogs
+  5     EUR-003     Hordeum vulgare 'Nordstern' (Sweden)   0.994              besser als 96.7 % des Katalogs
+  → Rang 1 und 2 praktisch gleichwertig (Score-Abstand < 0.010)
+  → Rang 2 und 3 praktisch gleichwertig (Score-Abstand < 0.010)
+  → Rang 3 und 4 praktisch gleichwertig (Score-Abstand < 0.010)
+  → Rang 4 und 5 praktisch gleichwertig (Score-Abstand < 0.010)
+──────────────────────────────────────────────────────────────────────────
+
+SZENARIO C — Leguminosen-Screening / Low-Input
+  Maximale Stickstoff-Effizienz, hoher Ertragsfokus, moderate Wasserlage
+  Aktive Query-Dimensionen (3/12): nitrogen_efficiency, yield_potential,
+    water_requirement
+  Teilraum-γ (Median-Heuristik im Query-Subraum) = 5.8608
+  Rang  Accession   Sorte                                  Query-Score (dim.) Perzentil
+  1     EUR-066     Vicia faba 'SaharaLine-66' (Austria)   1.000              besser als 98.7 % des Katalogs
+  2     EUR-118     Glycine max 'DryLand-118' (Netherland… 1.000              besser als 98.7 % des Katalogs
+  3     EUR-012     Vicia faba 'NitroFix-Plus' (Germany)   1.000              besser als 98.0 % des Katalogs
+  4     EUR-054     Vicia faba 'AquaSave-54' (Finland)     0.999              besser als 97.3 % des Katalogs
+  5     EUR-064     Glycine max 'AquaSave-64' (Hungary)    0.995              besser als 96.7 % des Katalogs
+  * Rang 1 erfüllt das Anforderungsprofil vollständig
+  * Rang 2 erfüllt das Anforderungsprofil vollständig
+  → Rang 1 und 2 praktisch gleichwertig (Score-Abstand < 0.010)
+  → Rang 2 und 3 praktisch gleichwertig (Score-Abstand < 0.010)
+  → Rang 3 und 4 praktisch gleichwertig (Score-Abstand < 0.010)
+  → Rang 4 und 5 praktisch gleichwertig (Score-Abstand < 0.010)
+──────────────────────────────────────────────────────────────────────────
+
+Katalog-Ähnlichkeit: RBF-Kernel — feste Maske → positiv definit → echter RKHS; Kernelwert = RKHS-Kosinus.
+Anfrage-Scoring: einseitige Hinge-Terme (Satisficing) im Query-Subraum — Query-Scoring, kein Kernel.

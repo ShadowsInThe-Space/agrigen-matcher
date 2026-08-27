@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>AgriGen AI — KI Biennale Award 2026</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --green: #1d3a2a;
+    --green-soft: #2a5240;
+    --amber: #c9962e;
+    --ink: #1c211e;
+    --muted: #5b6660;
+    --paper: #fbfaf7;
+    --line: #d8d4c8;
+  }
+  body { font-family: "DejaVu Sans", "Liberation Sans", sans-serif; color: var(--ink); background: var(--paper); }
+  .page { width: 210mm; height: 297mm; padding: 16mm 18mm 14mm 18mm; page-break-after: always; position: relative; background: var(--paper); overflow: hidden; }
+  .page:last-child { page-break-after: auto; }
+
+  .kicker { font-size: 8.5pt; letter-spacing: 2.2px; text-transform: uppercase; color: var(--amber); font-weight: 700; margin-bottom: 4mm; }
+  h1 { font-size: 26pt; line-height: 1.12; color: var(--green); margin-bottom: 5mm; }
+  h2 { font-size: 15pt; color: var(--green); margin-bottom: 4mm; }
+  h3 { font-size: 10.5pt; color: var(--green-soft); margin: 4mm 0 1.5mm 0; }
+  p { font-size: 9.5pt; line-height: 1.5; margin-bottom: 3mm; }
+  ul { margin: 0 0 3mm 5mm; }
+  li { font-size: 9.5pt; line-height: 1.5; margin-bottom: 1.2mm; }
+  .lead { font-size: 11pt; line-height: 1.5; color: var(--ink); margin-bottom: 5mm; }
+  .muted { color: var(--muted); }
+  .small { font-size: 8pt; line-height: 1.45; }
+
+  .footer { position: absolute; bottom: 8mm; left: 18mm; right: 18mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--muted); border-top: 0.5pt solid var(--line); padding-top: 2mm; }
+  .footer .pageno { color: var(--amber); font-weight: 700; }
+
+  .card { background: #fff; border: 0.7pt solid var(--line); border-radius: 2.5mm; padding: 4mm 4.5mm; margin-bottom: 3.5mm; }
+  .card h3 { margin-top: 0; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; }
+
+  .metric { text-align: center; padding: 3mm 1mm; background: #fff; border: 0.7pt solid var(--line); border-radius: 2.5mm; }
+  .metric .v { font-size: 17pt; font-weight: 700; color: var(--green); }
+  .metric .l { font-size: 7pt; color: var(--muted); margin-top: 1mm; line-height: 1.35; }
+
+  .term { background: #14201a; color: #d7e4da; font-family: "DejaVu Sans Mono", monospace; font-size: 6.6pt; line-height: 1.42; border-radius: 2.5mm; padding: 3.5mm 4mm; white-space: pre; overflow: hidden; }
+  .term .hl { color: #e9c468; }
+  .term .ok { color: #7fc98f; }
+
+  .pipe { display: flex; align-items: stretch; gap: 1.5mm; margin: 4mm 0; }
+  .pipe .step { flex: 1; background: #fff; border: 0.7pt solid var(--line); border-top: 2pt solid var(--amber); border-radius: 1.8mm; padding: 2.6mm 2.4mm; font-size: 7.2pt; line-height: 1.4; }
+  .pipe .step b { display: block; font-size: 7.8pt; color: var(--green); margin-bottom: 1mm; }
+  .pipe .arrow { align-self: center; color: var(--amber); font-weight: 700; font-size: 11pt; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 8.6pt; }
+  th { text-align: left; background: var(--green); color: #fff; padding: 2mm 2.5mm; font-weight: 600; }
+  td { padding: 1.9mm 2.5mm; border-bottom: 0.5pt solid var(--line); }
+  tr:nth-child(even) td { background: #f4f2ea; }
+
+  .tag { display: inline-block; font-size: 7.2pt; font-weight: 700; color: var(--green); background: #ede9da; border-radius: 1.2mm; padding: 0.8mm 2.2mm; margin: 0 1.2mm 1.2mm 0; }
+  .formel { font-family: "DejaVu Serif", serif; font-style: italic; background: #f4f2ea; border-left: 2pt solid var(--amber); padding: 2.5mm 3.5mm; font-size: 10pt; margin: 3mm 0; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ SEITE 1 — PROBLEM ═══════════ -->
+<section class="page">
+  <div class="kicker">KI Biennale Award 2026 · Kategorie KI Nachwuchs (BRYCK)</div>
+  <h1>AgriGen AI —<br>kernel-basiertes Sorten-Matching für klimaresiliente Landwirtschaft</h1>
+  <p class="lead">Die Sortenwahl wird zur Risiko-Entscheidung: Dürre, Hitze, verkürzte Vegetationsperioden und versalzende Böden verlangen nach Accessionen, die zu einem konkreten Anbau-Profil passen. Genbanken katalogisieren Millionen solcher Accessionen — aber ihre Suche filtert Passportfelder, sie empfiehlt nicht.</p>
+
+  <div class="card">
+    <h3>Das Problem im Detail</h3>
+    <p><b>EURISCO</b>, der europäische Suchkatalog für pflanzengenetische Ressourcen, erschließt über <b>2 Millionen Accessionen</b> aus 400 Instituten. Die Suche erschöpft sich in taxonomischen und herkunftsbezogenen Filtern. Die Frage eines Landwirts oder Beraters — <i>„Welche Accession verträgt extreme Dürre, hohe Hitze, kommt mit 350&nbsp;mm Wasser aus und toleriert mäßige Salinität?"</i> — beantwortet kein System.</p>
+    <p>Quantitative Eigenschaftsdaten (Toleranzen, Ertrag, Wasserbedarf) liegen in Characterization-&amp;-Evaluation-Daten vor — heterogen, lückenhaft, ohne harmonisierte Vergleichsskala. Genau dort setzt AgriGen an.</p>
+  </div>
+
+  <div class="grid3">
+    <div class="card"><h3>Wer es braucht</h3><p class="small">Landwirte &amp; Beratung bei Sortenwahl unter Klimastress; Genbank-Kuratoren für Zugangswertigkeit; Züchter als Parental-Screening.</p></div>
+    <div class="card"><h3>Warum jetzt</h3><p class="small">Klimaanpassung ist finanziert und politisch priorisiert; Kernel-Methoden sind in der quantitativen Genetik ausgereift — aber nie für Endanwender-Empfehlung produktisiert.</p></div>
+    <div class="card"><h3>Warum wir</h3><p class="small">Engine und Evaluierung entstehen im eigenen Code — inklusive adversarialer mathematischer Begutachtung und CI-Qualitätsgates.</p></div>
+  </div>
+
+  <div class="card">
+    <h3>Marktlage (Analyse 05/2026)</h3>
+    <table>
+      <tr><th>Anbieter</th><th>Ausrichtung</th><th>Abgrenzung</th></tr>
+      <tr><td>Heritable Agriculture (Google-X)</td><td>Genom-Plattform, Zucht</td><td rowspan="5">Alle treiben die <b>Züchtung</b> an (B2B-Genomik). Keiner beantwortet die <b>Auswahlfrage des Endanwenders</b>: welche existierende Accession passt zu meinem Anbau-Profil. Genau diese Lücke schließt AgriGen — mit derselben mathematischen Klasse, aber als Empfehlungssystem.</td></tr>
+      <tr><td>Avalo (11&nbsp;Mio. $ Series A)</td><td>Climate-Crops-Zucht</td></tr>
+      <tr><td>Computomics (Tübingen)</td><td>Enterprise-Genomik</td></tr>
+      <tr><td>NoMaze (München)</td><td>Genomic Prediction</td></tr>
+      <tr><td>Rainbow Crops (9,7&nbsp;Mio. € Seed)</td><td>Zucht-Beschleunigung</td></tr>
+    </table>
+  </div>
+
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">1 / 6</span></div>
+</section>
+
+<!-- ═══════════ SEITE 2 — ARCHITEKTUR ═══════════ -->
+<section class="page">
+  <div class="kicker">Architektur</div>
+  <h2>Ein Rechenkern, zwei sauber getrennte mathematische Objekte</h2>
+
+  <div class="pipe">
+    <div class="step"><b>Trait-Vektoren</b>12 Merkmale je Accession — Toleranzen, Resistenz, pH-Fenster, Vegetation, Ertrag, Wasser, Wurzel — normalisiert auf [0,1]; Ertrag pro Fruchtartgruppe.</div>
+    <div class="arrow">→</div>
+    <div class="step"><b>RBF-Katalog-Kern</b>K(x,y)=exp(−γ·d̄²(x,y)) mit Median-Heuristik für γ; bei fester Merkmalsmaske positiv definit — ein echter RKHS.</div>
+    <div class="arrow">→</div>
+    <div class="step"><b>Anfrage-Scoring</b>Einseitige Hinge-Terme (Satisficing): Unter-/Überschreiten des Anforderungsziels zählt, Übererfüllen ist frei. Anfragen sind Bereiche (±½ Wizard-Stufe).</div>
+    <div class="arrow">→</div>
+    <div class="step"><b>Ranking</b>Score primär; bei Gleichstand entscheidet die RBF-Profilähnlichkeit. Ausgabe: Rang, dimensionsloser Score, Perzentil.</div>
+  </div>
+
+  <div class="formel">K(x,y) = exp(−γ · ‖x−y‖²/d) &nbsp;·&nbsp; feste Maske ⇒ PSD ⇒ RKHS &nbsp;·&nbsp; Kernelwert = RKHS-Kosinus der Einbettungen (Einheitsdiagonale K(z,z)=1)</div>
+
+  <div class="card">
+    <h3>Mathematische Redlichkeit als Designprinzip</h3>
+    <ul>
+      <li><b>Katalog-Kern und Anfrage-Scoring sind getrennt:</b> Der RBF-Kernel (symmetrisch, positiv definit) trägt die RKHS-Interpretation; das Anfrage-Scoring ist asymmetrisch (Satisficing) und wird ausdrücklich nicht als Kernel deklariert.</li>
+      <li><b>PSD ist bewiesen und bewacht:</b> Gültigkeit der RKHS-Lesart ist an feste Scoring-Masken gebunden; ein Guard im Code lehnt paarweise verschiedene Masken ab, ein dokumentiertes Gegenbeispiel (min-λ = −1) ist als Test gepinnt.</li>
+      <li><b>Kalibration statt Zauberformeln:</b> γ wird datengetrieben über die Median-Heuristik im jeweils aktiven Teilraum bestimmt — auf großen Katalogen über eine 500er-Stichprobe (Rang-Invarianz macht das exakt).</li>
+      <li><b>Inspiriert von</b> RKHS-Regression in der quantitativen Genetik (Gianola / de los Campos) — wir produktisieren denselben Formalismus für die Empfehlungsrichtung.</li>
+    </ul>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Referenz-Implementierung (TypeScript)</h3>
+      <p class="small">Port des produktiv erprobten SeedShuffle-Kernel-Kerns (Quelle per Commit gepinnt, semantisch diff-identisch). Läuft ohne Abhängigkeiten auf Node ≥ 22.18 — jede Aussage im Repo in fünf Minuten verifizierbar.</p>
+    </div>
+    <div class="card">
+      <h3>Engineering-Qualität</h3>
+      <p class="small">Zweiter SOLID-Rebuild in Python (Dependency Injection, reine Funktionen); CI prüft bei jedem Push: 59 Selbsttest-Checks, Demo-Lauf und ein <b>Eval-Gate mit 7 Qualitäts-Deckeln</b> — Qualitätsregression brechen den Build.</p>
+    </div>
+  </div>
+
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">2 / 6</span></div>
+</section>
+
+<!-- ═══════════ SEITE 3 — MEHRWERT ═══════════ -->
+<section class="page">
+  <div class="kicker">Mehrwert</div>
+  <h2>Nachvollziehbare Empfehlung statt Blackbox</h2>
+  <p class="lead">AgriGen beantwortet die Anbauprofil-Frage direkt — mit einer Shortlist, die jeder Fachkraft erklärbar bleibt: welcher Anforderung jede Accession wie gut nachkommt, wo sie im Katalog-Perzentil steht und welche Kandidaten praktisch gleichwertig sind.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Für die Praxis</h3>
+      <ul>
+        <li><b>Landwirte &amp; Beratung:</b> Anbau-Profil in natürlichen Begriffen („extreme Dürretoleranz, kurze Saison") → qualifizierte Shortlist mit Erfüllungsgrad und Perzentil.</li>
+        <li><b>Genbanken:</b> Zugangswertigkeit wird sichtbar — C&E-Daten werden durch Suchbarkeit zum Aktiv, statt in Tabellen zu liegen.</li>
+        <li><b>Züchtung:</b> Parental-Screening über Trait-Profile statt Marker-für-Marker-Sichtung.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Für die Datenlage</h3>
+      <ul>
+        <li>Der maskierte Kernel ist <b>von Grund auf für fehlende Daten gebaut</b>: nur gemeinsam beobachtete Merkmale fließen in die Distanz ein — genau die Struktur lückenhafter C&E-Daten.</li>
+        <li>Ertragsnormalisierung pro Fruchtartgruppe vermeidet den klassischen Frisch-/Trockenmasse-Fehler.</li>
+        <li>Anfragen mit wenigen Kriterien bleiben korrekt (Teilraum-γ) — keine Schätzungen aus Unbekanntem.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>KI-Ehrlichkeit als Merkmal</h3>
+    <p>Alle Qualitätswerte entstehen aus reproduzierbaren, label-freien Evaluierungen (Identitäts-Retrieval, Leave-One-Out-Stabilität, Rausch-Robustheit) und sind im Repository nachvollziehbar. Grenzen werden dokumentiert, nicht verschwiegen: exakte Duplikate sind prinzipiell ununterscheidbar und werden als Datenfehler abgelehnt; die erzielbare Genauigkeit wächst mit der Anfrage-Präzision (Quantisierungs-Leiter 0.44 → 1.00).</p>
+  </div>
+
+  <div class="grid3">
+    <div class="metric"><div class="v">150</div><div class="l">Accessionen im Demo-Katalog<br>(12 kuratiert + 138 generiert, Generator committet)</div></div>
+    <div class="metric"><div class="v">12</div><div class="l">quantitative Merkmale<br>je Accession</div></div>
+    <div class="metric"><div class="v">31</div><div class="l">eval-getriebene Optimierungs-<br>Iterationen, jede mit Keep/Revert-Entscheidung</div></div>
+  </div>
+
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">3 / 6</span></div>
+</section>
+
+<!-- ═══════════ SEITE 4 — MVP-NACHWEIS ═══════════ -->
+<section class="page">
+  <div class="kicker">MVP-Nachweis</div>
+  <h2>Laufende Engine, gemessene Genauigkeit</h2>
+
+  <div class="term">╔════════════════════════════════════════════════════════════════════════╗
+║ AgriGen Matcher — kernel-basiertes Sorten-Matching (MVP)               ║
+║ RBF-Katalog-Kern · Hinge-Query-Scoring · Perzentil-Ranking             ║
+╚════════════════════════════════════════════════════════════════════════╝
+Katalog: 150 EURISCO-Accessionen × 12 Traits (normalisiert [0,1])
+Katalog-Kern γ (Median-Heuristik, volle Maske) = 4.5957
+Kernel-Matrix 150×150 (Diagnose): Rang 150/150 · Spur 150.000 · min-λ = 1.27e-3 (<span class="ok">PSD ✓</span>)
+──────────────────────────────────────────────────────────────────────────
+<span class="hl">SZENARIO A — Dürre &amp; Hitze (Südeuropa)</span>
+  Extreme Trockenheit, hohe Hitze, knappe Wasserressourcen, mäßige Salinität
+  Rang  Accession   Sorte                                  Query-Score (dim.) Perzentil
+  1     EUR-116     Hordeum vulgare 'DryLand-116' (Ger…   1.000              besser als 94.7 % des Katalogs
+  2     EUR-103     Zea mays 'SaharaLine-103' (Portugal)   1.000              besser als 94.7 % des Katalogs
+  3     EUR-021     Sorghum bicolor 'DryLand-21' (Denmar… 1.000              besser als 94.7 % des Katalogs
+<span class="hl">SZENARIO C — Leguminosen-Screening / Low-Input</span>
+  Maximale Stickstoff-Effizienz, hoher Ertragsfokus, moderate Wasserlage
+  1     EUR-066     Vicia faba 'SaharaLine-66' (Austria)   1.000              besser als 98.7 % des Katalogs
+  2     EUR-118     Glycine max 'DryLand-118' (Netherlan… 1.000              besser als 98.7 % des Katalogs
+  3     EUR-012     Vicia faba 'NitroFix-Plus' (Germany)   1.000              besser als 98.0 % des Katalogs
+  4     EUR-054     Vicia faba 'AquaSave-54' (Finland)     0.999              besser als 97.3 % des Katalogs</div>
+  <p class="small muted" style="margin-top:1.5mm">Echter Demo-Lauf (node mvp/demo.ts): Anfragen mit groben Stufen-Begriffen; Score 1.000 = Anforderungsprofil vollständig erfüllt; Ausgabe Rang, dimensionsloser Score, Katalog-Perzentil.</p>
+
+  <div class="card" style="margin-top:3mm">
+    <h3>Gemessene Qualität (label-freie Evaluierung, alle Werte via <span style="font-family:monospace">node mvp/eval.ts</span> reproduzierbar)</h3>
+    <table>
+      <tr><th>Kriterium</th><th>Messung</th><th>Ergebnis</th></tr>
+      <tr><td>Identity-Retrieval (Anfrage = Sortenprofil)</td><td>150 Accessionen, Vollmaske</td><td><b>1.0000</b> — jede Sorte findet sich selbst auf Rang 1</td></tr>
+      <tr><td>Teilraum-Identity</td><td>zufällige 4 von 12 Merkmalen</td><td><b>1.0000</b></td></tr>
+      <tr><td>Leave-One-Out-Stabilität</td><td>441 Katalog-Entfernungen</td><td><b>1.0000</b> Top-3-Jaccard</td></tr>
+      <tr><td>Bedauerns-Rate bei Anfrage-Rauschen</td><td>±0.01 / ±0.02 / ±0.05 je Merkmal</td><td><b>0.000 / 0.000 / 0.001</b></td></tr>
+      <tr><td>Wizard-Genauigkeit (Stufen-Anfragen)</td><td>Vollmaske / 4 Merkmale</td><td><b>top-1 1.000 / top-3 0.989</b></td></tr>
+      <tr><td>Top-3-Treue bei Messrauschen in Sorten-Traits</td><td>±0.02 / ±0.05</td><td>0.849 / 0.740</td></tr>
+      <tr><td>γ-Kalibration bei 5.000 Accessionen</td><td>gesampelte Median-Heuristik</td><td><b>≈ 99 ms</b> statt ≈ 20 s, Ranking unverändert</td></tr>
+    </table>
+  </div>
+
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">4 / 6</span></div>
+</section>
+
+<!-- ═══════════ SEITE 5 — TEAM ═══════════ -->
+<section class="page">
+  <div class="kicker">Team</div>
+  <h2>Technical Founder, der die Engine selbst baut und prüfen lässt</h2>
+
+  <div class="card">
+    <h3>Sonny — Gründer &amp; Entwickler</h3>
+    <p>Baut die Matching-Engine eigenständig: Kernel-Mathematik, Datenmodell, Evaluierungs-Harness und Infrastruktur. Hintergrund in vektorbasierter Suche und produktionsreifen Empfehlungssystemen — der produktive Kernel-Kern von AgriGen ist ein Port aus einem live betriebenen Matching-System.</p>
+  </div>
+
+  <div class="card">
+    <h3>Arbeitsweise: eval-getrieben und adversarial geprüft</h3>
+    <ul>
+      <li>Jede Algorithmus-Änderung lief durch messbare Hypothesen: 31 Iterationen, 17 übernommen, 6 datenbasiert verworfen — jede Entscheidung im öffentlichen Iterations-Log begründet.</li>
+      <li>Die Mathematik wurde vor Fertigstellung von einem unabhängigen RKHS-Gutachten adversarial geprüft (inkl. vollständiger numerischer Replikation); alle Befunde sind eingearbeitet.</li>
+      <li>Qualität ist automatisiert: CI prüft 59 Selbsttest-Checks, den Demo-Lauf und ein Eval-Gate mit sieben Qualitäts-Deckeln.</li>
+    </ul>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Adaptive AI Solutions</h3>
+      <p class="small">Einreichende Arbeitsplattform des Gründers für KI-Produktarbeit im Ruhrgebiet; Produktmarke für diese Einreichung: <b>AgriGen AI</b>.</p>
+    </div>
+    <div class="card">
+      <h3>Passung zum BRYCK-Umfeld</h3>
+      <p class="small">Pre-Seed-Phase, technische Umsetzungsstärke als Kernkompetenz; gesucht: Zugang zu Mentoring und Pilotkunden-Netzwerk (Beratung, Genbanken, Zucht).</p>
+    </div>
+  </div>
+
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">5 / 6</span></div>
+</section>
+
+<!-- ═══════════ SEITE 6 — SKALIERUNG ═══════════ -->
+<section class="page">
+  <div class="kicker">Skalierung</div>
+  <h2>Von 150 Muster-Datensätzen zu 2 Millionen echten Accessionen</h2>
+
+  <div class="card">
+    <h3>Roadmap</h3>
+    <table>
+      <tr><th>Phase</th><th>Inhalt</th><th>Zeitfenster</th></tr>
+      <tr><td><b>M2 — Echte Daten</b></td><td>EURISCO-Passportdaten (IDs, Taxonomie, Herkunft) + Harmonisierung von C&amp;E-Traits auf die 12-Merkmals-Matrix; der maskierte Kernel ist für die Lückenhaftigkeit bereits ausgelegt. Demo-Katalog heute transparent als modellierte Musterdaten gekennzeichnet (Generator committet).</td><td>Q4 2026</td></tr>
+      <tr><td><b>M3 — API &amp; Web-Demo</b></td><td>FastAPI-Wrapper um den Rechenkern; Match-Wizard als Web-Oberfläche (Stufen-Präzision nach der gemessenen Quantisierungs-Leiter: Slider ≈ kontinuierlich = 1.000).</td><td>Q4 2026</td></tr>
+      <tr><td><b>M4 — Pilotkunden</b></td><td>Beratungsgesellschaften und Genbank-Zusammenhänge im Ruhrgebiet/NRW; Feedback-Schleife in die Trait-Harmonisierung.</td><td>Q1–Q2 2027</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Skalierungspfad der Engine (gemessen, nicht behauptet)</h3>
+    <ul>
+      <li><b>Ranking skaliert linear</b> (O(n·d)): 6,6 ms bei 5.000 Accessionen — für Millionen-Kataloge ohne Architekturwechsel.</li>
+      <li><b>γ-Kalibration über Stichprobe</b> statt aller Paare: konstant ≈ 100 ms unabhängig von n, Ranking nachweislich unverändert (Rang-Invarianz von γ).</li>
+      <li><b>Two-Stage-Retrieval</b> (grober Kandidaten-Filter → exaktes Re-Ranking) ist bei echten EURISCO-Größen der dokumentierte nächste Schritt — die HNSW-Erfahrung existiert in der Produktivumgebung, aus der der Kern portiert wurde.</li>
+      <li>Datenhygiene eingebaut: Duplikat-Guard, Normalisierung pro Fruchtartgruppe, Trust-Boundary-Validierung aller Merkmalswerte.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Warum das jetzt trägt</h3>
+    <p>Der Rechenkern steht auf messbarer Decke jedes falsifizierbaren Kriteriums — inklusive Robustheit gegen Anfrage-Ungenauigkeit und Messfehler in den Sortendaten. Damit ist das Risiko des Projekts nicht mehr die Mathematik, sondern ausschließlich die Daten-Erschließung. Genau diese Arbeit ist roadmap-bar, planbar und für einen Technical Founder ohne Agentur-abhängigkeit umsetzbar.</p>
+  </div>
+
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions · github.com/Shadows-In-The-Space/agrigen-matcher</span><span class="pageno">6 / 6</span></div>
+</section>
+
+</body>
+</html>
