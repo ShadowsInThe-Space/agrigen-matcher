@@ -239,11 +239,12 @@ export const UNION_DIRECTIONS: Readonly<Record<string, 'benefit' | 'cost' | 'tar
   sortierung_2_0: 'benefit', sortierung_2_5: 'benefit', hektolitergewicht: 'benefit',
 }
 
-type LooseRecord = Record<string, unknown> & { sortenname: string; section: string; zuechtyp?: string | null }
+type LooseRecord = Record<string, unknown> & { sortenname: string; section: string; zuechtyp?: string | null; form?: string }
 
 const CROP_FILES: ReadonlyArray<[string, string, string]> = [
   ['winterweizen.json', 'Triticum aestivum', 'Weizen'],
   ['wintergerste.json', 'Hordeum vulgare', 'Gerste'],
+  ['wintergerste2.json', 'Hordeum vulgare', 'Gerste'],
   ['winterroggen.json', 'Secale cereale', 'Roggen'],
   ['dinkel.json', 'Triticum spelta', 'Dinkel'],
   ['hafer.json', 'Avena sativa', 'Hafer'],
@@ -285,8 +286,9 @@ export function loadBsaUnionCatalog(): UnionCatalog {
         continue
       }
       const typeSuffix = typeof record.zuechtyp === 'string' && record.zuechtyp ? ` [${record.zuechtyp}]` : ''
+      const formSuffix = typeof record.form === 'string' && record.form === 'zweizeilig' ? ', 2-zeilig' : ''
       ids.push(record.sortenname.replace(/\s+/g, '-'))
-      labels.push(`${latin} '${record.sortenname}'${typeSuffix} (${crop})`)
+      labels.push(`${latin} '${record.sortenname}'${typeSuffix}${formSuffix} (${crop})`)
       crops.push(crop)
       rows.push(row)
       observationMasks.push(mask)

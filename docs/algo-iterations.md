@@ -584,3 +584,12 @@ Selbsttest pinnt jetzt den Realdaten-Pfad wie den EURISCO-Pfad: Kataloggröße
 224, Identity-Deckel je Fruchtart (Weizen/Gerste/Roggen/Dinkel = 1.0, Hafer
 ≥ 0.94 mit dokumentiertem Cross-Crop-Duplikat-Einzelfall). 66/66 Checks —
 Echtdaten-Regressionen brechen ab sofort den Build.
+
+## Iteration 37 — Zweizeilige Gerste integriert: 273 Sorten, Deckel hält (KEEP)
+
+Wintergerste zweizeilig (57 Sorten, 19-Spalten-Schema doppelt verifiziert,
+Sonderfall Aretha 1* dokumentiert) registriert; Sommerweizen nach Skip-Regel
+nicht übernommen (15≠16 Spalten + Spaltenfolge anders — PARSE-NOTES Abschn. 6).
+Union: **273 Sorten** (Gerste 98), Coverage-Gate schließt 29 pathologische
+Records aus. Identity-Deckel unverändert: 4× 1.0000, Hafer 0.9412. Pins
+aktualisiert (66/66).
