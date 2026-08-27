@@ -65,6 +65,8 @@ export function scoreCandidate(
   gamma: number,
   directions: Readonly<Record<string, TraitDirection>>,
   tolerance = 0,
+  candidateMask?: FeatureMask,
+  traitNames?: readonly string[],
 ): number {
   validateGamma(gamma)
   if (query.length !== candidate.length) {
@@ -73,14 +75,26 @@ export function scoreCandidate(
   if (queryMask.length !== query.length) {
     throw new Error('scoreCandidate: query mask must have the same dimension as its feature vector')
   }
+  if (candidateMask !== undefined && candidateMask.length !== candidate.length) {
+    throw new Error('scoreCandidate: candidate mask must have the same dimension as its feature vector')
+  }
   if (!Number.isFinite(tolerance) || tolerance < 0) {
     throw new Error('scoreCandidate: tolerance must be a finite number >= 0')
   }
+  const names = traitNames ?? TRAIT_NAMES
+  if (names.length !== query.length) {
+    throw new Error('scoreCandidate: traitNames must match the vector dimension')
+  }
   let total = 0
   let active = 0
+  let queryActive = 0
   for (let index = 0; index < query.length; index++) {
     if (queryMask[index] === 0) continue
-    const name = TRAIT_NAMES[index]
+    queryActive++
+    // Real-source data (BSL): dimensions the candidate does not observe are
+    // excluded instead of imputed — masked distance, never an invented value.
+    if (candidateMask !== undefined && candidateMask[index] === 0) continue
+    const name = names[index]
     const direction = name === undefined ? undefined : directions[name]
     if (direction === undefined) {
       throw new Error(`scoreCandidate: no direction for active dimension '${name ?? index}'`)
@@ -96,7 +110,11 @@ export function scoreCandidate(
     total += hinge * hinge
     active++
   }
-  if (active === 0) return 1
+  if (queryActive === 0) return 1
+  // Zero overlap (query asks, candidate observes none of it) is NO match —
+  // "no information" must never rank as a perfect one (professor P3,
+  // exposed by real BSL gap patterns; only the empty QUERY stays neutral).
+  if (active === 0) return 0
   return Math.exp(-gamma * (total / active))
 }
 
@@ -180,12 +198,14 @@ export function rankCandidates(
   gamma: number,
   directions: Readonly<Record<string, TraitDirection>>,
   tolerance = 0,
+  observationMasks?: readonly FeatureMask[],
+  traitNames?: readonly string[],
 ): RankedCandidate[] {
   return catalogRows
     .map((row, index) => ({
       index,
-      score: scoreCandidate(query, row, queryMask, gamma, directions, tolerance),
-      similarity: dimensionNormalizedRbf(query, row, queryMask, gamma),
+      score: scoreCandidate(query, row, queryMask, gamma, directions, tolerance, observationMasks?.[index], traitNames),
+      similarity: dimensionNormalizedRbf(query, row, queryMask, gamma, observationMasks?.[index]),
     }))
     .sort((a, b) => b.score - a.score || b.similarity - a.similarity)
 }

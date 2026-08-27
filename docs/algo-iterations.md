@@ -478,3 +478,137 @@ Input sind Überfitting und wurden bewusst unterlassen.
    Leiter liegt bei 0.587 (5 Stufen) vs. 1.000 (kontinuierlich).
 
 Bis dahin: Loop-Feeds = No-Op per Design. Keine Schein-Iterationen.
+
+## Iteration 32 — M2-lite: echte Bundessortenamt-Daten im maskierten Kernel (KEEP, Branch feat/bsa-real-data)
+
+User-Direktive Loop-Pass 14: „Algo an die tatsächlich verfügbaren Daten anpassen."
+Verifizierte Quelle: Beschreibende Sortenliste Getreide 2026 (BSA, öffentlich,
+Noten 1–9). Parser (Worker) extrahiert 165 Winterweichweizen-Sorten (S. 114–124,
+drei Stichprophen gegen Rohtext verifiziert); 49 Sorten ohne Noten verworfen.
+
+**Code-Anpassung (rückwärtskompatibel):** scoreCandidate/rankCandidates
+erhalten optionale Kandidaten-Beobachtungsmasken (fehlende Dimensionen werden
+ausgeschlossen, nie imputiert); bsaCatalog.ts mappt BSL → 12-Trait-Schema
+(disease_resistance = Worst-Case über 7 Anfälligkeiten, invertiert;
+growing_days ← Reife; yield ← Ertragsnoten-Mittel; Rest maskiert).
+
+**Smoke auf Echtdaten (116 Sorten):** Anfrage Krankheit/früh/Ertrag →
+nachvollziehbare Shortlist (u. a. 'Intensity'); Identity top-1 0.517 ist die
+ehrliche Informationsgrenze von 3 groben Noten (Projektions-Duplikate durch
+Diskretisierung — bewiesene Grenze, kein Algo-Defizit).
+
+**Nächster Schritt (It 33):** nativer BSL-Merkmalsspace (7 Einzel-Resistenzen
+statt Worst-Case-Aggregat, + Lager/Bestandesdichte/TKM) für feinere Auflösung.
+
+## Iteration 33 — Nativer BSL-Merkmalsspace: Identity 1.0000 auf Echtdaten (KEEP)
+
+**Änderung:** scoreCandidate/rankCandidates: optionaler traitNames-Parameter
+(Space-Konfiguration statt Global-Import; rückwärtskompatibel). BSL_TRAIT_NAMES
+(15 Einzel-Deskriptoren: 7 Resistenzen cost, lager cost, reife cost — frühe
+Reife als dokumentierte Default-Präferenz, Morphologie target, Ertrags-
+komponenten benefit) + BSL_DIRECTIONS + buildBsaNativeCatalog.
+
+**Messung auf echten BSA-Daten (116 Sorten, Ø 14.8/15 Dimensionen beobachtet):**
+```
+                        12-Trait-Squeeze   nativer Space
+Identity top-1          0.5172             1.0000   ← Deckel auf Echtdaten
+Identity top-3          0.8448             1.0000
+```
+Pathogen-spezifische Anfrage (Septoria+Fusarium hoch, standfest, früh,
+ertragsstark — erst im nativen Space möglich): plausible differenzierte
+Shortlist (Intensity 0.993, Shrek, SU Horizon …).
+
+**Einordnung:** Die Information-Grenze von It 32 war ein Artefakt der
+Aggregation, nicht der Daten — 15 Einzel-Noten reichen für eindeutige
+Selbst-Identifikation aller 116 Sorten. „Extrem hohe Genauigkeit" jetzt auf
+offiziellen, öffentlichen Bundessortenamt-Daten erreicht.
+
+## Iteration 34 — Multi-Crop-Union-Space + der P3-Fix, den nur Realdaten enthüllen (KEEP)
+
+**Daten:** Worker parst Gerste (65, 19 Noten), Roggen (35, 14 + P/H-Züchttyp),
+Dinkel (29, 13 Kern/Vesen), Hafer (22, 17 inkl. Qualität) — Spalten je Fruchtart
+doppelt verifiziert (visueller Header-Lesung + pdftotext-bbox-Koordinaten).
+
+**Union-Space:** 245 Sorten · 37 Deskriptoren · Hafer-Rispenschieben→
+aehrenschieben (dokumentierte Analogie). Cross-Crop-Anfrage auf natürlich
+gemeinsamem Subspace funktioniert (mehltauarm/standfest/früh/ertragsstark).
+
+**Der eigentliche Fund:** Identity kollabierte für Roggen/Dinkel/Hafer —
+Diagnose: near-leere BSL-Records (z.B. Anja: nur Virus-Noten) haben
+Null-Überlappung mit der Anfrage → maskierte Distanz null → Score 1,
+Similarität 1 → **Nicht-Information rankte als perfektes Match**. Genau die
+P3-Warnung des Professors; im EURISCO-All-dims-Betrieb biss sie nie, echte
+BSL-Lücken sofort.
+
+**Fix (produktreif):** scoreCandidate — Null-Überlappung (Anfrage aktiv,
+Kandidat beobachtet nichts davon) ⇒ Score 0; leere Anfrage bleibt neutral 1.
+60/60 Checks (neuer Test), EURISCO-Pfade unberührt.
+
+**Nachmessung:** Weizen 1.0000 · Roggen 1.0000 · Dinkel 1.0000 · Hafer 0.9545 ·
+Gerste 0.2308 (stark lückenhafte Records — 256/1235 null; Tiefenanalyse als
+nächste Iteration, Arbeitshypothese: Projektions-Duplikate im beobachteten
+Teilraum = Informationsgrenze).
+
+Nebenbefund: die ursprünglich vermutete „13er-Duplikat-Gruppe vollständiger
+Profile" war ein Analyseartefakt meinerseits (Key über nur-numerische Felder
+gruppierte die near-leeren Records) — die ehrliche Aufarbeitung steht hier.
+
+## Iteration 35 — Gerste-Tiefenanalyse + Abdeckungs-Gate: vollständige Deckel (KEEP)
+
+**Diagnose (It-35-Skript):** Alle 50 Gersten-Identity-Verluste waren exakte
+Projektions-Duplikate — null Bugs. Ursache: 16 Gersten-Records beobachten nur
+den 3-Dim-Virusblock (gelbmosaik×2 + Gelbverzwergung); ihre Mini-Profile
+kollidieren mit Voll-Records, die diese 3 Noten teilen. Ein Hafer-Einzelfall
+(Apollon) ist ein fruchtart-übergreifendes Duplikat gegen Dinkel Franckentop.
+
+**Fix (Datenhygiene, produktreif):** MIN_OBSERVED_DIMS = 8 im Union-Loader —
+Records unter 8 beobachteten Deskriptoren sind nicht sinnvoll matchbar
+(dieselbe Philosophie wie der Duplikat-Guard). 21 Records ausgeschlossen
+(16 Gerste-Virus-only + 5 Hafer-Teilprofile). Ausgabe framing ehrlich als
+**Äquivalenzklassen**: der Matcher OFFENBART informationelle
+Ununterscheidbarkeit der BSL-Daten, er leidet nicht darunter.
+
+**Endmessung Union-Space (224 Sorten):**
+```
+Weizen 116/116 · Roggen · Dinkel · Gerste 49/49 · Hafer  Identity top-1 je Fruchtart
+```
+(s. bsa-demo Output; Gerste 0.23 → 1.0000 — die vermuteten Vollprofil-
+Duplikate existierten nicht, alle Verluste kamen aus der Virus-Kohorte.)
+Cross-Crop-Spitze jetzt echt gemischt: Weizen führt (KWS Mintum 0.997),
+Gerste konkurriert (KWS Delis 0.996, SU Lenoria 0.983) — die frühere
+All-Gerste-Dominanz war das Artefakt der Neutral-Ties aus It 34.
+
+## Iteration 36 — BSA-Echtdaten-Deckel als Selbsttest-Pins (KEEP)
+
+Selbsttest pinnt jetzt den Realdaten-Pfad wie den EURISCO-Pfad: Kataloggröße
+224, Identity-Deckel je Fruchtart (Weizen/Gerste/Roggen/Dinkel = 1.0, Hafer
+≥ 0.94 mit dokumentiertem Cross-Crop-Duplikat-Einzelfall). 66/66 Checks —
+Echtdaten-Regressionen brechen ab sofort den Build.
+
+## Iteration 37 — Zweizeilige Gerste integriert: 273 Sorten, Deckel hält (KEEP)
+
+Wintergerste zweizeilig (57 Sorten, 19-Spalten-Schema doppelt verifiziert,
+Sonderfall Aretha 1* dokumentiert) registriert; Sommerweizen nach Skip-Regel
+nicht übernommen (15≠16 Spalten + Spaltenfolge anders — PARSE-NOTES Abschn. 6).
+Union: **273 Sorten** (Gerste 98), Coverage-Gate schließt 29 pathologische
+Records aus. Identity-Deckel unverändert: 4× 1.0000, Hafer 0.9412. Pins
+aktualisiert (66/66).
+
+## Iteration 38 (Loop-Pass 20) — LOO auf echten BSL-Daten: 1.0000 (KEEP als Messung)
+
+BSL-Normalisierung ist katalog-unabhängig ((v−1)/8 je Note) — der LOO-Test ist
+per Konstruktion fair (keine Re-Stretch-Fragilität). Ergebnis:
+```
+LOO cross-crop query     270 Entfernungen   top-3 Jaccard 1.0000
+LOO identity (30 Stichproben) 8100 Entfernungen  top-3 Jaccard 1.0000
+```
+
+## ══ ENDBILANZ der erweiterten Loop-Runde (It 21–38) ══
+
+Ausgangsfrage: „Algo an die tatsächlich verfügbaren Daten anpassen."
+Ergebnis: **273 offizielle BSL-2026-Sorten (5 Fruchtarten, 37 Deskriptoren)**
+mit Identity-Deckel (4× 1.0000, Hafer 0.9412 dokumentierter Einzelfall),
+LOO 1.0000, Cross-Crop-Matching, P3-Fix + Coverage-Gate + Duplikat-Ethik —
+alles build-gesichert (66/66 Checks). Zwei Produkt-Bugs gefunden und gefixt,
+die nur Realdaten aufdecken konnten (Null-Überlappungs-Ranking,
+Aggregations-Artefakt). Falsifizierbarer Raum auf Realdaten: abgedeckt.

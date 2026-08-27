@@ -15,6 +15,7 @@ import {
 } from './kernelMath.ts'
 import { matrixRank, symmetricEigenvalues } from './metrics.ts'
 import { percentileOf, queryGamma, queryGammaSampled, rankCandidates, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
+import { loadBsaUnionCatalog, UNION_TRAIT_NAMES, UNION_DIRECTIONS } from './bsaCatalog.ts'
 import {
   buildCatalog, CROP_GROUPS, extractRequirements, TRAIT_NAMES, WIZARD_TOLERANCE,
   type AccessionRecord, type Catalog, type FarmingRequirements,
@@ -317,6 +318,27 @@ check('Crop-Group real: Helianthus = 0.5385 (oilseed, 8-Member-Gruppe)',
     partialHits === partialTrials)
 }
 
+// ── Loop-It 36: BSA-Echtdaten-Deckel gepinnt (224 offizielle BSL-2026-Sorten) ──
+{
+  const union = loadBsaUnionCatalog()
+  const unionGamma = medianHeuristicGamma(union.rows, union.observationMasks, UNION_TRAIT_NAMES.map(() => 1))
+  check(`BSA-Real: 273 Sorten über 5 Fruchtarten im Union-Space (aktuell ${union.rows.length})`,
+    union.rows.length === 273)
+  const byCrop: Record<string, number[]> = {}
+  union.crops.forEach((crop, index) => { (byCrop[crop] ??= []).push(index) })
+  const ceilings: Record<string, number> = { Weizen: 1, Gerste: 1, Roggen: 1, Dinkel: 1, Hafer: 0.94 }
+  for (const [crop, indexes] of Object.entries(byCrop)) {
+    let top1 = 0
+    for (const i of indexes) {
+      const ranked = rankCandidates(union.rows, union.rows[i]!, union.observationMasks[i]!, unionGamma, UNION_DIRECTIONS, 0, union.observationMasks, UNION_TRAIT_NAMES)
+      if (ranked[0]!.index === i) top1++
+    }
+    const observed = top1 / indexes.length
+    check(`BSA-Real: Identity ${crop} top-1 ${(observed).toFixed(4)} ≥ ${(ceilings[crop] ?? 1).toFixed(2)} (${top1}/${indexes.length})`,
+      observed >= (ceilings[crop] ?? 1) - 1e-9)
+  }
+}
+
 // ── Loop-It 29: Toleranzband (Dead-Zone δ) ────────────────────────────────
 check('Toleranzband: Kandidat innerhalb des Bands ist frei',
   scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.42), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }, 0.1) === 1)
@@ -325,6 +347,9 @@ check('Toleranzband: Fehlbetrag zählt erst ab Bandkante (exp(−0.01), milder a
   Math.abs(scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.3), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }) - Math.exp(-0.04)) < 1e-12)
 check('Toleranzband: target-Dim zweiseitig mit Dead-Zone',
   Math.abs(scoreCandidate(vecAt('soil_ph_min', 0.5), vecAt('soil_ph_min', 0.62), maskOf('soil_ph_min'), 1, { soil_ph_min: 'target' }, 0.1) - Math.exp(-0.0004)) < 1e-12)
+check('Null-Überlappung: Kandidat ohne gemeinsame Beobachtung ist KEIN Match (Score 0)',
+  scoreCandidate(vecAt('drought_tolerance', 0.9), vecAt('drought_tolerance', 0.5), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }, 0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) === 0)
+
 check('Toleranzband: negatives δ wird abgelehnt',
   throws(() => scoreCandidate(vecAt('drought_tolerance', 0.5), vecAt('drought_tolerance', 0.5), maskOf('drought_tolerance'), 1, { drought_tolerance: 'benefit' }, -0.1)))
 
