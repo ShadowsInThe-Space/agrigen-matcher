@@ -222,3 +222,92 @@ Demo-Migration), 4× datenbasiert verworfen (margin-first, min-max-stretch,
 γ-Faktor, implizit LEVEL-Softening — siehe It 12-Begründung). Alle
 Genauigkeitsachsen (Identity, Teilraum-Identity über alle k, LOO, regret bei
 realistischem ε, Datenrauschen) sind charakterisiert und auf Deckel gepinnt.
+
+## Iteration 12 — LEVEL-Map-Softening (VERZICHT, begründet)
+
+**Hypothese:** 'extreme'-Ziele (0.9) abschwächen, um regret zu senken.
+**Begründung des Verzichts:** Keine Metrik spricht auf LEVEL-Ziele an — die
+Eval-Queries sind Katalogzeilen-Identitäten; regret-Fälle liegen nach It 5/7
+in zweiseitigen Target-Dims, nicht in den einseitigen Toleranz-Dims, die die
+LEVEL-Map definiert. Eine Änderung wäre unfalsifizierbar (Professoren-Warnung:
+blindes Parameter-Tuning ohne messbares Kriterium) UND würde Demo-Goldwerte +
+PDF-Zahlen verschieben. Verzicht ist die wissenschaftlich korrekte Entscheidung.
+
+## Iteration 13 — Seed-Stabilität (KEEP als Metrik)
+
+```
+base 100: flip 0.4806 regret 0.0917
+base 500: flip 0.4944 regret 0.0944
+```
+±0.3 pp über Seed-Basen — die Noise-Metriken sind kein Seed-Glück.
+
+## Iteration 14 — Synthetischer Stress-Katalog (KEEP als Metrik)
+
+n=100 uniform random: identity 1.0000, partial k=4 1.0000 — **die Deckel
+skalieren auf 8-fache Kataloggröße**. Mit 2 exakten Duplikaten: identity
+0.9800 — exakt die mathematisch unvermeidliche Grenze (Zwillinge sind per
+Score UND Similarität ununterscheidbar). → Motiviert It 18.
+
+## Iteration 15 — Performance-Sanity (KEEP als Metrik, deckt Skalierungshebel auf)
+
+```
+n=100    γ 3.7 ms      Ranking 0.21 ms
+n=1000   γ 713.9 ms    Ranking 1.34 ms
+n=5000   γ 20112.9 ms  Ranking 6.59 ms
+```
+Ranking ist linear (EURISCO-tauglich); die O(n²)-Median-Heuristik explodiert. → It 16.
+
+## Iteration 16 — Gesampelte Median-Heuristik (KEEP, Produkt)
+
+**Änderung:** `queryGammaSampled(rows, mask, sampleSize=500, seed)` in
+scoring.ts — feste-Seed-Stichprobe + partieller Fisher-Yates, Fallback auf
+volle Heuristik bei kleinen Katalogen. Rang-Invarianz macht Sampling legitim
+(γ kalibriert nur Score-Werte, nie die Reihenfolge).
+
+**Messung:**
+```
+n=1000  γ voll 3.1214 vs gesampelt 3.1002 (Δ 0.0213) ·  97.0 ms · Top-1 identisch
+n=5000  γ voll 3.0790 vs gesampelt 3.0925 (Δ 0.0135) ·  99.4 ms · Top-1 identisch
+```
+203× schneller bei n=5000 (20.1 s → 0.1 s), γ-Abweichung 0.4 %, Top-1 unverändert.
+
+## Iteration 17 — LOO mit echten Demo-Anfragen (KEEP als Metrik)
+
+Top-3 Jaccard 1.0000 über 27 Entfernungen mit den tatsächlichen
+Demo-Requirement-Queries (nicht nur Identitäts-Proxies).
+
+## Iteration 18 — Duplikat-Guard im Katalogaufbau (KEEP, Produkt)
+
+**Änderung:** `buildCatalog` lehnt identische normalisierte Trait-Vektoren als
+Datenfehler ab (klare Meldung mit beiden Accession-IDs). It 14 zeigte: exakte
+Zwillinge sind von KEINEM Matcher unterscheidbar — lieber laut failen als
+still willkürlich ordnen. Aktueller Katalog unberührt (keine Duplikate).
+
+## Iteration 19 — Vollverifikation (KEEP)
+
+55/55 Selbsttest-Checks (inkl. neuer: sampled-γ-Fallback/Nähe,
+Duplikat-Guard), Demo-Output byte-identisch, eval läuft komplett durch.
+
+## Iteration 20 — Dokumentation (KEEP)
+
+README-Messwerte-Sektion (alle Zahlen via `node mvp/eval.ts` /
+`node mvp/selftest.ts` reproduzierbar), dieses Log abgeschlossen.
+
+## Endstand nach 20 Iterationen
+
+| Metrik | Wert | Reproduzierbar |
+|---|---|---|
+| Identity-Retrieval (Vollmaske, n=12) | 1.0000 | selftest-Pin |
+| Teilraum-Identity (jedes k ∈ 2–12) | 1.0000 | selftest-Pin (k=4) + eval |
+| Identity auf synthetischem n=100 | 1.0000 | eval |
+| LOO Top-3 Jaccard (Demo-Queries) | 1.0000 | eval |
+| Regret ε=0.01 / 0.02 / 0.05 | 0.0000 / 0.0194 / 0.0917 | eval |
+| Top-3-Treue bei Datenrauschen ε=0.02/0.05 | 0.8944 / 0.8731 | eval |
+| γ-Kalibration n=5000 | 99 ms (vorher 20.1 s) | eval |
+
+**Bilanz:** 11× behalten (4 Produkt-Änderungen: Kernel-Tiebreaker,
+Demo-Migration auf eval-Pfad, gesampelter γ, Duplikat-Guard), 5× verworfen
+(margin-first, min-max-stretch, γ-Faktor ×2-Tests, LEVEL-Softening mit
+Begründung), 4× neue Messachsen etabliert. Der Algorithmus steht auf
+messbarer Decke in jedem falsifizierbaren Kriterium; Skalierung ist bis auf
+die (jetzt gesampelte) γ-Kalibration linear.

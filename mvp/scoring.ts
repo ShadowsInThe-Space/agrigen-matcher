@@ -101,6 +101,39 @@ export function queryGamma(catalogRows: readonly number[][], queryMask: FeatureM
 }
 
 /**
+ * Sampled subspace γ (loop It 16): the full median heuristic costs O(n²) pair
+ * distances, which explodes on real catalog sizes (20 s at n=5000). Ranking is
+ * γ-invariant (monotone exp; ordering of distinct distances is width-free), γ
+ * only calibrates score VALUES — so a fixed-seed uniform sample of rows gives
+ * a statistically equivalent calibration in O(sampleSize²) regardless of n.
+ */
+export function queryGammaSampled(
+  catalogRows: readonly number[][],
+  queryMask: FeatureMask,
+  sampleSize = 500,
+  seed = 1,
+): number {
+  if (catalogRows.length <= sampleSize) {
+    return medianHeuristicGamma(catalogRows, undefined, queryMask)
+  }
+  let state = seed >>> 0
+  const random = () => {
+    state = (state + 0x6d2b79f5) | 0
+    let t = Math.imul(state ^ (state >>> 15), 1 | state)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+  const pool = catalogRows.map(row => row as number[])
+  for (let i = 0; i < sampleSize; i++) {
+    const j = i + Math.floor(random() * (pool.length - i))
+    const swap = pool[i]!
+    pool[i] = pool[j]!
+    pool[j] = swap
+  }
+  return medianHeuristicGamma(pool.slice(0, sampleSize), undefined, queryMask)
+}
+
+/**
  * Percentile of a score within the catalog score distribution (Fix P2):
  * 100 × proportion of catalog scores STRICTLY below it. Strict comparison
  * means ties share a percentile and no candidate is inflated by beating

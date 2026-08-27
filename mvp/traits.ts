@@ -128,6 +128,18 @@ export function buildCatalog(records: AccessionRecord[]): Catalog {
       normWater(t.water_requirement_mm), normRoot(t.root_depth_cm),
     ]
   })
+  // Loop It 18: exact duplicate trait vectors are provably indistinguishable
+  // (identical kernel similarity AND hinge score — the tie cannot be resolved
+  // by any ranking rule). Reject them as a data-quality error up front.
+  const seen = new Map<string, string>()
+  rows.forEach((row, index) => {
+    const key = row.join(',')
+    const first = seen.get(key)
+    if (first !== undefined) {
+      throw new Error(`Duplicate trait vector after normalization: ${records[index]!.accession_id} is identical to ${first} — deduplicate the catalog (exact twins are unresolvable by any matcher)`)
+    }
+    seen.set(key, records[index]!.accession_id)
+  })
   return {
     ids: records.map(record => record.accession_id),
     labels: records.map(record => `${record.genus} ${record.species} '${record.cultivar}' (${record.origin_country})`),

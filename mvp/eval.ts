@@ -17,8 +17,8 @@
  */
 
 import { readFileSync, writeFileSync } from 'node:fs'
-import { rankCandidates, queryGamma, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
-import { dimensionNormalizedRbf } from './kernelMath.ts'
+import { rankCandidates, queryGamma, queryGammaSampled, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
+import { dimensionNormalizedRbf, medianHeuristicGamma } from './kernelMath.ts'
 import { buildCatalog, extractRequirements, TRAIT_NAMES, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
 
 const DATA_PATH = new URL('../data/sample_eurisco.json', import.meta.url)
@@ -127,14 +127,14 @@ function looStability(catalog: Catalog, scenarios: number[][]): number {
  * rate counts only perturbations where the new top-1 strictly misses a
  * requirement the old top-1 satisfied (score drop > 1e-9).
  */
-function noiseRobustness(catalog: Catalog, scenarios: number[][], epsilon: number, trials: number, ranker: typeof rankAll = rankAll): { flipRate: number, regretRate: number } {
+function noiseRobustness(catalog: Catalog, scenarios: number[][], epsilon: number, trials: number, ranker: typeof rankAll = rankAll, seedBase = 100): { flipRate: number, regretRate: number } {
   let flips = 0
   let regrets = 0
   let total = 0
   for (const mask of scenarios) {
     const gamma = queryGamma(catalog.rows, mask)
     const directions = directionsFor(mask)
-    for (let seed = 100; seed < 100 + trials; seed++) {
+    for (let seed = seedBase; seed < seedBase + trials; seed++) {
       const random = rng(seed)
       for (const query of catalog.rows) {
         const baseline = ranker(catalog, query, mask, gamma, directions)
@@ -408,6 +408,91 @@ function experiments(catalog: Catalog, scenarioMasks: number[][]): void {
     const accuracy = k === 12 ? identityAccuracy(catalog).top1 : partialIdentityAccuracy(catalog, k, 5)
     console.log(`  k=${String(k).padEnd(3)} top-1 ${round(accuracy).toFixed(4)}`)
   }
+
+  // ── It 13: seed stability of the noise metrics ──────────────────────────
+  console.log('  ── It 13: Seed-Stabilität (regret ε=0.05, zwei Seed-Basen) ──')
+  const seedsA = noiseRobustness(catalog, scenarioMasks, 0.05, 20, rankAll, 100)
+  const seedsB = noiseRobustness(catalog, scenarioMasks, 0.05, 20, rankAll, 500)
+  console.log(`  base 100: flip ${round(seedsA.flipRate).toFixed(4)} regret ${round(seedsA.regretRate).toFixed(4)}`)
+  console.log(`  base 500: flip ${round(seedsB.flipRate).toFixed(4)} regret ${round(seedsB.regretRate).toFixed(4)}`)
+
+  // ── It 14: synthetic stress catalog + duplicate boundary ────────────────
+  console.log('  ── It 14: Synthetischer Stress-Katalog (n=100) ──')
+  const synthetic = syntheticCatalog(100, 42, 0)
+  const syntheticDup = syntheticCatalog(100, 42, 2)
+  const synthIdentity = identityAccuracy(synthetic)
+  const synthPartial = partialIdentityAccuracy(synthetic, 4, 5)
+  const synthDupIdentity = identityAccuracy(syntheticDup)
+  console.log(`  ohne Duplikate:  identity ${round(synthIdentity.top1).toFixed(4)}  partial k=4 ${round(synthPartial).toFixed(4)}`)
+  console.log(`  mit 2 Duplikaten: identity ${round(synthDupIdentity.top1).toFixed(4)} (Grenze: exakte Duplikate sind prinzipiell ununterscheidbar)`)
+
+  // ── It 15: performance sanity at catalog scale ──────────────────────────
+  console.log('  ── It 15: Performance (Median-γ + Ranking, 12 Dims) ──')
+  for (const n of [100, 1000, 5000]) {
+    const rows = syntheticCatalog(n, 7, 0).rows
+    const fullMask = TRAIT_NAMES.map(() => 1)
+    const query = rows[0]!
+    const directions = directionsFor(fullMask)
+    const tGamma = time(() => medianHeuristicGamma(rows))
+    const gamma = medianHeuristicGamma(rows)
+    const tRank = time(() => rankCandidates(rows, query, fullMask, gamma, directions))
+    console.log(`  n=${String(n).padEnd(5)} γ-Kalibration ${tGamma.toFixed(1)} ms  Ranking ${tRank.toFixed(2)} ms`)
+  }
+
+  // ── It 16: sampled γ — deviation, time, rank identity ───────────────────
+  console.log('  ── It 16: Gesampelter γ (500 Zeilen) vs voller Median-Heuristik ──')
+  for (const n of [1000, 5000]) {
+    const rows = syntheticCatalog(n, 7, 0).rows
+    const fullMask = TRAIT_NAMES.map(() => 1)
+    const directions = directionsFor(fullMask)
+    const fullGamma = medianHeuristicGamma(rows)
+    const tSampled = time(() => queryGammaSampled(rows, fullMask, 500, 1))
+    const sampledGamma = queryGammaSampled(rows, fullMask, 500, 1)
+    let rankIdentical = true
+    for (let i = 0; i < Math.min(rows.length, 200) && rankIdentical; i++) {
+      const a = rankCandidates(rows, rows[i]!, fullMask, fullGamma, directions)[0]!.index
+      const b = rankCandidates(rows, rows[i]!, fullMask, sampledGamma, directions)[0]!.index
+      if (a !== b) rankIdentical = false
+    }
+    console.log(`  n=${String(n).padEnd(5)} γ voll ${fullGamma.toFixed(4)} vs gesampelt ${sampledGamma.toFixed(4)} (Δ ${Math.abs(fullGamma - sampledGamma).toFixed(4)}) · ${tSampled.toFixed(1)} ms · Top-1 identisch: ${rankIdentical ? 'ja' : 'NEIN'}`)
+  }
+
+  // ── It 17: LOO with the actual demo requirement queries ─────────────────
+  console.log('  ── It 17: LOO mit echten Demo-Anfragen ──')
+  let demoLooSum = 0
+  let demoLooCount = 0
+  for (const requirement of DEMO_REQUIREMENTS) {
+    const { vector, mask, directions } = extractRequirements(requirement)
+    const gamma = queryGamma(catalog.rows, mask)
+    const reference = rankAll(catalog, vector, mask, gamma, directions).slice(0, 3).map(item => item.id)
+    for (let j = 0; j < catalog.rows.length; j++) {
+      if (reference.includes(catalog.ids[j]!)) continue
+      const reduced: Catalog = {
+        ids: catalog.ids.filter((_, index) => index !== j),
+        labels: [],
+        rows: catalog.rows.filter((_, index) => index !== j),
+      }
+      const perturbed = rankAll(reduced, vector, mask, gamma, directions).slice(0, 3).map(item => item.id)
+      const overlap = reference.filter(id => perturbed.includes(id)).length
+      demoLooSum += overlap / (6 - overlap)
+      demoLooCount++
+    }
+  }
+  console.log(`  top-3 Jaccard unter LOO: ${round(demoLooSum / demoLooCount).toFixed(4)} (${demoLooCount} Entfernungen)`)
+}
+
+function time(fn: () => unknown): number {
+  const start = performance.now()
+  fn()
+  return performance.now() - start
+}
+
+/** Synthetic catalog: n rows × 12 dims uniform [0,1]; `duplicates` copies of row 0. */
+function syntheticCatalog(n: number, seed: number, duplicates: number): Catalog {
+  const random = rng(seed)
+  const rows = Array.from({ length: n }, () => Array.from({ length: TRAIT_NAMES.length }, () => round(random())))
+  for (let d = 1; d <= duplicates && d < n; d++) rows[d] = [...rows[0]!]
+  return { ids: rows.map((_, index) => `SYN-${index}`), labels: [], rows }
 }
 
 main()

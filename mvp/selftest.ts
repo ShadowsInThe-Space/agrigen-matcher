@@ -14,7 +14,7 @@ import {
   reciprocalRankFusion, rbfKernel, validateAlpha, validateFeatureRanges, validateGamma,
 } from './kernelMath.ts'
 import { matrixRank, symmetricEigenvalues } from './metrics.ts'
-import { percentileOf, queryGamma, rankCandidates, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
+import { percentileOf, queryGamma, queryGammaSampled, rankCandidates, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
 import {
   buildCatalog, CROP_GROUPS, extractRequirements, TRAIT_NAMES,
   type AccessionRecord, type Catalog, type FarmingRequirements,
@@ -314,6 +314,32 @@ check('Crop-Group real: Helianthus = 0.5 (Einzelgruppe oilseed, neutral)',
   }
   check(`Deckel: Partielles Identity-Retrieval k=4 = 100 % (${partialHits}/${partialTrials})`,
     partialHits === partialTrials)
+}
+
+// ── Loop-It 16/18: gesampelter γ + Duplikat-Guard ─────────────────────────
+{
+  check('queryGammaSampled: kleiner Katalog = voller Fallback (identisch)',
+    queryGammaSampled(goldCatalog.rows, goldFullMask, 500, 1) === queryGamma(goldCatalog.rows, goldFullMask))
+  const bigRows = Array.from({ length: 600 }, (_, i) =>
+    Array.from({ length: goldDimensions }, (_, d) => ((i * 37 + d * 11) % 97) / 96))
+  const bigFull = new Array<number>(goldDimensions).fill(1)
+  const bigGammaFull = medianHeuristicGamma(bigRows)
+  const bigGammaSampled = queryGammaSampled(bigRows, bigFull, 200, 3)
+  check('queryGammaSampled: endliches γ nahe voller Heuristik (±20 %)',
+    Number.isFinite(bigGammaSampled) && bigGammaSampled > 0 &&
+    Math.abs(bigGammaSampled - bigGammaFull) / bigGammaFull < 0.2)
+
+  const twinTraits = {
+    drought_tolerance: 5, heat_tolerance: 5, cold_tolerance: 5, disease_resistance: 5,
+    soil_ph_min: 6, soil_ph_max: 7, growing_days: 200, yield_potential_t_ha: 7,
+    water_requirement_mm: 550, nitrogen_efficiency: 5, salinity_tolerance: 5, root_depth_cm: 100,
+  }
+  const twins: AccessionRecord[] = [
+    { accession_id: 'D1', genus: 'Triticum', species: 'aestivum', cultivar: 'A', origin_country: 'X', biological_status: 'Bred_cultivar', traits: { ...twinTraits } },
+    { accession_id: 'D2', genus: 'Hordeum', species: 'vulgare', cultivar: 'B', origin_country: 'Y', biological_status: 'Bred_cultivar', traits: { ...twinTraits } },
+  ]
+  check('Duplikat-Guard: identische Trait-Vektoren werden als Datenfehler abgelehnt',
+    throws(() => buildCatalog(twins)))
 }
 
 console.log('─'.repeat(64))

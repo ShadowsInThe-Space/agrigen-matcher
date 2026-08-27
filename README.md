@@ -71,7 +71,26 @@ Die beiden Implementierungen sind ausdrücklich **nicht** als derselbe Rechenker
 2. **RBF-Kernel:** K(x,y) = exp(-γ·||x-y||²) mit γ via Median-Heuristik
 3. **RKHS-Ähnlichkeit (nur Katalog-Kern):** Der RBF-Kernel läuft auf den normalisierten Trait-Vektoren mit **fester** Maske — feste Maske ⇒ PSD ⇒ echter RKHS; der Kernelwert ist der RKHS-Kosinus der Einbettungen (Einheitsdiagonale K(z,z)=1 gegeben; Details: JSDoc zu `dimensionNormalizedRbf` bzw. Guard `assertFixedScoringMask` in `mvp/kernelMath.ts`)
 4. **Query-Scoring (kein Kernel):** Das Ranking einer Anfrage nutzt einseitige Hinge-Terme (Satisficing) im Query-Subraum — asymmetrisch in (Anfrage, Kandidat), keine PSD-Garantie, ausdrücklich kein Kernel und keine RKHS-Lesart (Details: `mvp/scoring.ts`)
-5. **Terminal-Demo:** 3 Szenarien (Dürre/Süd-EU, Kälte/Nord-EU, Leguminosen-Screening)
+5. **Ranking:** Hinge-Score primär; bei Gleichstand entscheidet die RBF-Profilähnlichkeit im aktiven Teilraum (`rankCandidates`) — Satisficing wird nie von Ähnlichkeit überschrieben
+6. **Terminal-Demo:** 3 Szenarien (Dürre/Süd-EU, Kälte/Nord-EU, Leguminosen-Screening)
+
+## Messwerte (label-freie Eval, 20 Loop-Iterationen)
+
+Alle Zahlen reproduzierbar via `node mvp/eval.ts` bzw. als Pins in `node mvp/selftest.ts`
+(55 Checks). Methodik und Keep/Revert-Entscheidungen: `docs/algo-iterations.md`.
+
+| Kriterium | Wert |
+|---|---|
+| Identity-Retrieval (Anfrage = Sortenprofil, Vollmaske) | **1.0000** (12/12, selftest-gepinnt) |
+| Teilraum-Identity (jedes k ∈ {2,3,4,6,8,12}) | **1.0000** |
+| Identity auf synthetischem Katalog n=100 | 1.0000 |
+| LOO Top-3-Stabilität (echte Demo-Anfragen) | 1.0000 |
+| Bedauerns-Rate bei Anfrage-Rauschen ε=0.01 / 0.02 / 0.05 | 0.0000 / 0.0194 / 0.0917 |
+| Top-3-Treue bei Messrauschen in Sorten-Traits (ε=0.02 / 0.05) | 0.8944 / 0.8731 |
+| γ-Kalibration bei n=5000 (gesampelte Median-Heuristik) | ~99 ms statt ~20 s, Top-1 unverändert |
+
+Grenze (beabsichtigt): exakte Duplikate im Katalog sind von keinem Matcher
+unterscheidbar und werden daher von `buildCatalog` als Datenfehler abgelehnt.
 
 ## Ziel
 
