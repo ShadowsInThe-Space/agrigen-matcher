@@ -593,3 +593,22 @@ nicht übernommen (15≠16 Spalten + Spaltenfolge anders — PARSE-NOTES Abschn.
 Union: **273 Sorten** (Gerste 98), Coverage-Gate schließt 29 pathologische
 Records aus. Identity-Deckel unverändert: 4× 1.0000, Hafer 0.9412. Pins
 aktualisiert (66/66).
+
+## Iteration 38 (Loop-Pass 20) — LOO auf echten BSL-Daten: 1.0000 (KEEP als Messung)
+
+BSL-Normalisierung ist katalog-unabhängig ((v−1)/8 je Note) — der LOO-Test ist
+per Konstruktion fair (keine Re-Stretch-Fragilität). Ergebnis:
+```
+LOO cross-crop query     270 Entfernungen   top-3 Jaccard 1.0000
+LOO identity (30 Stichproben) 8100 Entfernungen  top-3 Jaccard 1.0000
+```
+
+## ══ ENDBILANZ der erweiterten Loop-Runde (It 21–38) ══
+
+Ausgangsfrage: „Algo an die tatsächlich verfügbaren Daten anpassen."
+Ergebnis: **273 offizielle BSL-2026-Sorten (5 Fruchtarten, 37 Deskriptoren)**
+mit Identity-Deckel (4× 1.0000, Hafer 0.9412 dokumentierter Einzelfall),
+LOO 1.0000, Cross-Crop-Matching, P3-Fix + Coverage-Gate + Duplikat-Ethik —
+alles build-gesichert (66/66 Checks). Zwei Produkt-Bugs gefunden und gefixt,
+die nur Realdaten aufdecken konnten (Null-Überlappungs-Ranking,
+Aggregations-Artefakt). Falsifizierbarer Raum auf Realdaten: abgedeckt.
