@@ -137,3 +137,66 @@ export function asAccessionRecords(records: BslWheatRecord[]): AccessionRecord[]
     traits: {},
   }))
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Native BSL trait space (It 33): individual descriptors as dimensions —
+// 7 single resistances instead of the worst-case aggregate + morphology and
+// yield notes. Much finer resolution than the 12-trait squeeze.
+// ═══════════════════════════════════════════════════════════════════════════
+
+export const BSL_TRAIT_NAMES = [
+  'mehltau', 'gelbrost', 'braunrost', 'blattseptoria', 'aehrenfusarium',
+  'drechslera', 'pseudocercosporella', 'lager', 'reife', 'pflanzenlaenge',
+  'bestandesdichte', 'kornzahl_aehre', 'tausendkornmasse', 'kornertrag_st1', 'kornertrag_st2',
+] as const
+
+/**
+ * Directions in the native BSL space:
+ *  - susceptibilities (diseases, lodging) are 'cost' — BSL 1 = low = good
+ *  - reife is 'cost' (early maturity bias: harvest logistics + drought escape;
+ *    the dominant preference in German wheat practice — documented assumption)
+ *  - morphology (height, stand density) is 'target' — two-sided preferences
+ *  - yield components are 'benefit'
+ */
+export const BSL_DIRECTIONS: Readonly<Record<string, 'benefit' | 'cost' | 'target'>> = {
+  mehltau: 'cost', gelbrost: 'cost', braunrost: 'cost', blattseptoria: 'cost',
+  aehrenfusarium: 'cost', drechslera: 'cost', pseudocercosporella: 'cost',
+  lager: 'cost', reife: 'cost',
+  pflanzenlaenge: 'target', bestandesdichte: 'target',
+  kornzahl_aehre: 'benefit', tausendkornmasse: 'benefit',
+  kornertrag_st1: 'benefit', kornertrag_st2: 'benefit',
+}
+
+export function buildBsaNativeCatalog(records: BslWheatRecord[]): BsaCatalog {
+  const usable = records.filter(record =>
+    BSL_TRAIT_NAMES.some(name => record[name as keyof BslWheatRecord] !== null))
+  const rows: number[][] = []
+  const observationMasks: number[][] = []
+  const ids: string[] = []
+  const labels: string[] = []
+  for (const record of usable) {
+    const row: number[] = []
+    const mask: number[] = []
+    for (const name of BSL_TRAIT_NAMES) {
+      const note = record[name as keyof BslWheatRecord]
+      if (typeof note === 'number') {
+        row.push((note - 1) / 8)
+        mask.push(1)
+      } else {
+        row.push(0)
+        mask.push(0)
+      }
+    }
+    ids.push(record.sortenname.replace(/\s+/g, '-'))
+    labels.push(`Triticum aestivum '${record.sortenname}' (${record.section.includes('EU-Land') ? 'EU' : 'DE'})`)
+    rows.push(row)
+    observationMasks.push(mask)
+  }
+  return { ids, labels, rows, observationMasks }
+}
+
+export function loadBsaNativeCatalog(): BsaCatalog {
+  const records: BslWheatRecord[] = JSON.parse(
+    readFileSync(new URL('../data/bsa/winterweizen.json', import.meta.url), 'utf8'))
+  return buildBsaNativeCatalog(records)
+}

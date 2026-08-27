@@ -66,6 +66,7 @@ export function scoreCandidate(
   directions: Readonly<Record<string, TraitDirection>>,
   tolerance = 0,
   candidateMask?: FeatureMask,
+  traitNames?: readonly string[],
 ): number {
   validateGamma(gamma)
   if (query.length !== candidate.length) {
@@ -80,6 +81,10 @@ export function scoreCandidate(
   if (!Number.isFinite(tolerance) || tolerance < 0) {
     throw new Error('scoreCandidate: tolerance must be a finite number >= 0')
   }
+  const names = traitNames ?? TRAIT_NAMES
+  if (names.length !== query.length) {
+    throw new Error('scoreCandidate: traitNames must match the vector dimension')
+  }
   let total = 0
   let active = 0
   for (let index = 0; index < query.length; index++) {
@@ -87,7 +92,7 @@ export function scoreCandidate(
     // Real-source data (BSL): dimensions the candidate does not observe are
     // excluded instead of imputed — masked distance, never an invented value.
     if (candidateMask !== undefined && candidateMask[index] === 0) continue
-    const name = TRAIT_NAMES[index]
+    const name = names[index]
     const direction = name === undefined ? undefined : directions[name]
     if (direction === undefined) {
       throw new Error(`scoreCandidate: no direction for active dimension '${name ?? index}'`)
@@ -188,11 +193,12 @@ export function rankCandidates(
   directions: Readonly<Record<string, TraitDirection>>,
   tolerance = 0,
   observationMasks?: readonly FeatureMask[],
+  traitNames?: readonly string[],
 ): RankedCandidate[] {
   return catalogRows
     .map((row, index) => ({
       index,
-      score: scoreCandidate(query, row, queryMask, gamma, directions, tolerance, observationMasks?.[index]),
+      score: scoreCandidate(query, row, queryMask, gamma, directions, tolerance, observationMasks?.[index], traitNames),
       similarity: dimensionNormalizedRbf(query, row, queryMask, gamma, observationMasks?.[index]),
     }))
     .sort((a, b) => b.score - a.score || b.similarity - a.similarity)

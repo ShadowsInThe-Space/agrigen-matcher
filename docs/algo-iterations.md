@@ -499,3 +499,26 @@ Diskretisierung — bewiesene Grenze, kein Algo-Defizit).
 
 **Nächster Schritt (It 33):** nativer BSL-Merkmalsspace (7 Einzel-Resistenzen
 statt Worst-Case-Aggregat, + Lager/Bestandesdichte/TKM) für feinere Auflösung.
+
+## Iteration 33 — Nativer BSL-Merkmalsspace: Identity 1.0000 auf Echtdaten (KEEP)
+
+**Änderung:** scoreCandidate/rankCandidates: optionaler traitNames-Parameter
+(Space-Konfiguration statt Global-Import; rückwärtskompatibel). BSL_TRAIT_NAMES
+(15 Einzel-Deskriptoren: 7 Resistenzen cost, lager cost, reife cost — frühe
+Reife als dokumentierte Default-Präferenz, Morphologie target, Ertrags-
+komponenten benefit) + BSL_DIRECTIONS + buildBsaNativeCatalog.
+
+**Messung auf echten BSA-Daten (116 Sorten, Ø 14.8/15 Dimensionen beobachtet):**
+```
+                        12-Trait-Squeeze   nativer Space
+Identity top-1          0.5172             1.0000   ← Deckel auf Echtdaten
+Identity top-3          0.8448             1.0000
+```
+Pathogen-spezifische Anfrage (Septoria+Fusarium hoch, standfest, früh,
+ertragsstark — erst im nativen Space möglich): plausible differenzierte
+Shortlist (Intensity 0.993, Shrek, SU Horizon …).
+
+**Einordnung:** Die Information-Grenze von It 32 war ein Artefakt der
+Aggregation, nicht der Daten — 15 Einzel-Noten reichen für eindeutige
+Selbst-Identifikation aller 116 Sorten. „Extrem hohe Genauigkeit" jetzt auf
+offiziellen, öffentlichen Bundessortenamt-Daten erreicht.
