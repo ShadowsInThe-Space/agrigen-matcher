@@ -1,0 +1,12 @@
+{
+  "name": "agrigen-matcher-mvp",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "demo": "node demo.ts",
+    "selftest": "node selftest.ts"
+  }
+}

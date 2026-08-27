@@ -1,0 +1,29 @@
+name: MVP CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  mvp:
+    name: MVP Selftest + Demo + Eval-Gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run mvp selftest
+        run: node mvp/selftest.ts
+
+      - name: Run mvp demo
+        run: node mvp/demo.ts
+
+      - name: Run eval with ceiling gate
+        run: node mvp/eval.ts

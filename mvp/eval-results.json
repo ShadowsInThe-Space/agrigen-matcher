@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-08-27T13:44:16.182Z",
+  "node": "v22.22.3",
+  "metrics": {
+    "identity_top1": 1,
+    "identity_top3": 1,
+    "identity_mrr": 1,
+    "partial_identity_top1_k4": 1,
+    "loo_top3_jaccard": 1,
+    "noise_flip_rate_eps005": 0.1216,
+    "noise_regret_rate_eps005": 0.001,
+    "noise_sweep": [
+      {
+        "epsilon": 0.01,
+        "flip": 0.0166,
+        "regret": 0
+      },
+      {
+        "epsilon": 0.02,
+        "flip": 0.0406,
+        "regret": 0
+      },
+      {
+        "epsilon": 0.05,
+        "flip": 0.1216,
+        "regret": 0.001
+      },
+      {
+        "epsilon": 0.1,
+        "flip": 0.4327,
+        "regret": 0.1943
+      }
+    ],
+    "deep_regret_rate_eps005": 0,
+    "separation_mean_gap": 0.0114
+  }
+}
