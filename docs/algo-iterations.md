@@ -458,3 +458,23 @@ absorbiert neben Anfrage- auch Messungenauigkeit.
 9 Messachsen, Deckel-Gate im CI. Falsifizierbarer Raum abgedeckt; weitere
 Verbesserungen benötigen entweder echte EURISCO-C&E-Daten (M2) oder
 UX-Entscheidungen (Slider vs. Stufen), keine Algorithmus-Iteration.
+
+## ─── LOOP-CLOSURE-MARKER (Iteration 10 des Ralph-Loops, 2026-08-27) ───
+
+Das 20-Iterationen-Genauigkeitsprogramm ist ABGESCHLOSSEN und in main
+gemergent (64d0259). Letztverifikation auf main: 59/59 Checks, Demo Exit 0,
+MVP-CI inkl. Eval-Gate grün auf GitHub Actions.
+
+**Definition des Abschlusses:** Jede falsifizierbare Metrik liegt auf oder
+nahe der beweisbaren/informationstheoretischen Decke (Identity 1.0 in jedem
+Teilraum und auf n=150, LOO 1.0, regret ≈ 0 innerhalb der Anfrage-Toleranz,
+Wizard 0.989, Ranking linear skalierend). Weitere „Iterationen" ohne neuen
+Input sind Überfitting und wurden bewusst unterlassen.
+
+**Wiederaufnahme-Bedingungen (eine von beiden genügt):**
+1. M2-Datenzugang: echte EURISCO-C&E-Daten (Deskriptor-Harmonisierung) —
+   öffnet echte Kalibrations-, Gewichts- und Skalierungsfragen neu.
+2. UX-Entscheidung: Slider (kontinuierlich) vs. Stufen-Anfragen — quantisierte
+   Leiter liegt bei 0.587 (5 Stufen) vs. 1.000 (kontinuierlich).
+
+Bis dahin: Loop-Feeds = No-Op per Design. Keine Schein-Iterationen.
