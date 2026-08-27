@@ -426,3 +426,35 @@ konsistent, das Band deckt genau seine Breite.
 Tiebreaker, Demo-Migration, gesampelter γ, Duplikat-Guard, 5-Stufen-Wizard,
 Toleranzband), 6× verworfen mit Daten, 8 Messachsen. Jede falsifizierbare
 Genauigkeits- und Robustheitsmetrik liegt auf oder nahe der Decke.
+
+## Iteration 30 — δ-Sensitivität (KEEP als Analyse)
+
+```
+δ=0.05   identity 1.0000  regret 0.0251  wizard4Dim 0.6556
+δ=0.08   identity 1.0000  regret 0.0036  wizard4Dim 0.8600
+δ=0.10   identity 1.0000  regret 0.0010  wizard4Dim 0.9889   ← Produkt
+δ=0.12   identity 1.0000  regret 0.0000  wizard4Dim 0.9889
+δ=0.15   identity 1.0000  regret 0.0000  wizard4Dim 0.9822
+```
+Plateau [0.1, 0.15]; der Produktwert 0.1 ist der semantisch verankerte
+(halber Wizard-Schritt) am linken Plateau-Rand — bewusst NICHT der
+metrisch-aggressive Wert. Robust gegen kleine Fehlkalibrierung.
+
+## Iteration 31 — Deckel-Gate in eval + CI (KEEP, Produkt)
+
+eval prüft nach allen Messungen 7 Qualitäts-Deckel und exit(1) bei Verletzung:
+identity_top1/top3, partial k=4, LOO (alle = 1), regret ε=0.05 ≤ 0.01,
+tiefe Regrets = 0, Wizard 4-Dim ≥ 0.95. mvp-ci.yml führt eval als dritten
+Step — stille Qualitätsregressionen brechen ab sofort den Build, nicht nur
+die Gold-Pins. 7/7 PASS auf dem aktuellen Stand.
+
+Nebenbefund Band (aus It-10-Neumessung): Datenrauschen-Treue verbesserte
+sich unter dem Band auf 0.849/0.740 (ε=0.02/0.05) — das Toleranzband
+absorbiert neben Anfrage- auch Messungenauigkeit.
+
+## Endstand nach 31 Iterationen
+
+17× behalten (6 Produkt-Änderungen + CI-Gate), 6× verworfen mit Daten,
+9 Messachsen, Deckel-Gate im CI. Falsifizierbarer Raum abgedeckt; weitere
+Verbesserungen benötigen entweder echte EURISCO-C&E-Daten (M2) oder
+UX-Entscheidungen (Slider vs. Stufen), keine Algorithmus-Iteration.

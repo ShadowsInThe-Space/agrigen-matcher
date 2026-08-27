@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-08-27T13:34:02.329Z",
+  "timestamp": "2026-08-27T13:44:16.182Z",
   "node": "v22.22.3",
   "metrics": {
     "identity_top1": 1,
@@ -31,6 +31,7 @@
         "regret": 0.1943
       }
     ],
+    "deep_regret_rate_eps005": 0,
     "separation_mean_gap": 0.0114
   }
 }

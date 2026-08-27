@@ -244,6 +244,7 @@ function main(): void {
       noise_flip_rate_eps005: round(noise.flipRate),
       noise_regret_rate_eps005: round(noise.regretRate),
       noise_sweep: sweep,
+      deep_regret_rate_eps005: round(noise.deepRegretRate),
       separation_mean_gap: round(sep),
     },
   }
@@ -264,7 +265,26 @@ function main(): void {
   console.log(`  partial_identity_top1_k4   similarity ${(results.metrics.partial_identity_top1_k4 as number).toFixed(4)}  vs margin-first ${round(variantPartial).toFixed(4)}`)
   console.log(`  regret eps=0.05            similarity ${(results.metrics.noise_regret_rate_eps005 as number).toFixed(4)}  vs margin-first ${round(variantNoise.regretRate).toFixed(4)}`)
 
-  experiments(catalog, scenarioMasks)
+  const experimentResult = experiments(catalog, scenarioMasks)
+
+  // ── It 31: ceiling gate — CI fails on quality regression ────────────────
+  const m = results.metrics
+  const gate: [string, boolean][] = [
+    ['identity_top1 = 1', m.identity_top1 === 1],
+    ['identity_top3 = 1', m.identity_top3 === 1],
+    ['partial_identity_top1_k4 = 1', m.partial_identity_top1_k4 === 1],
+    ['loo_top3_jaccard = 1', m.loo_top3_jaccard === 1],
+    ['regret eps005 <= 0.01', (m.noise_regret_rate_eps005 as number) <= 0.01],
+    ['deep regret eps005 = 0', m.deep_regret_rate_eps005 === 0],
+    ['wizard 4-dim top-3 >= 0.95', experimentResult.wizard4dim >= 0.95],
+  ]
+  const failed = gate.filter(([, ok]) => !ok)
+  console.log('  ── Deckel-Gate (It 31) ──')
+  for (const [name, ok] of gate) console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${name}`)
+  if (failed.length > 0) {
+    console.error(`Ceiling-Gate verletzt: ${failed.map(([name]) => name).join('; ')}`)
+    process.exit(1)
+  }
 }
 
 function round(value: number): number {
@@ -358,7 +378,7 @@ function gammaTiebreakRank(factor: number): typeof rankAll {
   }
 }
 
-function experiments(catalog: Catalog, scenarioMasks: number[][]): void {
+function experiments(catalog: Catalog, scenarioMasks: number[][]): { wizard4dim: number } {
   // ── It 6: min-max-stretched normalization (A/B) ─────────────────────────
   const { rows: stretchedRows, transforms } = stretchRows(catalog.rows)
   const variantCatalog: Catalog = { ids: catalog.ids, labels: [], rows: stretchedRows }
@@ -501,6 +521,7 @@ function experiments(catalog: Catalog, scenarioMasks: number[][]): void {
   console.log(`  volle Maske:   top-1 ${round(wizardFull.top1).toFixed(4)}  top-3 ${round(wizardFull.top3).toFixed(4)}`)
   const wizardPartials = [1, 2, 3].map(seed => wizardConsistency(catalog, randomMask(4, seed)))
   const wizardPartialAvg = wizardPartials.reduce((sum, result) => sum + result.top3, 0) / wizardPartials.length
+  const wizardProduct = wizardPartialAvg
   console.log(`  4-Dim-Masken:  top-3 Ø ${round(wizardPartialAvg).toFixed(4)} (3 Seeds)`)
 
   // ── It 22: finer level grid A/B (only meaningful if It 21 shows a gap) ──
@@ -555,6 +576,18 @@ function experiments(catalog: Catalog, scenarioMasks: number[][]): void {
     const winnersOk = winners.every((id, index) => id === DEMO_EXPECTED_TOP1[index])
     console.log(`  δ=${String(delta).padEnd(5)} identity ${round(bandIdentity.top1).toFixed(4)}  partial ${round(bandPartial).toFixed(4)}  regret ${round(bandNoise.regretRate).toFixed(4)} (tief ${round(bandNoise.deepRegretRate).toFixed(4)})  wizard4Dim ${round(bandWizard).toFixed(4)}  demo-top1 ${winnersOk ? 'stabil' : `GEÄNDERT ${winners.join('/')}`}`)
   }
+
+  // ── It 30: δ-sensitivity — operating window around the product value ────
+  console.log('  ── It 30: δ-Sensitivität (Produkt: 0.1 = halber Wizard-Schritt) ──')
+  for (const delta of [0.05, 0.08, 0.1, 0.12, 0.15]) {
+    const ranker = bandRanker(delta)
+    const identity = identityAccuracyWith(catalog, ranker).top1
+    const regret = noiseRobustness(catalog, scenarioMasks, 0.05, 20, ranker).regretRate
+    const wizard = [1, 2, 3].reduce((sum, seed) =>
+      sum + wizardConsistencyWith(catalog, randomMask(4, seed), WIZARD_LEVELS, ranker).top3, 0) / 3
+    console.log(`  δ=${String(delta).padEnd(6)} identity ${round(identity).toFixed(4)}  regret ${round(regret).toFixed(4)}  wizard4Dim ${round(wizard).toFixed(4)}`)
+  }
+  return { wizard4dim: wizardProduct }
 }
 
 /** Hinge score with a symmetric dead zone δ around the query target. */

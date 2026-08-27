@@ -8,7 +8,7 @@ on:
 
 jobs:
   mvp:
-    name: MVP Selftest + Demo
+    name: MVP Selftest + Demo + Eval-Gate
     runs-on: ubuntu-latest
 
     steps:
@@ -24,3 +24,6 @@ jobs:
 
       - name: Run mvp demo
         run: node mvp/demo.ts
+
+      - name: Run eval with ceiling gate
+        run: node mvp/eval.ts
