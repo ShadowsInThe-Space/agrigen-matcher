@@ -32,13 +32,17 @@ Rang  Sorte                                Score   Perzentil
 8    Triticum aestivum 'KWS Mintum' (DE)               0.928  besser als 93.1 %
 
 ═══ Union-Space: 5 Fruchtarten, echte BSL-2026-Daten ═══
-  Datenhygiene: 29 Records mit < 8 beobachteten Deskriptoren ausgeschlossen (nicht sinnvoll matchbar)
-273 Sorten gesamt über 5 Fruchtarten · 37 Union-Deskriptoren
+  Datenhygiene: 81 Records mit < 8 beobachteten Deskriptoren ausgeschlossen (nicht sinnvoll matchbar)
+375 Sorten gesamt über 9 Fruchtarten · 54 Union-Deskriptoren
   Weizen   116 Sorten
   Gerste    98 Sorten
   Roggen    23 Sorten
   Dinkel    19 Sorten
   Hafer     17 Sorten
+  Raps      39 Sorten
+  Ackerbohne   2 Sorten
+  Mais      48 Sorten
+  Sojabohne  13 Sorten
 
 Identity-Retrieval je Fruchtart (Union-Space, maskiert):
   Weizen   top-1 1.0000 (116/116) · 116 Äquivalenzklassen
@@ -46,17 +50,21 @@ Identity-Retrieval je Fruchtart (Union-Space, maskiert):
   Roggen   top-1 1.0000 (23/23) · 23 Äquivalenzklassen
   Dinkel   top-1 1.0000 (19/19) · 19 Äquivalenzklassen
   Hafer    top-1 0.9412 (16/17) · 17 Äquivalenzklassen
+  Raps     top-1 0.8205 (32/39) · 37 Äquivalenzklassen · 3 Sorten in Klassen mit identischer BSL-Beschreibung — der Matcher OFFENBART die informationelle Ununterscheidbarkeit, er leidet nicht darunter
+  Ackerbohne top-1 0.0000 (0/2) · 1 Äquivalenzklassen · 2 Sorten in Klassen mit identischer BSL-Beschreibung — der Matcher OFFENBART die informationelle Ununterscheidbarkeit, er leidet nicht darunter
+  Mais     top-1 0.8333 (40/48) · 45 Äquivalenzklassen · 5 Sorten in Klassen mit identischer BSL-Beschreibung — der Matcher OFFENBART die informationelle Ununterscheidbarkeit, er leidet nicht darunter
+  Sojabohne top-1 0.6154 (8/13) · 13 Äquivalenzklassen
 
 ANFRAGE (cross-crop): mehltauarm, standfest, früh, ertragsstark (Stufe 2)
-Teilraum-γ = 11.2941 · δ = 0.1
+Teilraum-γ = 6.0000 · δ = 0.1
 Rang  Sorte                                            Frucht    Score   Perzentil
-1    Triticum aestivum 'KWS Mintum' (Weizen)       Weizen  0.998   besser als 99.6 %
-2    Triticum aestivum 'Campesino' (Weizen)        Weizen  0.996   besser als 98.9 %
-3    Hordeum vulgare 'KWS Delis' (Gerste)          Gerste  0.996   besser als 98.9 %
-4    Triticum aestivum 'LG Niklas' (Weizen)        Weizen  0.987   besser als 98.5 %
-5    Hordeum vulgare 'SU Lenoria' (Gerste)         Gerste  0.986   besser als 98.2 %
-6    Triticum aestivum 'Winner' (Weizen)           Weizen  0.980   besser als 97.8 %
-7    Triticum aestivum 'SU Horizon' (Weizen)       Weizen  0.978   besser als 97.4 %
-8    Triticum aestivum 'SU Magnetron' (Weizen)     Weizen  0.969   besser als 96.3 %
-9    Triticum aestivum 'SU Aventinus' (Weizen)     Weizen  0.969   besser als 96.3 %
-10   Triticum aestivum 'Debian' (Weizen)           Weizen  0.969   besser als 96.3 %
+1    Glycine max 'Sussex' (Sojabohne)              Sojabohne0.999   besser als 99.2 %
+2    Glycine max 'Merlin' (Sojabohne)              Sojabohne0.999   besser als 99.2 %
+3    Triticum aestivum 'KWS Mintum' (Weizen)       Weizen  0.999   besser als 99.2 %
+4    Zea mays 'Glutexo' (Mais)                     Mais    0.998   besser als 98.4 %
+5    Triticum aestivum 'Campesino' (Weizen)        Weizen  0.998   besser als 98.4 %
+6    Hordeum vulgare 'KWS Delis' (Gerste)          Gerste  0.998   besser als 98.4 %
+7    Glycine max 'Stepa' (Sojabohne)               Sojabohne0.998   besser als 96.8 %
+8    Glycine max 'Suzuka' (Sojabohne)              Sojabohne0.998   besser als 96.8 %
+9    Glycine max 'Tarock' (Sojabohne)              Sojabohne0.998   besser als 96.8 %
+10   Glycine max 'Vineta PZO' (Sojabohne)          Sojabohne0.998   besser als 96.8 %
