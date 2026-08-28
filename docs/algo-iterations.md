@@ -622,3 +622,18 @@ Profil = 1 Äquivalenzklasse). Union-Space: **47 Deskriptoren, 7 Kulturen,
 314 Sorten**. Identity: Kerngetreide 1.0 unverändert; Raps 0.8205 (37 Klassen,
 Hybrid-Noten cluster eng); Ackerbohne 0/2 als offengelegte
 Informationsgrenze. Pins aktualisiert: 68/68.
+
+## Iteration 40 — Triple-Kernel-Verifikation auf main (KEEP, Abschluss)
+
+Gesamtlauf auf dem gemergten Stand (Traits + Pedigree + Text):
+```
+Text-Kernel (CPVO-VD + bge-m3):  identity 1.0000 (200 Sortentexte)
+                                  official-similar top10 0.4706
+Deckel-Gate: 10/10 PASS — neu: text_identity_top1 = 1,
+                                rrf_fusion_identity = 1
+```
+Die RRF-Fusion (Traits-RBF + Text) ist identitätserhaltend — die
+SeedShuffle-Dual-Space-Disziplin trägt auf echten Daten. Pedigree-Kinship
+(Genesys) als dritter Raum integriert und geprüft. System-Endstand:
+314 amtliche Sorten · 7 Fruchtarten · 47 Deskriptoren · 3 Kernel-Räume ·
+alle Deckel build-gesichert (68/66→Checks + 10 Gate-Assertionen).
