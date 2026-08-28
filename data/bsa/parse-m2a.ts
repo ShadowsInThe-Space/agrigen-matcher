@@ -142,6 +142,38 @@ function parseMais(raw: string): Record[] {
   return records
 }
 
+
+const SOJA_FIELDS = [
+  'nabelfarbe', 'reife', 'pflanzenlaenge', 'lager', 'kornertrag',
+  'oelertrag', 'rohproteinertrag', 'oelgehalt', 'rohproteingehalt', 'tausendkornmasse',
+]
+
+function parseSoja(raw: string): Record[] {
+  const records: Record[] = []
+  let section = ''
+  for (const line of raw.split('\n')) {
+    const trimmed = line.trim()
+    if (trimmed === '' || /^Seite\s+\d+/.test(trimmed)) continue
+    if (/^Mit Voraussetzung|^In einem anderen EU-Land|^Ohne Voraussetzung/.test(trimmed)) { section = trimmed.slice(0, 70); continue }
+    let rest = trimmed
+    let isNew = false
+    if (rest.startsWith('neu ')) { isNew = true; rest = rest.slice(4) }
+    const tokens = rest.split(/\s+/)
+    const nameTokens: string[] = []
+    while (tokens.length && !/^([1-9]|-)$/.test(tokens[0]!)) nameTokens.push(tokens.shift()!)
+    // Fußnoten vom Namen lösen
+    while (nameTokens.length && /^\d\)$/.test(nameTokens[nameTokens.length - 1]!)) nameTokens.pop()
+    // 10 führende Noten-Token; dahinter folgen Ergänzungs-Angaben (ignoriert)
+    const values = tokens.slice(0, SOJA_FIELDS.length)
+    if (!nameTokens.length || values.length !== SOJA_FIELDS.length) continue
+    if (!values.every(token => token === '-' || /^[1-9]$/.test(token))) continue
+    const record: Record = { sortenname: nameTokens.join(' '), section: section || 'unbekannt', is_new: isNew, footnotes: [] }
+    SOJA_FIELDS.forEach((field, index) => { record[field] = values[index] === '-' ? null : Number(values[index]) })
+    records.push(record)
+  }
+  return records
+}
+
 function main(): void {
   console.log('Winterraps S. 228–230 …')
   const rapsRaw = extract(228, 230)
@@ -168,6 +200,12 @@ function main(): void {
   const mais = parseMais(extract(206, 219))
   console.log('  Mais:', summarize(mais, MAIS_FIELDS))
   writeFileSync(new URL('./koernermais.json', import.meta.url), JSON.stringify(mais, null, 2) + '\n')
+  console.log('Sojabohne S. 283–284 …')
+  verifyBbox(283, ['nabelfarbe', 'reife', 'pflanzenlaenge', 'lager', 'kornertrag', 'oelertrag', 'rohproteinertrag', 'oelgehalt', 'rohproteingehalt', 'tausendkornmasse'])
+  const soja = parseSoja(extract(283, 284))
+  console.log('  Soja:', summarize(soja, SOJA_FIELDS))
+  writeFileSync(new URL('./sojabohne.json', import.meta.url), JSON.stringify(soja, null, 2) + '\n')
+  console.log(`  Stichprobe Soja: ${soja[0]?.sortenname} ${SOJA_FIELDS.map(f => soja[0]?.[f]).join(' ')}`)
   console.log(`  Stichprobe Mais: ${mais[0]?.sortenname} K${mais[0]?.kornerreife} S${mais[0]?.siloreife} ${MAIS_FIELDS.map(f => mais[0]?.[f]).join(' ')}`)
 
   // Stichproben gegen Rohtext (erste Datenzeile je Kultur)
