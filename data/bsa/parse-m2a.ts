@@ -105,6 +105,43 @@ function verifyBbox(page: number, expected: string[]): void {
   console.log(`  bbox OK S.${page}: ${order.join(' < ')}`)
 }
 
+
+const MAIS_FIELDS = [
+  'buehzeitpunkt_weiblich', 'pflanzenlaenge', 'kaelteempfindlichkeit_jugend', 'lager',
+  'bestockung', 'staengelfaeule', 'kornertrag', 'tausendkornmasse',
+  'silo_gesamttrockenmasse', 'staerkegehalt',
+]
+
+function parseMais(raw: string): Record[] {
+  const records: Record[] = []
+  let section = ''
+  for (const line of raw.split('\n')) {
+    const trimmed = line.trim()
+    if (trimmed === '' || /^Seite\s+\d+/.test(trimmed)) continue
+    if (/^Reifegruppe|^Mit Voraussetzung|^In einem anderen EU-Land/.test(trimmed)) { section = trimmed.slice(0, 70); continue }
+    let rest = trimmed
+    let isNew = false
+    if (rest.startsWith('neu ')) { isNew = true; rest = rest.slice(4) }
+    const tokens = rest.split(/\s+/)
+    const nameTokens: string[] = []
+    while (tokens.length && !/^K$/.test(tokens[0]!) && !/^([1-9]|-)$/.test(tokens[0]!)) nameTokens.push(tokens.shift()!)
+    const footnotes: number[] = []
+    while (tokens.length && /^\d\)$/.test(tokens[0]!)) footnotes.push(Number(tokens.shift()!.replace(')', '')))
+    // K/S-Reifetokens: "K 210" und "S 200"
+    let kornerreife: number | null = null
+    let siloreife: number | null = null
+    if (tokens[0] === 'K' && /^\d+$/.test(tokens[1] ?? '')) { kornerreife = Number(tokens[1]); tokens.splice(0, 2) }
+    if (tokens[0] === 'S' && /^\d+$/.test(tokens[1] ?? '')) { siloreife = Number(tokens[1]); tokens.splice(0, 2) }
+    const values = tokens
+    if (!nameTokens.length || kornerreife === null || values.length !== MAIS_FIELDS.length) continue
+    if (!values.every(token => token === '-' || /^[1-9]$/.test(token))) continue
+    const record: Record = { sortenname: nameTokens.join(' '), section: section || 'unbekannt', is_new: isNew, footnotes, kornerreife, siloreife }
+    MAIS_FIELDS.forEach((field, index) => { record[field] = values[index] === '-' ? null : Number(values[index]) })
+    records.push(record)
+  }
+  return records
+}
+
 function main(): void {
   console.log('Winterraps S. 228–230 …')
   const rapsRaw = extract(228, 230)
@@ -125,6 +162,13 @@ function main(): void {
 
   writeFileSync(new URL('./winterraps.json', import.meta.url), JSON.stringify(raps, null, 2) + '\n')
   writeFileSync(new URL('./ackerbohne.json', import.meta.url), JSON.stringify(bohne, null, 2) + '\n')
+
+  console.log('Körnermais S. 206–219 …')
+  verifyBbox(206, ['buehzeitpunkt', 'pflanzenlaenge', 'kaelteempfindlichkeit', 'lager', 'bestockung', 'staengelfaeule', 'kornertrag', 'tausendkornmasse', 'gesamttrockenmasse', 'staerkegehalt'])
+  const mais = parseMais(extract(206, 219))
+  console.log('  Mais:', summarize(mais, MAIS_FIELDS))
+  writeFileSync(new URL('./koernermais.json', import.meta.url), JSON.stringify(mais, null, 2) + '\n')
+  console.log(`  Stichprobe Mais: ${mais[0]?.sortenname} K${mais[0]?.kornerreife} S${mais[0]?.siloreife} ${MAIS_FIELDS.map(f => mais[0]?.[f]).join(' ')}`)
 
   // Stichproben gegen Rohtext (erste Datenzeile je Kultur)
   const firstRaps = raps[0]

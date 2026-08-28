@@ -337,3 +337,14 @@ Frühjahrsaussaat geprüft" trägt 2026 KEINE Noten; nur EU-Land-Sektion:
 Mais (K/S-Reifetokens, Reifegruppen-Untertabellen) und Zuckerrübe sowie
 Senf/Lein/Lupine/Sommerraps: als Folgeschritte dokumentiert — Schema-Klärung
 je Tabelle nötig; Regel bleibt: sauber lieber als komplett.
+
+## 9. Körnermais — `koernermais.json` (PDF S. 206–219)
+
+**Verifikation:** bbox S. 206 — Reihenfolge weicht vom Layout-Lesestand ab:
+buehzeitpunkt_weiblich < pflanzenlaenge < **kaelteempfindlichkeit_jugend** <
+lager < bestockung < staengelfaeule < kornertrag < tausendkornmasse <
+silo_gesamttrockenmasse < staerkegehalt (10 Noten). Zeilenschema: Name +
+"K <n>" + "S <n>" (Körner-/Siloreifezahl) + 10 Noten; Reifegruppen-Abschnitte
+→ section. **97 Sorten** (LG 31215 … Bismark) · 353/970 null · Stichprobe
+LG 31215 K210 S200 `5 7 4 3 2 3 7 6 6 6` = Rohtext ✓. K/S-Reifezahlen als
+Metadaten (eigene Skala, nicht Union-Dim). Silomais-Tabellen nicht extrahiert.
