@@ -311,3 +311,29 @@ Sommerroggen (S. 90), Winterhafer/Silonutzung (S. 72), alle Öko-Notentabellen
 
 Alle Stichproben (json vs. Rohtext der Quellseite vs. manuell gelesene Erwartung)
 sowie Zeilenzahl-Guards: **OK** (Ausgabe des Parser-Laufs).
+
+## 7. Winterraps — `winterraps.json` (PDF S. 228–230)
+
+**Verifikation:** visuelle Header-Lesung (S. 228) + bbox-Subset-Check (7 Felder
+in korrekter Ordnung); volle 12-Spalten-Folge aus Layout+Datenzeilen-Konsistenz:
+buehbeginn, **reifeverzoegerung_stroh** (x≈161, identische Spalte wie Hafer),
+reife, pflanzenlaenge, lager, tausendkornmasse, kornertrag, oelertrag,
+oelgehalt, rohproteinertrag, rohproteingehalt, glucosinolatgehalt.
+Zeilenschema: Name + Linie/Hybride-Token [L|H] + 12 Noten.
+**49 Sorten** (Karat … Zidane) · 124/588 null · Stichprobe Karat [H]
+`4 5 5 6 3 4 9 9 8 7 4 3` = Rohtext S. 228 ✓
+
+## 8. Ackerbohne — `ackerbohne.json` (PDF S. 270)
+
+**Verifikation:** bbox-Check S. 270 (tanningehalt < reife < lager < ascochyta <
+botrytis < rost < tausendkornmasse < kornertrag < rohproteinertrag <
+rohproteingehalt) + visuelle Header-Lesung. 12 Spalten; Abschnitt „In
+Frühjahrsaussaat geprüft" trägt 2026 KEINE Noten; nur EU-Land-Sektion:
+**2 Sorten** (Vishnu, Vision) mit wortgleichem Beschreibungsvektor —
+1 Äquivalenzklasse (dokumentierte BSL-Informationsgrenze).
+
+## M2a-Scope-Entscheidungen
+
+Mais (K/S-Reifetokens, Reifegruppen-Untertabellen) und Zuckerrübe sowie
+Senf/Lein/Lupine/Sommerraps: als Folgeschritte dokumentiert — Schema-Klärung
+je Tabelle nötig; Regel bleibt: sauber lieber als komplett.

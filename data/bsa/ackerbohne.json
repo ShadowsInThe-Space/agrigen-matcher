@@ -1,0 +1,40 @@
+[
+  {
+    "sortenname": "Vishnu",
+    "section": "In einem anderen EU-Land eingetragen",
+    "is_new": false,
+    "footnotes": [],
+    "zuechtyp": null,
+    "tanningehalt": 9,
+    "buehbeginn": 4,
+    "reife": 5,
+    "pflanzenlaenge": 6,
+    "lager": 4,
+    "ascochyta": null,
+    "botrytis": 4,
+    "rost": 6,
+    "tausendkornmasse": 6,
+    "kornertrag": 7,
+    "rohproteinertrag": 8,
+    "rohproteingehalt": 4
+  },
+  {
+    "sortenname": "Vision",
+    "section": "In einem anderen EU-Land eingetragen",
+    "is_new": false,
+    "footnotes": [],
+    "zuechtyp": null,
+    "tanningehalt": 9,
+    "buehbeginn": 4,
+    "reife": 5,
+    "pflanzenlaenge": 6,
+    "lager": 4,
+    "ascochyta": null,
+    "botrytis": 4,
+    "rost": 6,
+    "tausendkornmasse": 6,
+    "kornertrag": 7,
+    "rohproteinertrag": 8,
+    "rohproteingehalt": 4
+  }
+]

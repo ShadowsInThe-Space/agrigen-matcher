@@ -612,3 +612,13 @@ LOO 1.0000, Cross-Crop-Matching, P3-Fix + Coverage-Gate + Duplikat-Ethik —
 alles build-gesichert (66/66 Checks). Zwei Produkt-Bugs gefunden und gefixt,
 die nur Realdaten aufdecken konnten (Null-Überlappungs-Ranking,
 Aggregations-Artefakt). Falsifizierbarer Raum auf Realdaten: abgedeckt.
+
+## Iteration 39 — M2a Pass 1: Raps + Ackerbohne integriert (KEEP)
+
+Eigene Parser-Arbeit (Worker-Dispatch lief auf Nutzungslimit): Winterraps
+(49 Sorten, L/H-Typ, 12 Noten inkl. reifeverzoegerung_stroh = Hafer-Analogie)
+und Ackerbohne (2 Sorten — 2026 die einzigen notentragenden; wortgleiches
+Profil = 1 Äquivalenzklasse). Union-Space: **47 Deskriptoren, 7 Kulturen,
+314 Sorten**. Identity: Kerngetreide 1.0 unverändert; Raps 0.8205 (37 Klassen,
+Hybrid-Noten cluster eng); Ackerbohne 0/2 als offengelegte
+Informationsgrenze. Pins aktualisiert: 68/68.
