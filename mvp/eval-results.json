@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-08-28T22:36:57.275Z",
+  "timestamp": "2026-08-28T23:39:13.949Z",
   "node": "v22.22.3",
   "metrics": {
     "identity_top1": 1,
@@ -36,13 +36,13 @@
   },
   "text_metrics": {
     "text_identity_top1": 1,
-    "text_corpus_size": 200,
-    "text_official_pairs": 17,
-    "text_official_top5": 0.4118,
-    "text_official_top10": 0.4706,
+    "text_corpus_size": 226,
+    "text_official_pairs": 18,
+    "text_official_top5": 0.4444,
+    "text_official_top10": 0.5,
     "traitsrbf_official_pairs": 15,
-    "traitsrbf_official_top5": 0.2,
+    "traitsrbf_official_top5": 0.0667,
     "traitsrbf_official_top10": 0.2,
-    "rrf_fusion_identity": 1
+    "rrf_fusion_identity": 0.995
   }
 }

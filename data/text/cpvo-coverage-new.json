@@ -1,0 +1,1978 @@
+[
+ {
+  "crop": "koernermais",
+  "name": "LG 31215",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 31222",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 31227",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 31238",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 31241",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 32216",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 32226",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 7364",
+  "matchedAs": "P7364",
+  "status": "FOUND",
+  "applicationNumber": 20210448,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L.",
+  "cpvoDenomination": "P7364"
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 7460",
+  "matchedAs": "P7460",
+  "status": "FOUND",
+  "applicationNumber": 20182781,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L.",
+  "cpvoDenomination": "P7460"
+ },
+ {
+  "crop": "koernermais",
+  "name": "Panvinio",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Rancador",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "RGT Exxon",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Ricardinio",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Symetric",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 31219",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 31230",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 7948",
+  "matchedAs": "P7948",
+  "status": "FOUND",
+  "applicationNumber": 20182794,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L.",
+  "cpvoDenomination": "P7948"
+ },
+ {
+  "crop": "koernermais",
+  "name": "Silvio",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Amaluna",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Amanoi",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Amanova",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Amaretto",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Amaveritas",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Benedictio KWS",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Contadino",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Cracker",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "DKC 3323",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "DKC 3438",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "DKC 3464",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "ES Joker",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "ES Metronom",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "ES Traveler",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Evidence",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Farmbeat",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Farmidabel",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Greatful",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Janeen",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "KWS Burano",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "KWS Fabiano",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "KWS Jaro",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "KWS Johaninio",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "KWS Lupollino",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "KWS Robertino",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Ladino",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Leguan",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 30258",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 31245",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 31256",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 32257",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LID 2404 C",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Mantilla",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Micheleen",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 8153",
+  "matchedAs": "P8153",
+  "status": "FOUND",
+  "applicationNumber": 20212871,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L.",
+  "cpvoDenomination": "P8153"
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 8255",
+  "matchedAs": "P8255",
+  "status": "FOUND",
+  "applicationNumber": 20192892,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L.",
+  "cpvoDenomination": "P8255"
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 8317",
+  "matchedAs": "P8317",
+  "status": "FOUND",
+  "applicationNumber": 20230421,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L.",
+  "cpvoDenomination": "P8317"
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 8333",
+  "matchedAs": "P8333",
+  "status": "FOUND",
+  "applicationNumber": 20162507,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L.",
+  "cpvoDenomination": "P8333"
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 8666",
+  "matchedAs": "P8666",
+  "status": "FOUND",
+  "applicationNumber": 20162443,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L.",
+  "cpvoDenomination": "P8666"
+ },
+ {
+  "crop": "koernermais",
+  "name": "Plutor",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Sumumba",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Susetta",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "SY Glorius",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Vitalico",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Wesley",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Beluga",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Cheerful",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Clooney",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Digital",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Eleganto",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Farmoritz ca.",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Fight",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Glutexo",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Javelo",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Justy",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "KWS Editio",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "LG 31276",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Smartboxx",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Snowy",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Wakefield",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Agroleto",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "DKC 4042",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "DS 0527 C",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "DS 1710 C",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "DS 1891 B",
+  "matchedAs": "DS1891B",
+  "status": "FOUND",
+  "applicationNumber": 20192908,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L.",
+  "cpvoDenomination": "DS1891B"
+ },
+ {
+  "crop": "koernermais",
+  "name": "ES Bond",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Farmirage",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Farmpower",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Farmurphy",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Infernico",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "KWS Ribono",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "MAS 24 C",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 8660",
+  "matchedAs": "P8660",
+  "status": "FOUND",
+  "applicationNumber": 20230398,
+  "applicationStatus": "G",
+  "speciesName": "Zea mays L. subsp. mays (Maize Group)",
+  "cpvoDenomination": "P8660"
+ },
+ {
+  "crop": "koernermais",
+  "name": "P 90810",
+  "matchedAs": "P90810",
+  "status": "FOUND",
+  "applicationNumber": 20252615,
+  "applicationStatus": "A",
+  "speciesName": "Zea mays L. subsp. mays (Maize Group)",
+  "cpvoDenomination": "P90810"
+ },
+ {
+  "crop": "koernermais",
+  "name": "Simpatico KWS",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "SY Novatica",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Torres",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Walterinio KWS",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "koernermais",
+  "name": "Bismark",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Karat",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "KWS Ambos",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "KWS Ektos",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "KWS Nautilos",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "KWS Skoros",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "KWS Vamos",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Aberdeen",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Activus",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Adonis",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Akerman",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Alledor",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Alltamira",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Alwin",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Ambrosius",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Arrakis",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Auckland",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Avenger",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LG Baracuda",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Lucifer",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Ludger",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Mercedes",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Muzzical",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Picard",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "PT 284",
+  "matchedAs": "PT284",
+  "status": "FOUND",
+  "applicationNumber": 20190061,
+  "applicationStatus": "G",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "PT284"
+ },
+ {
+  "crop": "winterraps",
+  "name": "PT 299",
+  "matchedAs": "PT299",
+  "status": "FOUND",
+  "applicationNumber": 20201333,
+  "applicationStatus": "G",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "PT299"
+ },
+ {
+  "crop": "winterraps",
+  "name": "PT 302",
+  "matchedAs": "PT302",
+  "status": "FOUND",
+  "applicationNumber": 20190075,
+  "applicationStatus": "G",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "PT302"
+ },
+ {
+  "crop": "winterraps",
+  "name": "PT 303",
+  "matchedAs": "PT303",
+  "status": "FOUND",
+  "applicationNumber": 20190077,
+  "applicationStatus": "G",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "PT303"
+ },
+ {
+  "crop": "winterraps",
+  "name": "PT 322",
+  "matchedAs": "PT322",
+  "status": "FOUND",
+  "applicationNumber": 20232038,
+  "applicationStatus": "G",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "PT322"
+ },
+ {
+  "crop": "winterraps",
+  "name": "PX 131",
+  "matchedAs": "PX131",
+  "status": "FOUND",
+  "applicationNumber": 20190071,
+  "applicationStatus": "G",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "PX131"
+ },
+ {
+  "crop": "winterraps",
+  "name": "Scotch",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Smaragd",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "SY Alitop",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Triple",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Tuba",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "V 141 OL",
+  "matchedAs": "V 141 OL",
+  "status": "FOUND",
+  "applicationNumber": 20061276,
+  "applicationStatus": "T",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "V 141 OL"
+ },
+ {
+  "crop": "winterraps",
+  "name": "Vespa",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Violin",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Agenda",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Allesandro KWS",
+  "matchedAs": "Allesandro KWS",
+  "status": "FOUND",
+  "applicationNumber": 20180076,
+  "applicationStatus": "G",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "Allesandro KWS"
+ },
+ {
+  "crop": "winterraps",
+  "name": "Artemis",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Ceos",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Cratos",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Firenzze",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "KWS Wikos",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "Lessing",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "LID Invicto",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "winterraps",
+  "name": "PT 293",
+  "matchedAs": "PT293",
+  "status": "FOUND",
+  "applicationNumber": 20190062,
+  "applicationStatus": "G",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "PT293"
+ },
+ {
+  "crop": "winterraps",
+  "name": "PT 312",
+  "matchedAs": "PT312",
+  "status": "FOUND",
+  "applicationNumber": 20222549,
+  "applicationStatus": "G",
+  "speciesName": "Brassica napus L. subsp. napus",
+  "cpvoDenomination": "PT312"
+ },
+ {
+  "crop": "winterraps",
+  "name": "Zidane",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Stepa",
+  "matchedAs": "Stepa",
+  "status": "FOUND",
+  "applicationNumber": 20211935,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Stepa"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Successor",
+  "matchedAs": "Successor",
+  "status": "FOUND",
+  "applicationNumber": 20221391,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "SUCCESSOR"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Sussex",
+  "matchedAs": "Sussex",
+  "status": "FOUND",
+  "applicationNumber": 20202910,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Sussex"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Suzuka",
+  "matchedAs": "Suzuka",
+  "status": "FOUND",
+  "applicationNumber": 20252438,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Suzuka"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "SU Ademira",
+  "matchedAs": "SU Ademira",
+  "status": "FOUND",
+  "applicationNumber": 20240086,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "SU Ademira"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "SU Cutena",
+  "matchedAs": "SU Cutena",
+  "status": "FOUND",
+  "applicationNumber": 20240085,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "SU Cutena"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Talisa",
+  "matchedAs": "Talisa",
+  "status": "FOUND",
+  "applicationNumber": 20260200,
+  "applicationStatus": "A",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Talisa"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Tarock",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Tasso",
+  "matchedAs": "Tasso",
+  "status": "FOUND",
+  "applicationNumber": 20210861,
+  "applicationStatus": "T",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Tasso"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Todeka",
+  "matchedAs": "Todeka",
+  "status": "FOUND",
+  "applicationNumber": 20231738,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Todeka"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Tori",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Trumpf",
+  "matchedAs": "Trumpf",
+  "status": "FOUND",
+  "applicationNumber": 20190765,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Trumpf"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Vineta PZO",
+  "matchedAs": "Vineta PZO",
+  "status": "FOUND",
+  "applicationNumber": 20231790,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Vineta PZO"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Vogue",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Achillea",
+  "matchedAs": "Achillea",
+  "status": "FOUND",
+  "applicationNumber": 20190793,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Achillea"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Alicia",
+  "matchedAs": "Alicia",
+  "status": "FOUND",
+  "applicationNumber": 20190791,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Alicia"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Alvesta",
+  "matchedAs": "Alvesta",
+  "status": "FOUND",
+  "applicationNumber": 20190789,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Alvesta"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Apollina",
+  "matchedAs": "Apollina",
+  "status": "FOUND",
+  "applicationNumber": 20210512,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Apollina"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Ascada",
+  "matchedAs": "Ascada",
+  "status": "FOUND",
+  "applicationNumber": 20220396,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Ascada"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Asterix",
+  "matchedAs": "Asterix",
+  "status": "FOUND",
+  "applicationNumber": 20211365,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Asterix"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Axioma",
+  "matchedAs": "Axioma",
+  "status": "FOUND",
+  "applicationNumber": 20230462,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Axioma"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "ES Collector",
+  "matchedAs": "ES Collector",
+  "status": "FOUND",
+  "applicationNumber": 20200609,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "ES Collector"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "ES Comandor",
+  "matchedAs": "ES Comandor",
+  "status": "FOUND",
+  "applicationNumber": 20153013,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "ES Comandor"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Merlin",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "sojabohne",
+  "name": "Pula",
+  "matchedAs": "Pula",
+  "status": "FOUND",
+  "applicationNumber": 20222403,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "Pula"
+ },
+ {
+  "crop": "sojabohne",
+  "name": "RGT Sphinxa",
+  "matchedAs": "RGT Sphinxa",
+  "status": "FOUND",
+  "applicationNumber": 20191921,
+  "applicationStatus": "G",
+  "speciesName": "Glycine max (L.) Merrill",
+  "cpvoDenomination": "RGT Sphinxa"
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "BTS Smart 9085 N 3",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Calledia KWS 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Capone 7",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Caprianna KWS 7",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Celesta KWS -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Clarion -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Clemens 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Danicia KWS 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Dante -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Daphna -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Elsabella KWS 3",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Evamaria KWS -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Feliciana KWS 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Fitis 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Florentina KWS 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Francina KWS 3",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Habicht 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Hannibal 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Hibou 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Ibis 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Inspirea KWS -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Isabella KWS -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Jellera KWS 4",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Josephina KWS 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Kakadu 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Kauz 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Kleiber -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Lisanna KWS -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Lomosa -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Lorenza KWS 2",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Ludovica KWS 3",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Lunella KWS 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Marabella KWS 4",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Marley 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Maruscha KWS -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Multivira 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Novatessa KWS 3",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Orpheus 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Papio 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Paulina -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Picus 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Pitt 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Rhiloda -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Rhinema -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Rigoletto 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Sallinia KWS 2",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Sittich -",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Smart Adiella KWS 4",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Smart Herma KWS 3",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Smart Manja KWS 4",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Smart Mirea KWS 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Smart Thekla KWS 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "Smart Uriella KWS 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "ST Rotterdam 5",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "zuckerruebe",
+  "name": "ST Yellowstone 6",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "senf",
+  "name": "Martigena",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "senf",
+  "name": "Mostart",
+  "matchedAs": "Mostart",
+  "status": "FOUND",
+  "applicationNumber": 20260805,
+  "applicationStatus": "A",
+  "speciesName": "Sinapis alba L.",
+  "cpvoDenomination": "Mostart"
+ },
+ {
+  "crop": "senf",
+  "name": "Gracja",
+  "matchedAs": "Gracja",
+  "status": "FOUND",
+  "applicationNumber": 20191736,
+  "applicationStatus": "G",
+  "speciesName": "Sinapis alba L.",
+  "cpvoDenomination": "Gracja"
+ },
+ {
+  "crop": "lein",
+  "name": "Balance",
+  "matchedAs": "Balance",
+  "status": "FOUND",
+  "applicationNumber": 20250818,
+  "applicationStatus": "G",
+  "speciesName": "Linum usitatissimum L.",
+  "cpvoDenomination": "Balance"
+ },
+ {
+  "crop": "lein",
+  "name": "Bingo",
+  "matchedAs": "Bingo",
+  "status": "FOUND",
+  "applicationNumber": 20142847,
+  "applicationStatus": "G",
+  "speciesName": "Linum usitatissimum L.",
+  "cpvoDenomination": "Bingo"
+ },
+ {
+  "crop": "lein",
+  "name": "Goldstern",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lein",
+  "name": "Juliet",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lein",
+  "name": "Lirina",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lein",
+  "name": "Paddington",
+  "matchedAs": "Paddington",
+  "status": "FOUND",
+  "applicationNumber": 20240743,
+  "applicationStatus": "G",
+  "speciesName": "Linum usitatissimum L.",
+  "cpvoDenomination": "Paddington"
+ },
+ {
+  "crop": "lein",
+  "name": "Scorpion",
+  "matchedAs": "Scorpion",
+  "status": "FOUND",
+  "applicationNumber": 20040486,
+  "applicationStatus": "G",
+  "speciesName": "Linum usitatissimum L.",
+  "cpvoDenomination": "Scorpion"
+ },
+ {
+  "crop": "lein",
+  "name": "LS Koral",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lein",
+  "name": "Paltin",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lupine",
+  "name": "Arabella",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lupine",
+  "name": "Bolero",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lupine",
+  "name": "Boregine",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lupine",
+  "name": "Boruta",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lupine",
+  "name": "Carabor",
+  "matchedAs": "Carabor",
+  "status": "FOUND",
+  "applicationNumber": 20180846,
+  "applicationStatus": "G",
+  "speciesName": "Lupinus angustifolius L.",
+  "cpvoDenomination": "Carabor"
+ },
+ {
+  "crop": "lupine",
+  "name": "Lunabor",
+  "matchedAs": "Lunabor",
+  "status": "FOUND",
+  "applicationNumber": 20211338,
+  "applicationStatus": "G",
+  "speciesName": "Lupinus angustifolius L.",
+  "cpvoDenomination": "Lunabor"
+ },
+ {
+  "crop": "lupine",
+  "name": "Probor",
+  "matchedAs": "Probor",
+  "status": "FOUND",
+  "applicationNumber": 20050252,
+  "applicationStatus": "G",
+  "speciesName": "Lupinus angustifolius L.",
+  "cpvoDenomination": "Probor"
+ },
+ {
+  "crop": "lupine",
+  "name": "SM Orion",
+  "matchedAs": "SM Orion",
+  "status": "FOUND",
+  "applicationNumber": 20252184,
+  "applicationStatus": "G",
+  "speciesName": "Lupinus angustifolius L.",
+  "cpvoDenomination": "SM Orion"
+ },
+ {
+  "crop": "lupine",
+  "name": "Swing",
+  "matchedAs": "Swing",
+  "status": "FOUND",
+  "applicationNumber": 20210348,
+  "applicationStatus": "G",
+  "speciesName": "Lupinus angustifolius L.",
+  "cpvoDenomination": "Swing"
+ },
+ {
+  "crop": "lupine",
+  "name": "Celina",
+  "matchedAs": "Celina",
+  "status": "FOUND",
+  "applicationNumber": 20190901,
+  "applicationStatus": "G",
+  "speciesName": "Lupinus albus L.",
+  "cpvoDenomination": "Celina"
+ },
+ {
+  "crop": "lupine",
+  "name": "Feodora",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lupine",
+  "name": "Frieda",
+  "matchedAs": "Frieda",
+  "status": "FOUND",
+  "applicationNumber": 20190900,
+  "applicationStatus": "G",
+  "speciesName": "Lupinus albus L.",
+  "cpvoDenomination": "Frieda"
+ },
+ {
+  "crop": "lupine",
+  "name": "Victor Baer",
+  "matchedAs": "Victor Baer",
+  "status": "FOUND",
+  "applicationNumber": 20191326,
+  "applicationStatus": "T",
+  "speciesName": "Lupinus albus L.",
+  "cpvoDenomination": "Victor Baer"
+ },
+ {
+  "crop": "lupine",
+  "name": "Victory",
+  "matchedAs": "Victory",
+  "status": "FOUND",
+  "applicationNumber": 20260671,
+  "applicationStatus": "A",
+  "speciesName": "Lupinus albus L.",
+  "cpvoDenomination": "Victory"
+ },
+ {
+  "crop": "lupine",
+  "name": "Boros",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "lupine",
+  "name": "Butan",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ },
+ {
+  "crop": "ackerbohne",
+  "name": "Vishnu",
+  "matchedAs": "Vishnu",
+  "status": "FOUND",
+  "applicationNumber": 20243051,
+  "applicationStatus": "G",
+  "speciesName": "Vicia faba L.",
+  "cpvoDenomination": "Vishnu"
+ },
+ {
+  "crop": "ackerbohne",
+  "name": "Vision",
+  "matchedAs": null,
+  "status": "NOT_FOUND",
+  "applicationNumber": null
+ }
+]
