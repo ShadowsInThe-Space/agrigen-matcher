@@ -218,6 +218,8 @@ export const UNION_TRAIT_NAMES = [
   'kornertrag_st1', 'kornertrag_st2', 'vesenertrag_st1', 'vesenertrag_st2',
   'sortierung_2_0', 'sortierung_2_5', 'hektolitergewicht', 'spelzenanteil',
   'anteil_nicht_entspelzter_koerner',
+  'buehbeginn', 'tanningehalt', 'ascochyta', 'botrytis', 'rost',
+  'oelertrag', 'oelgehalt', 'rohproteinertrag', 'rohproteingehalt', 'glucosinolatgehalt',
 ] as const
 
 /** Hafer: Rispenschieben ist das phänologische Pendant zum Ährenschieben (dokumentierte Analogie). */
@@ -233,6 +235,9 @@ export const UNION_DIRECTIONS: Readonly<Record<string, 'benefit' | 'cost' | 'tar
   gelbmosaik_baymv1: 'cost', gelbmosaik_baymv2: 'cost', gerstengelbverzwergung: 'cost',
   mutterkorn: 'cost', anteil_nicht_entspelzter_koerner: 'cost',
   kornzahl_aehre: 'benefit', kernzahl_aehre: 'benefit', kornzahl_rispe: 'benefit',
+  tanningehalt: 'cost', ascochyta: 'cost', botrytis: 'cost', rost: 'cost', glucosinolatgehalt: 'cost',
+  buehbeginn: 'target',
+  oelertrag: 'benefit', oelgehalt: 'benefit', rohproteinertrag: 'benefit', rohproteingehalt: 'benefit',
   tausendkornmasse: 'benefit', tausendkernmasse: 'benefit',
   kornertrag_st1: 'benefit', kornertrag_st2: 'benefit',
   vesenertrag_st1: 'benefit', vesenertrag_st2: 'benefit',
@@ -248,6 +253,8 @@ const CROP_FILES: ReadonlyArray<[string, string, string]> = [
   ['winterroggen.json', 'Secale cereale', 'Roggen'],
   ['dinkel.json', 'Triticum spelta', 'Dinkel'],
   ['hafer.json', 'Avena sativa', 'Hafer'],
+  ['winterraps.json', 'Brassica napus', 'Raps'],
+  ['ackerbohne.json', 'Vicia faba', 'Ackerbohne'],
 ]
 
 export interface UnionCatalog extends BsaCatalog {

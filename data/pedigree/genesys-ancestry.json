@@ -1,0 +1,763 @@
+{
+ "_meta": {
+  "description": "Offizielle Pedigree-/Ancestry-Strings (MCPD-Feld ANCEST) für BSL-2026-Sorten, abgerufen aus EURISCO/Genesys (Genesys Catalog API v2, Netzwerk ECPGR) am 2026-08-27.",
+  "provenance": "Je Sorte Volltextsuche accessionName==Sortenname; Ancestry-Strings stammen aus Genbank-Passdaten (u.a. CZE122 Crop Research Institute, UKR001, POL003, SWE054, AUT001, SVK001). Roh-Abfrage: 373 eindeutige BSL-Zeilen -> 196 Match -> 165 mit ANCEST-Feld -> 83 mit substanziellem Pedigree (nicht unknown/n.a.).",
+  "caveats": [
+   "Pedigree-Strings sind Genbank-Notationen (teils CIMMYT-/Züchternotation), nicht vollständige Stammbäume; fehlende Eltern werden als unbekannte Founder behandelt.",
+   "Roggen: 0 Pedigrees (Hybrid-Eltern sind Geschäftsgeheimnis).",
+   "Sorten ohne Match (177) haben keine Genbank-Accession unter ihrem exakten Namen - meist zu neue Züchtungen.",
+   "Keine Züchter-Marketingtexte, nur amtliche/genbank-seitige Passdaten (ANCEST-Feld)."
+  ],
+  "fetched": "2026-08-27",
+  "count": 83
+ },
+ "varieties": [
+  {
+   "crop": "winterweizen",
+   "name": "Akasha",
+   "pedigree": "Sheriff x (Julius x Skalmeje)",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108589"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Akratos",
+   "pedigree": "(Stamm*Tabot/*Granada)*(Bert*Stamm/*Urban)/*batis-sister",
+   "source": {
+    "inst": "HRV053",
+    "acc": "CAM00001"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Akteur",
+   "pedigree": "87-308/Astron//Astron",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0106623"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Apertus",
+   "pedigree": "Line/Xanthos//Line/3/Line 89850.2/4/ Bockris",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0107469"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Attraktion",
+   "pedigree": "(Chevalier x Robigus) x Chevalier",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0107758"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Axioma",
+   "pedigree": "Impression x STAMM29-94-8",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0107753"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Benchmark",
+   "pedigree": "Samyl/Hermann//Oakley",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105882"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Boss",
+   "pedigree": "Aquila/Kronjuwel [1478]",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0102345"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Bussard",
+   "pedigree": "M. Huntsman/Kranich//Monopol",
+   "source": {
+    "inst": "DEU146",
+    "acc": "TRI 7781"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Capta",
+   "pedigree": "Cappelle Desprez/Thatcher",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0202045"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Cubus",
+   "pedigree": "Greif/SB 71189",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0106625"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Debian",
+   "pedigree": "(Tobak x Elixer) x Forum",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0109055"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Dekan",
+   "pedigree": "SB9(83xLP10990.80)*Grej",
+   "source": {
+    "inst": "HRV053",
+    "acc": "CAM00314"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Discus",
+   "pedigree": "Saka 4224/95 x Saka 4236/95",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0107635"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Faxe",
+   "pedigree": "Linus x (Sj 5713 x Opus)",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108568"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Informer",
+   "pedigree": "Drifter/Br 3610b8/Tabasco",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105601"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "JB Asano",
+   "pedigree": "STRU 2158/Record",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105603"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Julius",
+   "pedigree": "Diplomat/3/M.Huntsman//Multiweiss 2*/Jubilar",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0101210"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Knut",
+   "pedigree": "Sheriff x RGT Reform",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108570"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "KWS Donovan",
+   "pedigree": "Tobak x Anapolis",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108595"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "KWS Emerick",
+   "pedigree": "Genius/LMGN 4078/Zeppelin",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105746"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "KWS Ferrum",
+   "pedigree": "Magnus x Apache",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0107632"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "KWS Fontas",
+   "pedigree": "Premio/KW 8259-1-05/Julius",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105747"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "KWS Imperium",
+   "pedigree": "(Julius x Evolution) x KWS Magic",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108596"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "KWS Jubilum",
+   "pedigree": "(Julius x KWS Livius) x KWS Magic",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108597"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "KWS Keitum",
+   "pedigree": "KWS Smart x KWS Salix",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108598"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "KWS Talent",
+   "pedigree": "Julius x WW 4055",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108217"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Leandrus",
+   "pedigree": "(Elvis x Stru 991490.1) x Stru 011661.5",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108155"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Matrix",
+   "pedigree": "Hattrick x T¿rkis",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0107637"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Meister",
+   "pedigree": "Heges Frueher/Werla;",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0101631"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Moschus",
+   "pedigree": "Carenius x Leiffer",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108156"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Opal",
+   "pedigree": "RUF/GARNET/3/HEINES KOLBEN//KOGA/ERLI",
+   "source": {
+    "inst": "CHE001",
+    "acc": "2243"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Partner",
+   "pedigree": "{(Manager x Robigus) x Hermann} x Frodin",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0107803"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Patras",
+   "pedigree": "Paroli/Toras",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105619"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Polarkap",
+   "pedigree": "LGN4941 x Nordkarp",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0109056"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Ponticus",
+   "pedigree": "(Stru 031727/DSV 3508)/ECK 3665",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105620"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Porthus",
+   "pedigree": "(Stru 031727 x DSV 3508) x Stru 061887",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108157"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Potenzial",
+   "pedigree": "Maverick/Dekan",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105574"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Revolver",
+   "pedigree": "Sheriff x RGT Reform",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108572"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "RGT Reform",
+   "pedigree": "Confidential/Fortrolig",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105903"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Sheriff",
+   "pedigree": "(Timber/Oakley)/Skalmeje",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105604"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Tobak",
+   "pedigree": "Elvis/Drifter//Koch",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0107404"
+   }
+  },
+  {
+   "crop": "winterweizen",
+   "name": "Chevignon",
+   "pedigree": "Chevron x Boisseau",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0108258"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "Anja",
+   "pedigree": "Lomerit x 4877b12 (BRGD2510)",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502198"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "Henriette",
+   "pedigree": "Laverda/GW 2349",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502114"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "KWS Faro",
+   "pedigree": "Henriette x Cargo",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502361"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "KWS Higgins",
+   "pedigree": "KWS 6-855 x KWS Meridian",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502285"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "KWS Memphis",
+   "pedigree": "KWS Tonic x (KW 6-826 x KW 6-239)",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502498"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "KWS Meridian",
+   "pedigree": "Ikone/Lomerit//Fridericus",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502101"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "KWS Morris",
+   "pedigree": "Daisy x KW 6-137",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502448"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "KWS Tenor",
+   "pedigree": "LP 6-335/Fridericus",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502125"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "KWS Tonic",
+   "pedigree": "Leibnitz x LP 6-536",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502163"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "Lomerit",
+   "pedigree": "Askanova/Grete/Oceane//St.1332-29",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0501835"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "Semper",
+   "pedigree": "Lomerit/Merlot",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502054"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "Stella",
+   "pedigree": "Selection from landrace from Bollnäs",
+   "source": {
+    "inst": "SWE054",
+    "acc": "NGB 1484"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "Titus",
+   "pedigree": "Merlot/Lomerit",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502137"
+   }
+  },
+  {
+   "crop": "wintergerste",
+   "name": "Wenke",
+   "pedigree": "Amrai x 07088/2 x (Wendy x BRGD 2628)",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502485"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Aros",
+   "pedigree": "Kathmandu x Calvin",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502496"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Comtesse",
+   "pedigree": "74 195/Trumpf//5238-8-74/Aramir",
+   "source": {
+    "inst": "CZE122",
+    "acc": "03C0602134"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Gerda",
+   "pedigree": "Ackermann 316/321-482//Voldagsen 2417/3/Herta",
+   "source": {
+    "inst": "CZE122",
+    "acc": "03C0600657"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Jeanie",
+   "pedigree": "Ruby x Matros",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502635"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "KWS Somerset",
+   "pedigree": "KWS Scala x KWS Liga",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502309"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Lautetia",
+   "pedigree": "(Valentina x (Nord 2476 x GW 2424)) x Chalup",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502484"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Lottie",
+   "pedigree": "7598i63 x KWS Cassia",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502356"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Padura",
+   "pedigree": "Zephyr x (Albi x Chess)",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502206"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Sandra",
+   "pedigree": "Artist/Carat",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502111"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "SU Vireni",
+   "pedigree": "Cantare/Reni",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502157"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Valerie",
+   "pedigree": "Berenice/Atem//Mazurka/3/Trumpf",
+   "source": {
+    "inst": "CZE122",
+    "acc": "03C0602100"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Zita",
+   "pedigree": "[(Herta x KLV) x Ymer] x Vada",
+   "source": {
+    "inst": "ITA382",
+    "acc": "Orzo0449"
+   }
+  },
+  {
+   "crop": "wintergerste2",
+   "name": "Zophia",
+   "pedigree": "Admiral x Daniela",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0502358"
+   }
+  },
+  {
+   "crop": "dinkel",
+   "name": "Albertino",
+   "pedigree": "Inbred line",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105988"
+   }
+  },
+  {
+   "crop": "dinkel",
+   "name": "Badenglanz",
+   "pedigree": "Inbred line",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105991"
+   }
+  },
+  {
+   "crop": "dinkel",
+   "name": "Franckentop",
+   "pedigree": "Inbred line",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105990"
+   }
+  },
+  {
+   "crop": "dinkel",
+   "name": "Oberkulmer Rotkorn",
+   "pedigree": "S-LV; (S)LV-CHE[GRIS-2001];",
+   "source": {
+    "inst": "CZE122",
+    "acc": "01C0104947"
+   }
+  },
+  {
+   "crop": "dinkel",
+   "name": "Schwabenkorn",
+   "pedigree": "Crossing",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0102312"
+   }
+  },
+  {
+   "crop": "dinkel",
+   "name": "Zollernfit",
+   "pedigree": "Inbred line",
+   "source": {
+    "inst": "SVK001",
+    "acc": "C0105989"
+   }
+  },
+  {
+   "crop": "hafer",
+   "name": "Delfin",
+   "pedigree": "07/107 x Canyon",
+   "source": {
+    "inst": "SVK003",
+    "acc": "C0701338"
+   }
+  },
+  {
+   "crop": "hafer",
+   "name": "Dominik",
+   "pedigree": "Stamm 6021/Stamm 6018",
+   "source": {
+    "inst": "SVK003",
+    "acc": "C0701331"
+   }
+  },
+  {
+   "crop": "hafer",
+   "name": "Ivory",
+   "pedigree": "NORD 950 x GRAMENA",
+   "source": {
+    "inst": "RUS001",
+    "acc": "201_15082"
+   }
+  },
+  {
+   "crop": "hafer",
+   "name": "Max",
+   "pedigree": "99.10069 x 99.11125",
+   "source": {
+    "inst": "CZE122",
+    "acc": "03C0702159"
+   }
+  },
+  {
+   "crop": "hafer",
+   "name": "Platin",
+   "pedigree": "WEIHENSTEPHANER 8-25/FLAEMINGSKRONE",
+   "source": {
+    "inst": "DEU146",
+    "acc": "AVE 4184"
+   }
+  },
+  {
+   "crop": "hafer",
+   "name": "Poseidon",
+   "pedigree": "Pogon/Flaemingsprof",
+   "source": {
+    "inst": "CZE122",
+    "acc": "03C0702225"
+   }
+  },
+  {
+   "crop": "hafer",
+   "name": "Rex",
+   "pedigree": "sel. from PAJBJERG REX",
+   "source": {
+    "inst": "POL003",
+    "acc": "51265"
+   }
+  }
+ ]
+}

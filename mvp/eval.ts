@@ -18,8 +18,10 @@
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { rankCandidates, queryGamma, queryGammaSampled, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
-import { dimensionNormalizedRbf, medianHeuristicGamma } from './kernelMath.ts'
+import { dimensionNormalizedRbf, maskedMeanSquaredDistance, medianHeuristicGamma, reciprocalRankFusion } from './kernelMath.ts'
 import { buildCatalog, extractRequirements, LEVEL, TRAIT_NAMES, WIZARD_TOLERANCE, type AccessionRecord, type Catalog, type FarmingRequirements } from './traits.ts'
+import { loadBsaUnionCatalog, UNION_TRAIT_NAMES } from './bsaCatalog.ts'
+import { loadTextKernel, normalizeName, textIdentityTop1, textOfficialSimilarRetrieval } from './textKernel.ts'
 
 const DATA_PATH = new URL('../data/eurisco_150.json', import.meta.url)
 
@@ -267,6 +269,89 @@ function main(): void {
 
   const experimentResult = experiments(catalog, scenarioMasks)
 
+  // ── Text-Kernel (CPVO-VD + bge-m3): offizielle Sortentexte, BSL-Katalog ──
+  // Datenroute und Provenanz: data/text/README.md. Das Label `similarTo` ist
+  // die vom Prüfamt in VD-Sektion 16 genannte ähnlichste Sorte (amtlich, aber
+  // per Definition unterscheidbar — Top-k ist der erwartete Modus, nicht Top-1).
+  const tk = loadTextKernel()
+  const tkIdentity = textIdentityTop1(tk)
+  const tkSimilar = textOfficialSimilarRetrieval(tk)
+
+  // Faire numerische Vergleichsbasis auf denselben amtlichen Paaren: reine
+  // RBF-Ähnlichkeit (kein Satisficing-Score, der bei Identitäts-Queries sättigt).
+  const bsa = loadBsaUnionCatalog()
+  const bsaFullMask = UNION_TRAIT_NAMES.map(() => 1)
+  const bsaGamma = queryGammaSampled(bsa.rows, bsaFullMask)
+  const bsaNormed = bsa.ids.map(normalizeName)
+  const corpusNormed = new Set(tk.names.map(normalizeName))
+  // Faire RBF-Ähnlichkeit ohne Neutral-Falle: Null-Überlappung (maskierter
+  // Abstand null) wird ausgeschlossen, nicht als 1.0 gewertet — konsistent mit
+  // der P3-Produktentscheidung (dimensionNormalizedRbf wäre hier neutral 1).
+  const rbfStrict = (q: number, j: number): number | null => {
+    const d = maskedMeanSquaredDistance(bsa.rows[q]!, bsa.rows[j]!, bsa.observationMasks[q]!, bsa.observationMasks[j]!, bsaFullMask)
+    return d === null ? null : Math.exp(-bsaGamma * d)
+  }
+  let fairPairs = 0, fairTop5 = 0, fairTop10 = 0
+  for (let i = 0; i < tk.names.length; i++) {
+    const target = tk.similarTo[i]
+    if (!target) continue
+    const qi = bsaNormed.indexOf(normalizeName(tk.names[i]!))
+    const ti = bsaNormed.indexOf(normalizeName(target))
+    // gleiche Paarmenge wie beim Text-Kernel: Query UND Ziel im VD-Korpus
+    if (qi < 0 || ti < 0 || qi === ti || !corpusNormed.has(normalizeName(target))) continue
+    fairPairs++
+    const ranked = bsa.ids
+      .map((_, j) => ({ j, v: j === qi ? -1 : (rbfStrict(qi, j) ?? -1) }))
+      .sort((a, b) => b.v - a.v)
+    const rank = ranked.findIndex((r) => r.j === ti) + 1
+    if (rank <= 5) fairTop5++
+    if (rank <= 10) fairTop10++
+  }
+
+  // RRF-Fusion (Traits-RBF + Text): Identität muss unter Fusion erhalten bleiben.
+  // Self nimmt normal teil (RBF(x,x)=1, cos(i,i)=1) — es muss gegen alle anderen
+  // gewinnen, sonst wäre die Fusion keine Identität erhaltende Kombination.
+  const inBoth = tk.names
+    .map((name, i) => ({ name, i, q: bsaNormed.indexOf(normalizeName(name)) }))
+    .filter((x) => x.q >= 0)
+  let fusionTop1 = 0
+  for (const { i, q } of inBoth) {
+    // IDs kanonisieren (normalisierte Namen): Der Katalog schreibt "KWS-Dottie",
+    // das Korpus "KWS Dottie" — RRF führt exakte Strings zusammen, ohne
+    // Kanonisierung bekäme die Sorte selbst nur 1/61 statt 2/61.
+    const traitsList = bsa.ids
+      .map((id, j) => ({ id: bsaNormed[j], v: rbfStrict(q, j) ?? -1 }))
+      .sort((a, b) => b.v - a.v)
+      .slice(0, 50)
+    const textList = tk.names
+      .map((n, j) => ({ id: normalizeName(n), v: tk.cos(i, j) }))
+      .sort((a, b) => b.v - a.v)
+      .slice(0, 50)
+    const fused = reciprocalRankFusion([traitsList, textList], 60)
+    if (fused.length > 0 && normalizeName(String(fused[0]!.id)) === bsaNormed[q]) fusionTop1++
+  }
+  const fusionIdentity = inBoth.length > 0 ? fusionTop1 / inBoth.length : 0
+
+  console.log('  ── Text-Kernel (CPVO-VD + bge-m3) ──')
+  console.log(`  text_identity_top1            ${round(tkIdentity)}  (${tk.names.length} Sortentexte)`)
+  console.log(`  amtliche „ähnlichste Sorte" (${tkSimilar.pairs} Paare im Korpus):`)
+  console.log(`    text   top5 ${round(tkSimilar.top5 / Math.max(tkSimilar.pairs, 1))}  top10 ${round(tkSimilar.top10 / Math.max(tkSimilar.pairs, 1))}`)
+  console.log(`    RBF    top5 ${round(fairTop5 / Math.max(fairPairs, 1))}  top10 ${round(fairTop10 / Math.max(fairPairs, 1))}  (${fairPairs} Paare katalogseitig)`)
+  console.log(`  rrf_fusion_identity           ${round(fusionIdentity)}  (${inBoth.length} Sorten im Schnitt)`)
+
+  const textMetrics = {
+    text_identity_top1: round(tkIdentity),
+    text_corpus_size: tk.names.length,
+    text_official_pairs: tkSimilar.pairs,
+    text_official_top5: round(tkSimilar.top5 / Math.max(tkSimilar.pairs, 1)),
+    text_official_top10: round(tkSimilar.top10 / Math.max(tkSimilar.pairs, 1)),
+    traitsrbf_official_pairs: fairPairs,
+    traitsrbf_official_top5: round(fairTop5 / Math.max(fairPairs, 1)),
+    traitsrbf_official_top10: round(fairTop10 / Math.max(fairPairs, 1)),
+    rrf_fusion_identity: round(fusionIdentity),
+  }
+  writeFileSync(new URL('./eval-results.json', import.meta.url), JSON.stringify({ ...results, text_metrics: textMetrics }, null, 2) + '\n')
+
   // ── It 31: ceiling gate — CI fails on quality regression ────────────────
   const m = results.metrics
   const gate: [string, boolean][] = [
@@ -277,6 +362,12 @@ function main(): void {
     ['regret eps005 <= 0.01', (m.noise_regret_rate_eps005 as number) <= 0.01],
     ['deep regret eps005 = 0', m.deep_regret_rate_eps005 === 0],
     ['wizard 4-dim top-3 >= 0.95', experimentResult.wizard4dim >= 0.95],
+    // Text-Kernel-Gates: Thresholds mit dokumentiertem Spielraum — gemessen
+    // 2026-08-27: identity 1.0, official top10 0.47 (Zufallsbaseline ≈ 10/200
+    // = 0.05), Fusion-Identität 1.0. Gate top10 bei 0.30 = 6× Zufall.
+    ['text_identity_top1 = 1', textMetrics.text_identity_top1 === 1],
+    ['text_official_top10 >= 0.3', textMetrics.text_official_top10 >= 0.3],
+    ['rrf_fusion_identity = 1', textMetrics.rrf_fusion_identity === 1],
   ]
   const failed = gate.filter(([, ok]) => !ok)
   console.log('  ── Deckel-Gate (It 31) ──')
