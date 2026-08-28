@@ -128,11 +128,12 @@ for (const [position, item] of nRanked.entries()) {
 // ═══════════════════════════════════════════════════════════════════════════
 // Union-Space über 5 Fruchtarten (It 34): Cross-Crop-Matching auf echten Daten
 // ═══════════════════════════════════════════════════════════════════════════
-console.log('\n═══ Union-Space: 5 Fruchtarten, echte BSL-2026-Daten ═══')
+console.log('\n═══ Union-Space: alle Fruchtarten, echte BSL-2026-Daten ═══')
 const union = loadBsaUnionCatalog()
 const uDims = UNION_TRAIT_NAMES.length
 const byCrop: Record<string, number[]> = {}
 union.crops.forEach((crop, index) => { (byCrop[crop] ??= []).push(index) })
+console.log(`═══ ${Object.keys(byCrop).length} Fruchtarten ═══`)
 console.log(`${union.rows.length} Sorten gesamt über ${Object.keys(byCrop).length} Fruchtarten · ${uDims} Union-Deskriptoren`)
 for (const [crop, indexes] of Object.entries(byCrop)) {
   console.log(`  ${crop.padEnd(8)} ${String(indexes.length).padStart(3)} Sorten`)

@@ -366,3 +366,118 @@ Noten sind hoch standardisiert; ein früherer Kandidat, der die Anfrage-
 Projektion exakt enthält (mehr beobachtet, auf den gemeinsamen Noten
 identisch), bindet bei (1, 1). 38 einzigartige Vollprofile, aber die
 Anfrage-Projektionen kollidieren — BSL-Informationsgrenze, dokumentiert.
+
+## M2a-Scope-Entscheidungen (Stand It 45)
+
+Mais, Zuckerrübe, Senf, Lein, Lupine: **geparsert** (Abschnitte 9, 11–14).
+Offen bleibt allein **Sommerraps** (S. 232 ff.) — Schema-Klärung nötig; Regel
+bleibt: sauber lieber als komplett.
+
+## 12. Senf — `senf.json` (PDF S. 250, Weißer Senf Sinapis alba L.)
+
+**Verifikation:** `pdftotext -bbox` S. 250 (rotierte Header, x-Min):
+Blühbeginn 127,6 < Reife 141,8 < Pflanzenlänge 156,0 < Neigung zu Lager 170,2 <
+**Tausendkornmasse 184,4 < Kornertrag** 198,5 < Ölertrag 212,7 < Ölgehalt 226,9
+(Kenn-Nummer 252,4 / zugelassen seit 287,6 / Züchter-Nummer 315,9 — Registry).
+bbox-Subset-Check im Parser bestätigt reife < lager < **tausendkornmasse <
+kornertrag** < oelertrag < oelgehalt. Datenwert-x-Lagen (129,8–229,1) liegen
+je ~2 pt neben den Header-Ankern — 8 Noten ✓.
+
+| # | Spalte | Feld | x-Min (pt) |
+|---|---|---|---|
+| 1 | Blühbeginn | `buehbeginn` | 127,6 |
+| 2 | Reife | `reife` | 141,8 |
+| 3 | Pflanzenlänge | `pflanzenlaenge` | 156,0 |
+| 4 | Neigung zu Lager | `lager` | 170,2 |
+| 5 | Tausendkornmasse | `tausendkornmasse` | 184,4 |
+| 6 | Kornertrag | `kornertrag` | 198,5 |
+| 7 | Ölertrag | `oelertrag` | 212,7 |
+| 8 | Ölgehalt | `oelgehalt` | 226,9 |
+
+**Trailing-Anker:** Token-Folge `SF <2-3stellig> <4-stellige Jahreszahl>`
+(Kenn-Nummer + zugelassen seit); dahinter Züchter-Nummer/(B)/(V) verworfen.
+Abschnitte: „Erucasäurefreie Sorten" / „Erucasäurehaltige Sorte" (beide unter
+„Mit Voraussetzung … zugelassen" — die Erucasäure-Teilung ist der informative
+Abschnitts-Header, S. 251 Erläuterungen: erucasäurehaltig = Gracja).
+
+**Stichproben:** Martigena `3 5 3 5 7 4 3 3` + SF 76/1990 ✓ Rohtext; Gracja
+(neu) `3 5 4 5 7 6 5 4` + SF 433/2025 ✓. **3 Sorten** · 0/24 null · is_new 2.
+**Identity-Befund 0/3:** Senf projiziert nur auf 8 generische Union-Dims;
+andere Fruchtarten tragen dieselben Notenkombinationen (Dinkel 'Badenkrone'
+vs. Martigena/Mostart, Gerste 'Aros' vs. Gracja — Ties bei Score/Similarity
+(1, 1)); Martigena/Mostart zudem wortgleich identisch (2 Äquivalenzklassen
+für 3 Sorten). BSL-Informationsgrenze bei minimaler Sortenzahl, dokumentiert.
+
+## 13. Lein — `lein.json` (PDF S. 256, Linum usitatissimum L.)
+
+**Verifikation:** `pdftotext -bbox` S. 256: Kornfarbe 130,5 < Blühbeginn 144,7 <
+**Pflanzenlänge 158,8 < Reife 173,0** < Neigung zu Lager 187,2 < Kornertrag
+201,4 < Ölertrag 215,5 < Ölgehalt 229,7 < **Tausendkornmasse 243,9 (zuletzt!)**
+— trotz gleicher Deskriptoren-Menge eine ANDERE Reihenfolge als Senf (dort
+Reife vor Pflanzenlänge, Tausendkornmasse vor Kornertrag). Genau der Fall, für
+den die bbox-Pflicht gilt: der Layout-Lesestand allein hätte verführt.
+
+| # | Spalte | Feld | x-Min (pt) |
+|---|---|---|---|
+| — | Kornfarbe (braun/gelb) | `kornfarbe` ("b"/"g") | 130,5 |
+| 1 | Blühbeginn | `buehbeginn` | 144,7 |
+| 2 | Pflanzenlänge | `pflanzenlaenge` | 158,8 |
+| 3 | Reife | `reife` | 173,0 |
+| 4 | Neigung zu Lager | `lager` | 187,2 |
+| 5 | Kornertrag | `kornertrag` | 201,4 |
+| 6 | Ölertrag | `oelertrag` | 215,5 |
+| 7 | Ölgehalt | `oelgehalt` | 229,7 |
+| 8 | Tausendkornmasse | `tausendkornmasse` | 243,9 |
+
+`kornfarbe` ist ein kategorisches Buchstaben-Feld (analog `spelzenfarbe`
+Hafer) — Metadatum, KEINE Union-Dimension. Trailing-Anker wie Senf:
+`LN <nummer> <jahr>` (z. B. Juliet `… 5 LN 133 2002 404 (B) 10864` —
+Züchter-Nummer 404, (B)-Marker und 10864 verworfen).
+
+**Stichproben:** Balance [b] `6 4 6 4 7 7 5 4` ✓ Rohtext; Paltin [b]
+`6 5 6 - 4 5 5 4` ✓ (EU-Abschnitt, Lager null). **10 Sorten im PDF, 9 im
+Output:** Octal („Ohne Voraussetzung …") trägt 2026 überhaupt keine Noten
+(keine Wert-Token in der Zeile) → parser-seitig ausgeschlossen, hätte auch
+die 8-Deskriptoren-Hygiene nicht passiert. 9 Sorten · 2/72 null (Lager der
+beiden EU-Sorten LS Koral/Paltin) · is_new 0 · kornfarbe b=5/g=4.
+
+## 14. Lupine — `lupine.json` (PDF S. 276, Lupinus angustifolius/albus)
+
+**Verifikation:** `pdftotext -bbox` S. 276 (nur rotierte Wörter — die
+Skalen-Legende unten enthält „Ornamentierung" horizontal am linken Rand und
+würde sonst die x-Ordnung verfälschen; verifyBbox filtert deshalb seit It 45
+auf hohe Boxen): Bitterstoffgehalt 137,6 < Determinierter Wuchs 154,6 <
+Blütenfarbe 171,6 < Ornamentierung des Korns 188,6 < Blühbeginn 205,6 <
+Reife 222,6 < Pflanzenlänge 239,6 < Lager 256,6 < Tausendkornmasse 273,6 <
+Kornertrag 290,6 < Rohproteinertrag 307,6 < Rohproteingehalt 324,7 — 12 Noten.
+Datenwert-x-Lagen (139,7–327,6) je ~2 pt neben den Ankern ✓ (Bolero-Zeile).
+
+| # | Spalte | Feld | Skala | Richtung |
+|---|---|---|---|---|
+| 1 | Bitterstoffgehalt | `bitterstoffgehalt` | 1 = bitterstoffarm … 9 = bitterstoffhaltig | cost |
+| 2 | Determinierter Wuchs | `determinierter_wuchs` | 1 = fehlend … 9 = vorhanden | target |
+| 3 | Blütenfarbe | `bluetenfarbe` | Code 1–7 (weiß … dunkelgelb) | target |
+| 4 | Ornamentierung des Korns | `ornamentierung` | Code 1–5 (keine … schwarz) | target |
+| 5–12 | Blühbeginn, Reife, Pflanzenlänge, Lager, Tausendkornmasse, Kornertrag, Rohproteinertrag, -gehalt | wie Feldname | Note 1–9 | etabliert |
+
+Codes zweiseitig neutral 'target' (analog nabelfarbe, It-Auftrag);
+Bitterstoffgehalt = Alkaloid-Inhaltsstoff → cost.
+
+**Kein Trailing-Anker nötig:** Die Notentabelle S. 276 hat keine Registry-
+Spalten — „Ergänzende Angaben" (Kenn-Nummer, zugelassen seit, …) stehen ab
+S. 277 in eigener Tabelle. Zeile = Name + exakt 12 Noten (Trailing-Run;
+Mehrtoken-Name „Victor Baer" bleibt erhalten).
+
+**Arten/Abschnitte:** Nur zwei der drei Lupinenarten haben 2026 Sorten —
+Gelbe Lupine (Lupinus luteus) ist laut Erläuterungen S. 278 derzeit nicht
+zugelassen. section = Art × Zulassungsstatus, z. B.
+„Lupinus angustifolius — Mit Voraussetzung …" / „Lupinus albus — In einem
+anderen EU-Land eingetragen"; die Art fließt zusätzlich in das Union-Label.
+
+**Stichproben:** Bolero `1 1 3 4 3 5 3 6 6 7 6 5` ✓ Rohtext; Arabella
+`1 1 1 3 - - - - - - - -` (nur Code-Block beobachtet) ✓; Butan
+`1 1 2 1 3 3 5 - 5 3 4 3` ✓. **16 Sorten** (9 angustifolius + 7 albus) ·
+20/192 null (Arabella/Victor Baer je 8, Boruta/Feodora/Boros/Butan je 1) ·
+is_new 0 · Fußnoten 0. Union-Hygiene: Arabella und Victor Baer (4 beobachtete
+Deskriptoren < 8) fallen unter das Matchbarkeits-Gate → 14 lupinen im
+Union-Space.
