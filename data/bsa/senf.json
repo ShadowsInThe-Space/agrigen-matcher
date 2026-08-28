@@ -1,0 +1,44 @@
+[
+  {
+    "sortenname": "Martigena",
+    "section": "Erucasäurefreie Sorten",
+    "is_new": false,
+    "footnotes": [],
+    "buehbeginn": 3,
+    "reife": 5,
+    "pflanzenlaenge": 3,
+    "lager": 5,
+    "tausendkornmasse": 7,
+    "kornertrag": 4,
+    "oelertrag": 3,
+    "oelgehalt": 3
+  },
+  {
+    "sortenname": "Mostart",
+    "section": "Erucasäurefreie Sorten",
+    "is_new": true,
+    "footnotes": [],
+    "buehbeginn": 3,
+    "reife": 5,
+    "pflanzenlaenge": 3,
+    "lager": 5,
+    "tausendkornmasse": 7,
+    "kornertrag": 4,
+    "oelertrag": 3,
+    "oelgehalt": 3
+  },
+  {
+    "sortenname": "Gracja",
+    "section": "Erucasäurehaltige Sorte",
+    "is_new": true,
+    "footnotes": [],
+    "buehbeginn": 3,
+    "reife": 5,
+    "pflanzenlaenge": 4,
+    "lager": 5,
+    "tausendkornmasse": 7,
+    "kornertrag": 6,
+    "oelertrag": 5,
+    "oelgehalt": 4
+  }
+]

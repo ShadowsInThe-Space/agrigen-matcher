@@ -669,3 +669,33 @@ hoch standardisierte Noten + unterschiedliche Beobachtungslücken ⇒ ein
 Kandidat CONTÄHLT die Anfrage-Projektion exakt ⇒ (1,1)-Tie. Derselbe
 Gesetzmäßigkeitstyp wie alle vorherigen Grenzen: Datenauflösung, nicht
 Algorithmus. Pins: 71/71.
+
+## Iteration 45 — M2a final: Senf/Lein/Lupine — Getreide-Heft komplett (KEEP)
+
+Die letzten drei Notentabellen des Hefts geparst (PARSE-NOTES Abschnitte
+12–14): **Senf** S. 250 (3 Sorten, Erucasäure-Abschnitte), **Lein** S. 256
+(9 Sorten, kornfarbe b/g als Metadatum wie spelzenfarbe), **Lupine** S. 276
+(16 Sorten über 2 Arten — Gelbe Lupine laut BSL unzugelassen; Arten × Status
+im section-Feld, Art im Union-Label). bbox-Pflicht hat sich erneut bezahlt
+gemacht: **Senf und Lein haben dieselben 8 Deskriptoren in VERSCHIEDENER
+Reihenfolge** (Lein: Pflanzenlänge vor Reife, Tausendkornmasse zuletzt) —
+der Layout-Lesestand allein hätte Spalten vertauscht. Trailing-Anker für
+Senf/Lein: Token-Folge «Kenn-Nummer (SF/LN) + Nummer + 4-stellige Jahreszahl»;
+Lupine braucht keinen (Registry erst ab S. 277, eigene Tabelle). verifyBbox
+gehärtet: nur rotierte (hohe) Boxen zählen — die Lupinen-Skalenlegende unten
+enthält „Ornamentierung" horizontal am linken Rand und verfälschte sonst die
+x-Ordnung (der Check hat das aktiv geworfen, bevor falsche Daten entstehen).
+
+**Nebenbefund, echter Bug:** Complete-Check + Sortenzahl-Delta deckten auf,
+dass plain `kornertrag` (Raps/Ackerbohne/Mais/Soja — und jetzt Senf/Lein/
+Lupine) SEIT It 34 nicht in UNION_TRAIT_NAMES stand: die Spalte war
+stillschweigend aus dem Union-Space maskiert, obwohl der Komment sie als
+geteilte Subspace-Dimension nannte. Fix + Neu-Messung: Mais 48→60, Soja
+13→16 Sorten bestehen die Hygiene-Gate; Identity Mais 0.8333, Soja 0.6250.
+
+**Endstand: 452 Sorten · 13 Fruchtarten · 66 Deskriptoren.** Identity
+(gemessen, gepinnt): Senf 0/3 (8-dim-Projektion kollidiert cross-crop mit
+identischen Notenkombinationen — Partial-Containment-Ties wie Zuckerrübe —
+und Martigena/Mostart wortgleich identisch), Lein 3/7, Lupine 5/14.
+Complete-Check vor Integration: [] (66 Namen = 66 Richtungen). Pins: 74/74.
+Offen im Heft: nur noch Sommerraps (S. 232 ff.).

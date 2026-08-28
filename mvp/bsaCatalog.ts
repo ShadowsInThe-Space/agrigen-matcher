@@ -219,11 +219,12 @@ export const UNION_TRAIT_NAMES = [
   'sortierung_2_0', 'sortierung_2_5', 'hektolitergewicht', 'spelzenanteil',
   'anteil_nicht_entspelzter_koerner',
   'buehbeginn', 'tanningehalt', 'ascochyta', 'botrytis', 'rost',
-  'oelertrag', 'oelgehalt', 'rohproteinertrag', 'rohproteingehalt', 'glucosinolatgehalt',
+  'kornertrag', 'oelertrag', 'oelgehalt', 'rohproteinertrag', 'rohproteingehalt', 'glucosinolatgehalt',
   'buehzeitpunkt_weiblich', 'kaelteempfindlichkeit_jugend', 'bestockung',
   'staengelfaeule', 'silo_gesamttrockenmasse', 'staerkegehalt', 'nabelfarbe',
   'cercospora', 'ruebenfrischmasse', 'bereinigter_zucker_ertrag', 'zuckergehalt',
   'bereinigter_zuckergehalt', 'kalium_natrium', 'aminostickstoff',
+  'bitterstoffgehalt', 'determinierter_wuchs', 'bluetenfarbe', 'ornamentierung',
 ] as const
 
 /** Hafer: Rispenschieben ist das phänologische Pendant zum Ährenschieben (dokumentierte Analogie). */
@@ -248,7 +249,13 @@ export const UNION_DIRECTIONS: Readonly<Record<string, 'benefit' | 'cost' | 'tar
   ruebenfrischmasse: 'benefit', bereinigter_zucker_ertrag: 'benefit',
   zuckergehalt: 'benefit', bereinigter_zuckergehalt: 'benefit',
   kalium_natrium: 'cost', aminostickstoff: 'cost', // niedrige Gehalte = Qualität
+  // Lupine: Bitterstoffgehalt 1 = bitterstoffarm → cost (Alkaloid-Inhaltsstoff,
+  // niedrig = gut); Wuchstyp determiniert/indeterminiert und die Farbcodes
+  // Blütenfarbe/Ornamentierung sind zweiseitig neutral (analog nabelfarbe).
+  bitterstoffgehalt: 'cost', determinierter_wuchs: 'target',
+  bluetenfarbe: 'target', ornamentierung: 'target',
   oelertrag: 'benefit', oelgehalt: 'benefit', rohproteinertrag: 'benefit', rohproteingehalt: 'benefit',
+  kornertrag: 'benefit', // Lücke seit It 34: plain kornertrag (Raps/Bohne/Mais/Soja/Senf/Lein/Lupine)
   tausendkornmasse: 'benefit', tausendkernmasse: 'benefit',
   kornertrag_st1: 'benefit', kornertrag_st2: 'benefit',
   vesenertrag_st1: 'benefit', vesenertrag_st2: 'benefit',
@@ -269,6 +276,9 @@ const CROP_FILES: ReadonlyArray<[string, string, string]> = [
   ['koernermais.json', 'Zea mays', 'Mais'],
   ['sojabohne.json', 'Glycine max', 'Sojabohne'],
   ['zuckerruebe.json', 'Beta vulgaris', 'Zuckerrübe'],
+  ['senf.json', 'Sinapis alba', 'Senf'],
+  ['lein.json', 'Linum usitatissimum', 'Lein'],
+  ['lupine.json', 'Lupinus', 'Lupine'],
 ]
 
 export interface UnionCatalog extends BsaCatalog {
@@ -308,8 +318,11 @@ export function loadBsaUnionCatalog(): UnionCatalog {
       }
       const typeSuffix = typeof record.zuechtyp === 'string' && record.zuechtyp ? ` [${record.zuechtyp}]` : ''
       const formSuffix = typeof record.form === 'string' && record.form === 'zweizeilig' ? ', 2-zeilig' : ''
+      // Lupine: Artspezifika stehen im section-Feld ("Lupinus angustifolius — …")
+      const lupinusSpecies = record.section.startsWith('Lupinus ') ? record.section.split(' — ')[0]! : ''
+      const latinName = lupinusSpecies || latin
       ids.push(record.sortenname.replace(/\s+/g, '-'))
-      labels.push(`${latin} '${record.sortenname}'${typeSuffix}${formSuffix} (${crop})`)
+      labels.push(`${latinName} '${record.sortenname}'${typeSuffix}${formSuffix} (${crop})`)
       crops.push(crop)
       rows.push(row)
       observationMasks.push(mask)

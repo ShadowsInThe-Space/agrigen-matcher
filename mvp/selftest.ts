@@ -318,15 +318,19 @@ check('Crop-Group real: Helianthus = 0.5385 (oilseed, 8-Member-Gruppe)',
     partialHits === partialTrials)
 }
 
-// ── Loop-It 36: BSA-Echtdaten-Deckel gepinnt (224 offizielle BSL-2026-Sorten) ──
+// ── Loop-It 36/45: BSA-Echtdaten-Deckel gepinnt (Getreide-Heft komplett) ──
 {
   const union = loadBsaUnionCatalog()
   const unionGamma = medianHeuristicGamma(union.rows, union.observationMasks, UNION_TRAIT_NAMES.map(() => 1))
-  check(`BSA-Real: 413 Sorten über 10 Fruchtarten im Union-Space (aktuell ${union.rows.length})`,
-    union.rows.length === 413)
+  check(`BSA-Real: 452 Sorten über 13 Fruchtarten im Union-Space (aktuell ${union.rows.length})`,
+    union.rows.length === 452)
   const byCrop: Record<string, number[]> = {}
   union.crops.forEach((crop, index) => { (byCrop[crop] ??= []).push(index) })
-  const ceilings: Record<string, number> = { Weizen: 1, Gerste: 1, Roggen: 1, Dinkel: 1, Hafer: 0.94, Raps: 0.82, Ackerbohne: 0, Mais: 0.83, Sojabohne: 0.61, 'Zuckerrübe': 0.13 }
+  // Ceilings = GEMESSENE Werte (It 45: Senf/Lein/Lupine neu; Mais/Soja durch den
+  // kornertrag-Union-Fix von It 34 neu gemessen — 60 statt 48 Mais-, 16 statt 13
+  // Soja-Sorten passieren die 8-Deskriptoren-Hygiene). 4 Dezimalen abgewärtis
+  // gepinnt, damit der Pin exakt trägt statt zu runden.
+  const ceilings: Record<string, number> = { Weizen: 1, Gerste: 1, Roggen: 1, Dinkel: 1, Hafer: 0.9411, Raps: 0.8205, Ackerbohne: 0, Mais: 0.8333, Sojabohne: 0.625, 'Zuckerrübe': 0.1315, Senf: 0, Lein: 0.4285, Lupine: 0.3571 }
   for (const [crop, indexes] of Object.entries(byCrop)) {
     let top1 = 0
     for (const i of indexes) {
