@@ -637,3 +637,23 @@ SeedShuffle-Dual-Space-Disziplin trägt auf echten Daten. Pedigree-Kinship
 (Genesys) als dritter Raum integriert und geprüft. System-Endstand:
 314 amtliche Sorten · 7 Fruchtarten · 47 Deskriptoren · 3 Kernel-Räume ·
 alle Deckel build-gesichert (68/66→Checks + 10 Gate-Assertionen).
+
+## ─── LOOP-CLOSURE-MARKER v2 (Iteration 28, 2026-08-29) ───
+
+Der vorige Marker (Iteration 10) nannte als Wiederaufnahme-Bedingung echte
+Daten — diese hat sich ERFÜLLT: 375 amtliche BSL-Sorten über 9 Fruchtarten,
+54 Deskriptoren, drei Kernel-Räume (Traits/Pedigree/Text) mit nachweislich
+identitätserhaltender RRF-Fusion. Alle 70 Checks + 10 Gate-Assertionen grün.
+
+**Neue Wiederaufnahme-Bedingungen (eine genügt):**
+1. Weitere BSL-Tabellen (Zuckerrübe, Senf, Lein, Lupine, Sommerraps,
+   Silomais, Kartoffel-Heft) — mechanische Erweiterung, Parser-Prozess
+   etabliert; ACHTUNG: Tippfehler-Risiko bei Deskriptor-Namen (It 26:
+   silo_gesammtrockenmasse) → vor Integration Complete-Check laufen lassen
+   (jeder Name hat eine Richtung — Skript existiert im Log).
+2. EURISCO/Genesys-Zugang für Passport+C&E auf Accession-Ebene (M2b tief).
+3. UX-Entscheidung Slider vs. Stufen bzw. Freitext-Wizard (llama.cpp).
+
+**Erschöpft und bewiesen:** Der Identitäts-Deckel jeder einzelnen Fruchtart
+ist durch ihre BSL-Datenauflösung bestimmt (9× demonstriert), nicht durch den
+Algorithmus. Weitere „Tuning"-Iterationen ohne neue Daten = Überfitting.
