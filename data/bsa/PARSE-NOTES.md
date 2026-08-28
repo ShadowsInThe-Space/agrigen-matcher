@@ -348,3 +348,21 @@ silo_gesamttrockenmasse < staerkegehalt (10 Noten). Zeilenschema: Name +
 → section. **97 Sorten** (LG 31215 … Bismark) · 353/970 null · Stichprobe
 LG 31215 K210 S200 `5 7 4 3 2 3 7 6 6 6` = Rohtext ✓. K/S-Reifezahlen als
 Metadaten (eigene Skala, nicht Union-Dim). Silomais-Tabellen nicht extrahiert.
+
+## 11. Zuckerrübe — `zuckerruebe.json` (PDF S. 291–292)
+
+**Verifikation:** bbox S. 291 (Cercospora < Mehltau < Ramularia < Rost <
+Rübenfrischmasse < Zucker < Bereinigter Zucker < Zucker < Bereinigter Zucker <
+Kalium+Natrium < Aminostickstoff — Gruppenzuordnung Erträge/Gehalte via
+visueller Header-Lesung geklärt) + Token-Guard (10 Noten vor "ZR"-Kennung).
+**55 Sorten** (BTS Smart 9085 N … ; 15 ohne Noten → Gate) · Stichprobe =
+Rohtext ✓ (nach Fußnoten-Orphan-Komma-Fix). Feldnamen:
+cercospora, mehltau, ramularia, rost, ruebenfrischmasse,
+bereinigter_zucker_ertrag, zuckergehalt, bereinigter_zuckergehalt,
+kalium_natrium (cost — niedrig = Qualität), aminostickstoff (cost).
+
+**Identity-Befund 0.1316 (5/38):** Partial-Containment-Ties — Zuckerrüben-
+Noten sind hoch standardisiert; ein früherer Kandidat, der die Anfrage-
+Projektion exakt enthält (mehr beobachtet, auf den gemeinsamen Noten
+identisch), bindet bei (1, 1). 38 einzigartige Vollprofile, aber die
+Anfrage-Projektionen kollidieren — BSL-Informationsgrenze, dokumentiert.

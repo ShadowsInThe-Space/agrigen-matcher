@@ -322,11 +322,11 @@ check('Crop-Group real: Helianthus = 0.5385 (oilseed, 8-Member-Gruppe)',
 {
   const union = loadBsaUnionCatalog()
   const unionGamma = medianHeuristicGamma(union.rows, union.observationMasks, UNION_TRAIT_NAMES.map(() => 1))
-  check(`BSA-Real: 375 Sorten über 9 Fruchtarten im Union-Space (aktuell ${union.rows.length})`,
-    union.rows.length === 375)
+  check(`BSA-Real: 413 Sorten über 10 Fruchtarten im Union-Space (aktuell ${union.rows.length})`,
+    union.rows.length === 413)
   const byCrop: Record<string, number[]> = {}
   union.crops.forEach((crop, index) => { (byCrop[crop] ??= []).push(index) })
-  const ceilings: Record<string, number> = { Weizen: 1, Gerste: 1, Roggen: 1, Dinkel: 1, Hafer: 0.94, Raps: 0.82, Ackerbohne: 0, Mais: 0.83, Sojabohne: 0.61 }
+  const ceilings: Record<string, number> = { Weizen: 1, Gerste: 1, Roggen: 1, Dinkel: 1, Hafer: 0.94, Raps: 0.82, Ackerbohne: 0, Mais: 0.83, Sojabohne: 0.61, 'Zuckerrübe': 0.13 }
   for (const [crop, indexes] of Object.entries(byCrop)) {
     let top1 = 0
     for (const i of indexes) {

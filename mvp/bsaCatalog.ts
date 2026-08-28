@@ -222,6 +222,8 @@ export const UNION_TRAIT_NAMES = [
   'oelertrag', 'oelgehalt', 'rohproteinertrag', 'rohproteingehalt', 'glucosinolatgehalt',
   'buehzeitpunkt_weiblich', 'kaelteempfindlichkeit_jugend', 'bestockung',
   'staengelfaeule', 'silo_gesamttrockenmasse', 'staerkegehalt', 'nabelfarbe',
+  'cercospora', 'ruebenfrischmasse', 'bereinigter_zucker_ertrag', 'zuckergehalt',
+  'bereinigter_zuckergehalt', 'kalium_natrium', 'aminostickstoff',
 ] as const
 
 /** Hafer: Rispenschieben ist das phänologische Pendant zum Ährenschieben (dokumentierte Analogie). */
@@ -242,6 +244,10 @@ export const UNION_DIRECTIONS: Readonly<Record<string, 'benefit' | 'cost' | 'tar
   kaelteempfindlichkeit_jugend: 'cost', bestockung: 'cost', staengelfaeule: 'cost',
   silo_gesamttrockenmasse: 'benefit', staerkegehalt: 'benefit',
   nabelfarbe: 'target', // Farbcodierung, kosmetisch — zweiseitig neutral
+  cercospora: 'cost',
+  ruebenfrischmasse: 'benefit', bereinigter_zucker_ertrag: 'benefit',
+  zuckergehalt: 'benefit', bereinigter_zuckergehalt: 'benefit',
+  kalium_natrium: 'cost', aminostickstoff: 'cost', // niedrige Gehalte = Qualität
   oelertrag: 'benefit', oelgehalt: 'benefit', rohproteinertrag: 'benefit', rohproteingehalt: 'benefit',
   tausendkornmasse: 'benefit', tausendkernmasse: 'benefit',
   kornertrag_st1: 'benefit', kornertrag_st2: 'benefit',
@@ -262,6 +268,7 @@ const CROP_FILES: ReadonlyArray<[string, string, string]> = [
   ['ackerbohne.json', 'Vicia faba', 'Ackerbohne'],
   ['koernermais.json', 'Zea mays', 'Mais'],
   ['sojabohne.json', 'Glycine max', 'Sojabohne'],
+  ['zuckerruebe.json', 'Beta vulgaris', 'Zuckerrübe'],
 ]
 
 export interface UnionCatalog extends BsaCatalog {

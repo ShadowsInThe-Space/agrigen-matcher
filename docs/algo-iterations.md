@@ -657,3 +657,15 @@ identitätserhaltender RRF-Fusion. Alle 70 Checks + 10 Gate-Assertionen grün.
 **Erschöpft und bewiesen:** Der Identitäts-Deckel jeder einzelnen Fruchtart
 ist durch ihre BSL-Datenauflösung bestimmt (9× demonstriert), nicht durch den
 Algorithmus. Weitere „Tuning"-Iterationen ohne neue Daten = Überfitting.
+
+## Iteration 44 — M2a Pass 4: Zuckerrübe — 10. Fruchtart, Containment-Grenze (KEEP)
+
+55 Sorten geparst (dritte bbox-Korrektur der Layout-Lesung; Namens-
+Orphan-Komma-Fix), 38 bestehen den Gate. **413 Sorten · 10 Fruchtarten ·
+61 Deskriptoren.** Complete-Check vor Integration verhinderte den It-26-
+Tippfehler-Typ diesmal aktiv. Neuer ehrlicher Grenzbefund: **Partial-
+Containment-Ties** (0.1316 Identity bei 38 einzigartigen Profilen) —
+hoch standardisierte Noten + unterschiedliche Beobachtungslücken ⇒ ein
+Kandidat CONTÄHLT die Anfrage-Projektion exakt ⇒ (1,1)-Tie. Derselbe
+Gesetzmäßigkeitstyp wie alle vorherigen Grenzen: Datenauflösung, nicht
+Algorithmus. Pins: 71/71.

@@ -174,6 +174,43 @@ function parseSoja(raw: string): Record[] {
   return records
 }
 
+
+const RUEBE_FIELDS = [
+  'cercospora', 'mehltau', 'ramularia', 'rost', 'ruebenfrischmasse',
+  'bereinigter_zucker_ertrag', 'zuckergehalt', 'bereinigter_zuckergehalt',
+  'kalium_natrium', 'aminostickstoff',
+]
+
+function parseRuebe(raw: string): Record[] {
+  const records: Record[] = []
+  let section = ''
+  for (const line of raw.split('\n')) {
+    const trimmed = line.trim()
+    if (trimmed === '' || /^Seite\s+\d+/.test(trimmed)) continue
+    if (/^Monogerme|^Polygerme|^Mit Voraussetzung|^In einem anderen EU-Land|^Ohne Voraussetzung|^Runkelrübe/.test(trimmed)) { section = trimmed.slice(0, 70); continue }
+    let rest = trimmed
+    let isNew = false
+    if (rest.startsWith('neu ')) { isNew = true; rest = rest.slice(4) }
+    // Fußnoten-Marker "1), 4)" innerhalb/ nach dem Namen entfernen und sammeln
+    const footnotes: number[] = []
+    rest = rest.replace(/\b(\d)\)/g, (_m, d) => { footnotes.push(Number(d)); return '' }).replace(/\s+,/g, ' ').replace(/,\s*$/g, '').replace(/\s+,/g, ' ').replace(/\s+/g, ' ').trim()
+    const tokens = rest.split(' ')
+    // Noten = die genau 10 Token direkt vor dem "ZR <nummer>"-Token (oder Zeilenende)
+    const zrIndex = tokens.findIndex(t => t === 'ZR')
+    const end = zrIndex >= 0 ? zrIndex : tokens.length
+    const tail = tokens.slice(0, end)
+    if (tail.length < RUEBE_FIELDS.length) continue
+    const values = tail.slice(tail.length - RUEBE_FIELDS.length)
+    const nameTokens = tail.slice(0, tail.length - RUEBE_FIELDS.length)
+    if (!nameTokens.length) continue
+    if (!values.every(token => token === '-' || /^[1-9]$/.test(token))) continue
+    const record: Record = { sortenname: nameTokens.join(' '), section: section || 'unbekannt', is_new: isNew, footnotes }
+    RUEBE_FIELDS.forEach((field, index) => { record[field] = values[index] === '-' ? null : Number(values[index]) })
+    records.push(record)
+  }
+  return records
+}
+
 function main(): void {
   console.log('Winterraps S. 228–230 …')
   const rapsRaw = extract(228, 230)
@@ -206,6 +243,11 @@ function main(): void {
   console.log('  Soja:', summarize(soja, SOJA_FIELDS))
   writeFileSync(new URL('./sojabohne.json', import.meta.url), JSON.stringify(soja, null, 2) + '\n')
   console.log(`  Stichprobe Soja: ${soja[0]?.sortenname} ${SOJA_FIELDS.map(f => soja[0]?.[f]).join(' ')}`)
+  console.log('Zuckerrübe S. 291–292 …')
+  const ruebe = parseRuebe(extract(291, 292))
+  console.log('  Zuckerrübe:', summarize(ruebe, RUEBE_FIELDS))
+  writeFileSync(new URL('./zuckerruebe.json', import.meta.url), JSON.stringify(ruebe, null, 2) + '\n')
+  console.log(`  Stichprobe Rübe: ${ruebe[0]?.sortenname} ${RUEBE_FIELDS.map(f => ruebe[0]?.[f]).join(' ')}`)
   console.log(`  Stichprobe Mais: ${mais[0]?.sortenname} K${mais[0]?.kornerreife} S${mais[0]?.siloreife} ${MAIS_FIELDS.map(f => mais[0]?.[f]).join(' ')}`)
 
   // Stichproben gegen Rohtext (erste Datenzeile je Kultur)
