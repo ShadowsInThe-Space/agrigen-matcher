@@ -240,7 +240,7 @@ export const UNION_DIRECTIONS: Readonly<Record<string, 'benefit' | 'cost' | 'tar
   tanningehalt: 'cost', ascochyta: 'cost', botrytis: 'cost', rost: 'cost', glucosinolatgehalt: 'cost',
   buehbeginn: 'target', buehzeitpunkt_weiblich: 'target',
   kaelteempfindlichkeit_jugend: 'cost', bestockung: 'cost', staengelfaeule: 'cost',
-  silo_gesammtrockenmasse: 'benefit', staerkegehalt: 'benefit',
+  silo_gesamttrockenmasse: 'benefit', staerkegehalt: 'benefit',
   nabelfarbe: 'target', // Farbcodierung, kosmetisch — zweiseitig neutral
   oelertrag: 'benefit', oelgehalt: 'benefit', rohproteinertrag: 'benefit', rohproteingehalt: 'benefit',
   tausendkornmasse: 'benefit', tausendkernmasse: 'benefit',
