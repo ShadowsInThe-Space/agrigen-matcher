@@ -332,6 +332,31 @@ function main(): void {
   }
   const fusionIdentity = inBoth.length > 0 ? fusionTop1 / inBoth.length : 0
 
+  // It 46: amtliche ähnlichste Sorte unter RRF-FUSION — schlägt die Fusion
+  // die Einzelkernel auf dem Amts-Ground-Truth?
+  let fusionSimTop5 = 0, fusionSimTop10 = 0, fusionSimPairs = 0
+  for (let i = 0; i < tk.names.length; i++) {
+    const target = tk.similarTo[i]
+    if (!target) continue
+    const qi = bsaNormed.indexOf(normalizeName(tk.names[i]!))
+    const ti = bsaNormed.indexOf(normalizeName(target))
+    if (qi < 0 || ti < 0 || qi === ti || !corpusNormed.has(normalizeName(target))) continue
+    fusionSimPairs++
+    const traitsList = bsa.ids
+      .map((id, j) => ({ id: bsaNormed[j], v: j === qi ? 1 : (rbfStrict(qi, j) ?? -1) }))
+      .sort((a, b) => b.v - a.v).slice(0, 50)
+    const textList = tk.names
+      .map((n, j) => ({ id: normalizeName(n), v: tk.cos(i, j) }))
+      .sort((a, b) => b.v - a.v).slice(0, 50)
+    const fused = reciprocalRankFusion([traitsList, textList], 60)
+    const pos = fused.findIndex(f => String(f.id) === bsaNormed[ti])
+    if (pos >= 0 && pos < 5) fusionSimTop5++
+    if (pos >= 0 && pos < 10) fusionSimTop10++
+  }
+  const fusionSim5 = fusionSimPairs > 0 ? fusionSimTop5 / fusionSimPairs : 0
+  const fusionSim10 = fusionSimPairs > 0 ? fusionSimTop10 / fusionSimPairs : 0
+  console.log(`  fusion_official_top5/10 (It 46)   ${fusionSim5.toFixed(4)} / ${fusionSim10.toFixed(4)} (${fusionSimPairs} Paare)`)
+
   console.log('  ── Text-Kernel (CPVO-VD + bge-m3) ──')
   console.log(`  text_identity_top1            ${round(tkIdentity)}  (${tk.names.length} Sortentexte)`)
   console.log(`  amtliche „ähnlichste Sorte" (${tkSimilar.pairs} Paare im Korpus):`)

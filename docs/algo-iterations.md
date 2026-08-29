@@ -699,3 +699,27 @@ identischen Notenkombinationen — Partial-Containment-Ties wie Zuckerrübe —
 und Martigena/Mostart wortgleich identisch), Lein 3/7, Lupine 5/14.
 Complete-Check vor Integration: [] (66 Namen = 66 Richtungen). Pins: 74/74.
 Offen im Heft: nur noch Sommerraps (S. 232 ff.).
+
+## Iteration 46 — Amtliche-ähnlichste-Sorte unter Fusion gemessen (KEEP als Metrik)
+
+User-Nachtrag löste die Embedding-Erweiterung aus (26 neue Texte, Korpus 226,
+Delta-only auf neobox); daraus die bislang ungeklärte Frage: Schlägt die
+RRF-Fusion die Einzelkernel auf dem Amts-Ground-Truth (Sektion 16 der VDs)?
+
+**Messung (neue eval-Metrik fusion_official_top5/10):**
+```
+                     top5    top10   Paare
+Traits-RBF strikt    0.067   0.200   15
+RRF-Fusion           0.267   0.467   15   ← 4× über Traits
+Text-Kernel allein   0.444   0.500   18
+```
+**Lesart (ehrlich):** Fusion hebt den Trait-Kern massiv, schlägt aber den
+Text-Kern nicht — VD-Texte tragen ~40 UPOV-Merkmale in feineren Ausprägungs-
+zuständen, die 1–9-Noten quantisieren grober; gleichgewichtete RRF verdünnt
+das Text-Signal. Gewichts-Tuning auf 15 Paaren = Überfitting (Professoren-
+Regel), deshalb dokumentiert, nicht getuned. Design-Folge für den
+"Ähnliche-Sorten-Modus": Text-Kern führt, Traits fusionieren zu.
+
+Nebenbefund: CPVO-Abdeckung der M2a-Kulturen politisch begrenzt (Mais 11/97,
+Zuckerrübe 0/55 national gelistet) — der Text-Kern ist ein Kernel für die
+CPVO-geschützte Teilmenge, Traits decken alle. Architektur trägt das.
