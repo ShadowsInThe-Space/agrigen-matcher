@@ -87,7 +87,7 @@
   <div class="kicker">Architektur</div>
   <h2>Ein Rechenkern, zwei getrennte mathematische Objekte — gebaut für echte Datenlücken</h2>
   <div class="pipe">
-    <div class="step"><b>Offizielle Noten</b>BSL Getreide 2026: Noten 1–9 je Sorte und Merkmal, normalisiert auf [0,1]. Union-Space aus 54 Deskriptoren über 9 Fruchtarten; nicht beobachtete Merkmale bleiben maskiert.</div>
+    <div class="step"><b>Offizielle Noten</b>BSL Getreide 2026: Noten 1–9 je Sorte und Merkmal, normalisiert auf [0,1]. Union-Space aus 66 Deskriptoren über 13 Fruchtarten; nicht beobachtete Merkmale bleiben maskiert.</div>
     <div class="arrow">→</div>
     <div class="step"><b>RBF-Katalog-Kern</b>K(x,y)=exp(−γ·d̄²(x,y)) mit Median-Heuristik für γ; bei fester Merkmalsmaske positiv definit — ein echter RKHS.</div>
     <div class="arrow">→</div>
@@ -108,11 +108,11 @@
   <div class="grid2">
     <div class="card">
       <h3>Referenz-Implementierung (TypeScript)</h3>
-      <p class="small">Kern portiert aus einem produktiven Matching-System (Quelle per Commit gepinnt, semantisch diff-identisch). Drei Kernel-Räume auf echten Daten: Trait-RBF (BSL-Noten), Pedigree-Kinship (offizielle Genesys-Abstammungen) und Text-Kernel (200 amtliche CPVO-Sortenbeschreibungen, bge-m3-Embeddings, self-hosted). Läuft ohne Abhängigkeiten auf Node ≥ 22.18 — jede Aussage im Repo in fünf Minuten verifizierbar.</p>
+      <p class="small">Kern portiert aus einem produktiven Matching-System (Quelle per Commit gepinnt, semantisch diff-identisch). Drei Kernel-Räume auf echten Daten: Trait-RBF (BSL-Noten), Pedigree-Kinship (offizielle Genesys-Abstammungen) und Text-Kernel (226 amtliche CPVO-Sortenbeschreibungen, bge-m3-Embeddings, self-hosted auf eigenem Server). Läuft ohne Abhängigkeiten auf Node ≥ 22.18 — jede Aussage im Repo in fünf Minuten verifizierbar.</p>
     </div>
     <div class="card">
       <h3>Engineering-Qualität</h3>
-      <p class="small">Zweiter SOLID-Rebuild in Python; CI prüft bei jedem Push: 70 Selbsttest-Checks (inkl. gepinnter Echtdaten-Deckel), Demo-Läufe und ein <b>Eval-Gate mit 10 Qualitäts-Deckeln</b> — Qualitätsregression bricht den Build. Die RRF-Fusion aus Trait- und Text-Kernel ist bewiesen identitätserhaltend.</p>
+      <p class="small">Zweiter SOLID-Rebuild in Python; CI prüft bei jedem Push: 74 Selbsttest-Checks (inkl. gepinnter Echtdaten-Deckel), Demo-Läufe und ein <b>Eval-Gate mit 10 Qualitäts-Deckeln</b> — Qualitätsregression bricht den Build. Die RRF-Fusion aus Trait- und Text-Kernel ist bewiesen identitätserhaltend.</p>
     </div>
   </div>
   <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">2 / 6</span></div>
@@ -122,7 +122,7 @@
 <section class="page">
   <div class="kicker">Mehrwert</div>
   <h2>Nachvollziehbare Empfehlung aus offiziellen Daten — statt Blackbox oder Tabellen-Sichtung</h2>
-  <p class="lead">AgriGen beantwortet die Anbauprofil-Frage direkt auf der Beschreibenden Sortenliste: eine Shortlist, die jeder Fachkraft erklärbar bleibt — welcher Anforderung jede Sorte wie gut nachkommt, wo sie im Katalog-Perzentil steht, welche Kandidaten praktisch gleichwertig sind. Und erstmals fruchtart-übergreifend: Weizen, Gerste, Roggen, Dinkel, Hafer, Raps, Mais, Sojabohne und Ackerbohne in einer Anfrage — die Standard-Anfrage bringt derzeit vier Fruchtarten in die Top 6.</p>
+  <p class="lead">AgriGen beantwortet die Anbauprofil-Frage direkt auf der Beschreibenden Sortenliste: eine Shortlist, die jeder Fachkraft erklärbar bleibt — welcher Anforderung jede Sorte wie gut nachkommt, wo sie im Katalog-Perzentil steht, welche Kandidaten praktisch gleichwertig sind. Und erstmals fruchtart-übergreifend: Weizen, Gerste, Roggen, Dinkel, Hafer, Raps, Mais, Sojabohne, Ackerbohne, Zuckerrübe, Senf, Lein und Lupine in einer Anfrage — die Standard-Anfrage bringt derzeit vier Fruchtarten in die Top 6.</p>
   <div class="grid2">
     <div class="card">
       <h3>Für die Praxis</h3>
@@ -146,9 +146,9 @@
     <p>Alle Qualitätswerte entstehen aus reproduzierbaren, label-freien Evaluierungen und sind im Repository nachvollziehbar. Grenzen werden dokumentiert, nicht verschwiegen: informationell ununterscheidbare Sorten (identische Beschreibungen), der eine dokumentierte fruchtart-übergreifende Doppelschreibung, und die quantisierte Anfrage-Genauigkeit (Stufen-Anfragen 0.59 → kontinuierlich 1.00).</p>
   </div>
   <div class="grid3">
-    <div class="metric"><div class="v">375</div><div class="l">offizielle BSL-2026-Sorten<br>in der laufenden Demo</div></div>
-    <div class="metric"><div class="v">9</div><div class="l">Fruchtarten in einem<br>Anfrage-Raum (54 Deskriptoren)</div></div>
-    <div class="metric"><div class="v">43</div><div class="l">eval-getriebene Iterationen,<br>jede mit Keep/Revert-Entscheidung</div></div>
+    <div class="metric"><div class="v">452</div><div class="l">offizielle BSL-2026-Sorten<br>in der laufenden Demo</div></div>
+    <div class="metric"><div class="v">13</div><div class="l">Fruchtarten in einem<br>Anfrage-Raum (66 Deskriptoren)</div></div>
+    <div class="metric"><div class="v">46</div><div class="l">eval-getriebene Iterationen,<br>jede mit Keep/Revert-Entscheidung</div></div>
   </div>
   <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">3 / 6</span></div>
 </section>
@@ -158,11 +158,11 @@
   <div class="kicker">MVP-Nachweis</div>
   <h2>Laufende Engine auf echten Bundessortenamt-Daten, gemessene Genauigkeit</h2>
   <div class="term">╔════════════════════════════════════════════════════════════════════════╗
-║ AgriGen Matcher — Union-Space: 9 Fruchtarten, echte BSL-2026-Daten      ║
+║ AgriGen Matcher — Union-Space: 13 Fruchtarten, echte BSL-2026-Daten     ║
 ╚════════════════════════════════════════════════════════════════════════╝
-375 Sorten gesamt über 9 Fruchtarten · 54 Union-Deskriptoren
+452 Sorten gesamt über 13 Fruchtarten · 66 Union-Deskriptoren
   Weizen 116 · Gerste 98 · Roggen 23 · Dinkel 19 · Hafer 17
-  Raps 39 · Mais 48 · Sojabohne 13 · Ackerbohne 2
+  Raps 39 · Mais 60 · Zuckerrübe 38 · Soja 16 · Lupine 14 …
 <span class="hl">Identity-Retrieval je Fruchtart (maskiert):</span>
   Weizen/Gerste/Roggen/Dinkel  top-1 <span class="ok">1.0000</span>
   Hafer 0.9412 · Mais 0.8333 · Raps 0.8205 · Sojabohne 0.6154
@@ -180,14 +180,15 @@ Rang  Sorte                                         Frucht      Score
     <h3>Gemessene Qualität (label-freie Evaluierung, reproduzierbar im Repo)</h3>
     <table>
       <tr><th>Kriterium</th><th>Messung</th><th>Ergebnis</th></tr>
-      <tr><td>Identity-Retrieval (Anfrage = Sortenprofil)</td><td>375 amtliche Sorten, 9 Fruchtarten</td><td><b>4× 1.0000</b>; Hafer 0.94, Mais 0.83, Raps 0.82, Soja 0.62 — jede Abweichung ausgewiesene Äquivalenzklassen</td></tr>
+      <tr><td>Identity-Retrieval (Anfrage = Sortenprofil)</td><td>452 amtliche Sorten, 13 Fruchtarten</td><td><b>4× 1.0000</b>; jede Abweichung ausgewiesene Äquivalenzklassen der amtlichen Daten</td></tr>
       <tr><td>Leave-One-Out-Stabilität</td><td>270 + 8.100 Entfernungen</td><td><b>1.0000</b> Top-3-Jaccard</td></tr>
-      <tr><td>Cross-Crop-Matching</td><td>gemeinsamer Subspace, 9 Fruchtarten</td><td>4 Fruchtarten in den Top 6 (Soja/Weizen/Mais/Gerste)</td></tr>
-      <tr><td>Text-Kernel (CPVO-Beschreibungen, bge-m3)</td><td>200 amtliche Sortentexte</td><td>Identity <b>1.0000</b>; RRF-Fusion identitätserhaltend</td></tr>
+      <tr><td>Cross-Crop-Matching</td><td>gemeinsamer Subspace, 13 Fruchtarten</td><td>4 Fruchtarten in den Top 6 (Soja/Weizen/Mais/Gerste)</td></tr>
+      <tr><td>Text-Kernel (CPVO-Beschreibungen, bge-m3)</td><td>226 amtliche Sortentexte</td><td>Identity <b>1.0000</b>; amtlich-ähnlichste Sorte: top-5 44 %, top-10 50 %</td></tr>
+      <tr><td>RRF-Fusion (Traits + Text)</td><td>amtliches Ground-Truth-Label</td><td>4× über Traits allein (top-5 0.27 vs 0.07); Identität erhaltend</td></tr>
       <tr><td>Bedauerns-Rate bei Anfrage-Rauschen (Modellkatalog)</td><td>±0.01 / ±0.02 / ±0.05</td><td>0.000 / 0.000 / 0.001</td></tr>
       <tr><td>Wizard-Genauigkeit (Stufen-Anfragen, Modellkatalog)</td><td>Vollmaske / 4 Merkmale</td><td>top-1 1.000 / top-3 0.989</td></tr>
       <tr><td>Skalierung</td><td>Ranking / γ-Kalibration (n=5.000)</td><td>linear ~5 ms / gesampelt ≈ 99 ms</td></tr>
-      <tr><td>Build-Absicherung</td><td>CI bei jedem Push</td><td>70 Checks + 10 Deckel-Assertionen</td></tr>
+      <tr><td>Build-Absicherung</td><td>CI bei jedem Push</td><td>74 Checks + 10 Deckel-Assertionen</td></tr>
     </table>
   </div>
   <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">4 / 6</span></div>
@@ -204,9 +205,9 @@ Rang  Sorte                                         Frucht      Score
   <div class="card">
     <h3>Arbeitsweise: eval-getrieben, adversarial geprüft, daten-erprobt</h3>
     <ul>
-      <li>43 Iterationen mit messbaren Hypothesen, jede Entscheidung im öffentlichen Iterations-Log begründet — inklusive dreier Kernel-Räume (Traits, Abstammung, Text) auf echten Daten.</li>
+      <li>46 Iterationen mit messbaren Hypothesen, jede Entscheidung im öffentlichen Iterations-Log begründet — inklusive dreier Kernel-Räume (Traits, Abstammung, Text) auf echten Daten.</li>
       <li>Die Mathematik wurde von einem unabhängigen RKHS-Gutachten adversarial geprüft (inkl. vollständiger numerischer Replikation); alle Befunde eingearbeitet — inklusive eines Kernel-Fehlers, den erst echte Bundessortenamt-Lücken sichtbar machten und der mit Test gepinnt ist.</li>
-      <li>Qualität ist automatisiert: CI prüft 70 Selbsttest-Checks (mit gepinnten Echtdaten-Deckeln), Demo-Läufe und ein Eval-Gate mit zehn Qualitäts-Deckeln.</li>
+      <li>Qualität ist automatisiert: CI prüft 74 Selbsttest-Checks (mit gepinnten Echtdaten-Deckeln), Demo-Läufe und ein Eval-Gate mit zehn Qualitäts-Deckeln.</li>
     </ul>
   </div>
   <div class="grid2">
@@ -225,13 +226,13 @@ Rang  Sorte                                         Frucht      Score
 <!-- S6 SKALIERUNG -->
 <section class="page">
   <div class="kicker">Skalierung</div>
-  <h2>Von 375 amtlichen Sorten in 9 Fruchtarten zur vollständigen offiziellen Sortenlandschaft</h2>
+  <h2>Von 452 amtlichen Sorten in 13 Fruchtarten zur vollständigen offiziellen Sortenlandschaft</h2>
   <div class="card">
     <h3>Roadmap</h3>
     <table>
       <tr><th>Phase</th><th>Inhalt</th><th>Zeitfenster</th></tr>
-      <tr><td><b>M2a — BSL ausbauen</b></td><td><b>9 Fruchtarten leben bereits</b> (Getreide, Mais, Raps, Soja, Ackerbohne; 375 Sorten). Rest: Zuckerrübe, Senf, Lein, Lupine, Silomais und die Kartoffel-Heftreihe nach demselben doppelt verifizierten Parser-Prozess — ohne neue Mechanik.</td><td>läuft seit 08/2026</td></tr>
-      <tr><td><b>M2b — Datenraum erweitern</b></td><td>Erste Etappe läuft: offizielle Genesys-Abstammungen (Pedigree-Kernel) und 200 CPVO-Sortenbeschreibungen (Text-Kernel, bge-m3) sind integriert. Weiter: EURISCO-Passportdaten und C&amp;E-Harmonisierung.</td><td>läuft / 2027</td></tr>
+      <tr><td><b>M2a — BSL ausbauen</b></td><td><b>Das komplette Getreide-Heft 2026 lebt bereits</b>: 13 Fruchtarten, 452 Sorten. Rest: Sommerraps, Silomais und die Kartoffel-Heftreihe nach demselben doppelt verifizierten Parser-Prozess — ohne neue Mechanik.</td><td>läuft seit 08/2026</td></tr>
+      <tr><td><b>M2b — Datenraum erweitern</b></td><td>Erste Etappe läuft: offizielle Genesys-Abstammungen (Pedigree-Kernel) und 226 CPVO-Sortenbeschreibungen (Text-Kernel, bge-m3, self-hosted) sind integriert. Weiter: EURISCO-Passportdaten und C&amp;E-Harmonisierung.</td><td>läuft / 2027</td></tr>
       <tr><td><b>M3 — API &amp; Web-Demo</b></td><td>FastAPI-Wrapper um den Rechenkern; Match-Wizard als Web-Oberfläche (Anfrage-Präzision nach der gemessenen Quantisierungs-Leiter: kontinuierliche Regler = 1.000).</td><td>Q4 2026</td></tr>
       <tr><td><b>M4 — Pilotkunden</b></td><td>Beratungsgesellschaften und Saatgut-Handel im Ruhrgebiet/NRW; Feedback-Schleife in die Merkmals-Harmonisierung.</td><td>2027</td></tr>
     </table>
