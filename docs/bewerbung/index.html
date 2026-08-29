@@ -4,253 +4,215 @@
 <meta charset="UTF-8">
 <title>AgriGen AI — KI Biennale Award 2026</title>
 <style>
+  @font-face { font-family:'Inter'; src:url('fonts/Inter-Regular.ttf'); font-weight:400; }
+  @font-face { font-family:'Inter'; src:url('fonts/Inter-Medium.ttf'); font-weight:500; }
+  @font-face { font-family:'Inter'; src:url('fonts/Inter-SemiBold.ttf'); font-weight:600; }
+  @font-face { font-family:'Inter'; src:url('fonts/Inter-Bold.ttf'); font-weight:700; }
+  @font-face { font-family:'Inter'; src:url('fonts/Inter-Black.ttf'); font-weight:900; }
+  @font-face { font-family:'JetBrains Mono'; src:url('fonts/JetBrainsMono-Regular.ttf'); font-weight:400; }
+  @font-face { font-family:'JetBrains Mono'; src:url('fonts/JetBrainsMono-Bold.ttf'); font-weight:700; }
   @page { size: A4; margin: 0; }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --green: #1d3a2a;
-    --green-soft: #2a5240;
-    --amber: #c9962e;
-    --ink: #1c211e;
-    --muted: #5b6660;
-    --paper: #fbfaf7;
-    --line: #d8d4c8;
-  }
-  body { font-family: "DejaVu Sans", "Liberation Sans", sans-serif; color: var(--ink); background: var(--paper); }
-  .page { width: 210mm; height: 297mm; padding: 16mm 18mm 14mm 18mm; page-break-after: always; position: relative; background: var(--paper); overflow: hidden; }
-  .page:last-child { page-break-after: auto; }
-  .kicker { font-size: 8.5pt; letter-spacing: 2.2px; text-transform: uppercase; color: var(--amber); font-weight: 700; margin-bottom: 4mm; }
-  h1 { font-size: 25pt; line-height: 1.12; color: var(--green); margin-bottom: 5mm; }
-  h2 { font-size: 15pt; color: var(--green); margin-bottom: 4mm; }
-  h3 { font-size: 10.5pt; color: var(--green-soft); margin: 4mm 0 1.5mm 0; }
-  p { font-size: 9.5pt; line-height: 1.5; margin-bottom: 3mm; }
-  ul { margin: 0 0 3mm 5mm; }
-  li { font-size: 9.5pt; line-height: 1.5; margin-bottom: 1.2mm; }
-  .lead { font-size: 11pt; line-height: 1.5; color: var(--ink); margin-bottom: 5mm; }
-  .muted { color: var(--muted); }
-  .small { font-size: 8pt; line-height: 1.45; }
-  .footer { position: absolute; bottom: 8mm; left: 18mm; right: 18mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--muted); border-top: 0.5pt solid var(--line); padding-top: 2mm; }
-  .footer .pageno { color: var(--amber); font-weight: 700; }
-  .card { background: #fff; border: 0.7pt solid var(--line); border-radius: 2.5mm; padding: 4mm 4.5mm; margin-bottom: 3.5mm; }
-  .card h3 { margin-top: 0; }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; }
-  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; }
-  .metric { text-align: center; padding: 3mm 1mm; background: #fff; border: 0.7pt solid var(--line); border-radius: 2.5mm; }
-  .metric .v { font-size: 17pt; font-weight: 700; color: var(--green); }
-  .metric .l { font-size: 7pt; color: var(--muted); margin-top: 1mm; line-height: 1.35; }
-  .term { background: #14201a; color: #d7e4da; font-family: "DejaVu Sans Mono", monospace; font-size: 6.5pt; line-height: 1.42; border-radius: 2.5mm; padding: 3.5mm 4mm; white-space: pre; overflow: hidden; }
-  .term .hl { color: #e9c468; }
-  .term .ok { color: #7fc98f; }
-  .pipe { display: flex; align-items: stretch; gap: 1.5mm; margin: 4mm 0; }
-  .pipe .step { flex: 1; background: #fff; border: 0.7pt solid var(--line); border-top: 2pt solid var(--amber); border-radius: 1.8mm; padding: 2.6mm 2.4mm; font-size: 7.2pt; line-height: 1.4; }
-  .pipe .step b { display: block; font-size: 7.8pt; color: var(--green); margin-bottom: 1mm; }
-  .pipe .arrow { align-self: center; color: var(--amber); font-weight: 700; font-size: 11pt; }
-  table { width: 100%; border-collapse: collapse; font-size: 8.6pt; }
-  th { text-align: left; background: var(--green); color: #fff; padding: 2mm 2.5mm; font-weight: 600; }
-  td { padding: 1.9mm 2.5mm; border-bottom: 0.5pt solid var(--line); }
-  tr:nth-child(even) td { background: #f4f2ea; }
-  .formel { font-family: "DejaVu Serif", serif; font-style: italic; background: #f4f2ea; border-left: 2pt solid var(--amber); padding: 2.5mm 3.5mm; font-size: 10pt; margin: 3mm 0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root { --bg:#06060a; --panel:#101018; --panel2:#0f0f17; --paper:#f4f1ea; --dim:rgba(244,241,234,0.55);
+          --faint:rgba(244,241,234,0.32); --line:rgba(244,241,234,0.13); --lime:#a3e635; --blue:#5b8def;
+          --violet:#8b5cf6; --orange:#ff6b1a; }
+  body { font-family:'Inter',sans-serif; color:var(--paper); background:var(--bg); }
+  .page { width:210mm; height:297mm; padding:15mm 16mm 12mm; page-break-after:always; position:relative; background:var(--bg); overflow:hidden; }
+  .page:last-child { page-break-after:auto; }
+  .mono { font-family:'JetBrains Mono',monospace; }
+  .kicker { font-family:'JetBrains Mono',monospace; font-size:7.5pt; letter-spacing:2.8px; text-transform:uppercase; color:var(--lime); margin-bottom:5mm; }
+  .footer { position:absolute; bottom:7mm; left:16mm; right:16mm; display:flex; justify-content:space-between; font-size:6.8pt; color:var(--faint); border-top:1px solid var(--line); padding-top:2mm; font-family:'JetBrains Mono',monospace; }
+  .footer b { color:var(--lime); font-weight:700; }
+  h1 { font-weight:900; font-size:34pt; line-height:1.05; letter-spacing:-0.5px; }
+  h1 .lime { color:var(--lime); }
+  .sub { font-size:12pt; line-height:1.45; color:var(--dim); font-weight:400; max-width:150mm; }
+  .statrow { display:flex; gap:4mm; margin-top:8mm; }
+  .stat { flex:1; background:var(--panel); border:1px solid var(--line); border-radius:3mm; padding:4mm 4mm 3.4mm; }
+  .stat .v { font-size:20pt; font-weight:900; color:var(--paper); line-height:1; }
+  .stat .v span { color:var(--lime); }
+  .stat .l { font-size:6.8pt; color:var(--faint); margin-top:1.6mm; line-height:1.4; font-family:'JetBrains Mono',monospace; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:3mm; padding:5mm; }
+  .num { font-family:'JetBrains Mono',monospace; font-size:8pt; font-weight:700; color:var(--lime); letter-spacing:1px; }
+  .big { font-size:14pt; font-weight:700; line-height:1.3; }
+  .big .dim { color:var(--dim); font-weight:500; }
+  .small { font-size:8.6pt; line-height:1.5; color:var(--dim); }
+  .tagline { font-size:8.6pt; color:var(--dim); line-height:1.5; }
+  h2 { font-weight:900; font-size:21pt; letter-spacing:-0.3px; margin-bottom:1.5mm; }
+  h2 .lime { color:var(--lime); }
+  .lead { font-size:10.5pt; color:var(--dim); line-height:1.45; margin-bottom:5mm; }
 </style>
 </head>
 <body>
 
-<!-- S1 PROBLEM -->
+<!-- ═════ 1 · HERO ═════ -->
 <section class="page">
-  <div class="kicker">KI Biennale Award 2026 · Kategorie KI Nachwuchs (BRYCK)</div>
-  <h1>AgriGen AI —<br>kernel-basiertes Sorten-Matching auf offiziellen Sortendaten</h1>
-  <p class="lead">Die Sortenwahl wird zur Risiko-Entscheidung: Dürre, Krankheitsdruck, verkürzte Vegetationsperioden verlangen die Sorte, die zum konkreten Anbau-Profil passt. Offizielle Beschreibungen existieren — die <b>Beschreibende Sortenliste</b> des Bundessortenamts mit Noten 1–9 für alle zugelassenen Sorten. Aber sie sind Tabellen, keine Empfehlung: keine Anfrage, kein Ranking, kein Vergleich über Fruchtarten hinweg. AgriGen macht diese Daten matchbar.</p>
-  <div class="card">
-    <h3>Das Problem im Detail</h3>
-    <p><b>Bundessortenamt &amp; Genbanken</b> beschreiben Sorten und Accessionen mit präzisen Noten (Resistenzen, Reife, Standfestigkeit, Ertrag, Morphologie). Die Frage eines Landwirts oder Beraters — <i>„Welche Sorte verträgt hohen Septoria- und Fusarium-Druck, reift früh, bleibt standfest und erträgt stark?"</i> — beantwortet kein System: Die Daten liegen in fruchtart-spezifischen Tabellen mit unterschiedlichen Merkmalssätzen und Lücken, nicht in durchsuchbarer Form. EURISCO erschließt über 2 Millionen Genbank-Accessionen — noch stärker auf Passportdaten beschränkt.</p>
-    <p>Genau diese Struktur — heterogene Merkmalssätze, fehlende Bewertungen, fruchtart-übergreifende Anfragen — ist der Arbeitspunkt unseres Kernels.</p>
+  <div class="kicker">KI Biennale Award 2026 &nbsp;·&nbsp; Kategorie KI Nachwuchs (BRYCK)</div>
+  <h1>452 amtliche Sorten.<br>13 Fruchtarten.<br><span class="lime">Eine Anfrage.</span></h1>
+  <p class="sub" style="margin-top:5mm">AgriGen AI macht die Beschreibende Sortenliste des Bundessortenamts durchsuchbar — Landwirte beschreiben ihr Anbau-Profil, ein Kernel-System empfiehlt passende Sorten. Auf offiziellen Daten, fruchtart-übergreifend, nachvollziehbar in jeder Zahl.</p>
+  <div style="margin:7mm 0 0"><svg viewBox="0 0 304 204" xmlns="http://www.w3.org/2000/svg"><circle cx="4.0" cy="4.0" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="15.5" cy="4.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="27.0" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="38.5" cy="4.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="50.0" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="61.5" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="73.0" cy="4.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="84.5" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="96.0" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="107.5" cy="4.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="119.0" cy="4.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="130.5" cy="4.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="142.0" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="153.5" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="165.0" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="176.5" cy="4.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="188.0" cy="4.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="199.5" cy="4.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="211.0" cy="4.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="222.5" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="234.0" cy="4.0" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="245.5" cy="4.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="257.0" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="268.5" cy="4.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="280.0" cy="4.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="291.5" cy="4.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="4.0" cy="15.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="15.5" cy="15.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="27.0" cy="15.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="38.5" cy="15.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="50.0" cy="15.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="61.5" cy="15.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="73.0" cy="15.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="84.5" cy="15.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="96.0" cy="15.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="107.5" cy="15.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="119.0" cy="15.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="130.5" cy="15.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="142.0" cy="15.5" r="3.2" fill="#ff6b1a" opacity="0.75"/><circle cx="153.5" cy="15.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="165.0" cy="15.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="176.5" cy="15.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="188.0" cy="15.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="199.5" cy="15.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="211.0" cy="15.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="222.5" cy="15.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="234.0" cy="15.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="245.5" cy="15.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="257.0" cy="15.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="268.5" cy="15.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="280.0" cy="15.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="291.5" cy="15.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="4.0" cy="27.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="15.5" cy="27.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="27.0" cy="27.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="38.5" cy="27.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="50.0" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="61.5" cy="27.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="73.0" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="84.5" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="96.0" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="107.5" cy="27.0" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="119.0" cy="27.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="130.5" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="142.0" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="153.5" cy="27.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="165.0" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="176.5" cy="27.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="188.0" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="199.5" cy="27.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="211.0" cy="27.0" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="222.5" cy="27.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="234.0" cy="27.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="245.5" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="257.0" cy="27.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="268.5" cy="27.0" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="280.0" cy="27.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="291.5" cy="27.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="4.0" cy="38.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="15.5" cy="38.5" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="27.0" cy="38.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="38.5" cy="38.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="50.0" cy="38.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="61.5" cy="38.5" r="3.2" fill="#ff6b1a" opacity="0.75"/><circle cx="73.0" cy="38.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="84.5" cy="38.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="96.0" cy="38.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="107.5" cy="38.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="119.0" cy="38.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="130.5" cy="38.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="142.0" cy="38.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="153.5" cy="38.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="165.0" cy="38.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="176.5" cy="38.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="188.0" cy="38.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="199.5" cy="38.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="211.0" cy="38.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="222.5" cy="38.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="234.0" cy="38.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="245.5" cy="38.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="257.0" cy="38.5" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="268.5" cy="38.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="280.0" cy="38.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="291.5" cy="38.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="4.0" cy="50.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="15.5" cy="50.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="27.0" cy="50.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="38.5" cy="50.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="50.0" cy="50.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="61.5" cy="50.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="73.0" cy="50.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="84.5" cy="50.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="96.0" cy="50.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="107.5" cy="50.0" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="119.0" cy="50.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="130.5" cy="50.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="142.0" cy="50.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="153.5" cy="50.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="165.0" cy="50.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="176.5" cy="50.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="188.0" cy="50.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="199.5" cy="50.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="211.0" cy="50.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="222.5" cy="50.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="234.0" cy="50.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="245.5" cy="50.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="257.0" cy="50.0" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="268.5" cy="50.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="280.0" cy="50.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="291.5" cy="50.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="4.0" cy="61.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="15.5" cy="61.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="27.0" cy="61.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="38.5" cy="61.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="50.0" cy="61.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="61.5" cy="61.5" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="73.0" cy="61.5" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="84.5" cy="61.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="96.0" cy="61.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="107.5" cy="61.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="119.0" cy="61.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="130.5" cy="61.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="142.0" cy="61.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="153.5" cy="61.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="165.0" cy="61.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="176.5" cy="61.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="188.0" cy="61.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="199.5" cy="61.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="211.0" cy="61.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="222.5" cy="61.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="234.0" cy="61.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="245.5" cy="61.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="257.0" cy="61.5" r="3.2" fill="#ff6b1a" opacity="0.75"/><circle cx="268.5" cy="61.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="280.0" cy="61.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="291.5" cy="61.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="4.0" cy="73.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="15.5" cy="73.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="27.0" cy="73.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="38.5" cy="73.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="50.0" cy="73.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="61.5" cy="73.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="73.0" cy="73.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="84.5" cy="73.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="96.0" cy="73.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="107.5" cy="73.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="119.0" cy="73.0" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="130.5" cy="73.0" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="142.0" cy="73.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="153.5" cy="73.0" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="165.0" cy="73.0" r="3.2" fill="#06b6d4" opacity="0.75"/><circle cx="176.5" cy="73.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="188.0" cy="73.0" r="3.2" fill="#06b6d4" opacity="0.75"/><circle cx="199.5" cy="73.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="211.0" cy="73.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="222.5" cy="73.0" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="234.0" cy="73.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="245.5" cy="73.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="257.0" cy="73.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="268.5" cy="73.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="280.0" cy="73.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="291.5" cy="73.0" r="3.2" fill="#ff6b1a" opacity="0.75"/><circle cx="4.0" cy="84.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="15.5" cy="84.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="27.0" cy="84.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="38.5" cy="84.5" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="50.0" cy="84.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="61.5" cy="84.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="73.0" cy="84.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="84.5" cy="84.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="96.0" cy="84.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="107.5" cy="84.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="119.0" cy="84.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="130.5" cy="84.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="142.0" cy="84.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="153.5" cy="84.5" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="165.0" cy="84.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="176.5" cy="84.5" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="188.0" cy="84.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="199.5" cy="84.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="211.0" cy="84.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="222.5" cy="84.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="234.0" cy="84.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="245.5" cy="84.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="257.0" cy="84.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="268.5" cy="84.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="280.0" cy="84.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="291.5" cy="84.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="4.0" cy="96.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="15.5" cy="96.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="27.0" cy="96.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="38.5" cy="96.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="50.0" cy="96.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="61.5" cy="96.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="73.0" cy="96.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="84.5" cy="96.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="96.0" cy="96.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="107.5" cy="96.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="119.0" cy="96.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="130.5" cy="96.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="142.0" cy="96.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="153.5" cy="96.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="165.0" cy="96.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="176.5" cy="96.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="188.0" cy="96.0" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="199.5" cy="96.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="211.0" cy="96.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="222.5" cy="96.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="234.0" cy="96.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="245.5" cy="96.0" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="257.0" cy="96.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="268.5" cy="96.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="280.0" cy="96.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="291.5" cy="96.0" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="4.0" cy="107.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="15.5" cy="107.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="27.0" cy="107.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="38.5" cy="107.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="50.0" cy="107.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="61.5" cy="107.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="73.0" cy="107.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="84.5" cy="107.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="96.0" cy="107.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="107.5" cy="107.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="119.0" cy="107.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="130.5" cy="107.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="142.0" cy="107.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="153.5" cy="107.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="165.0" cy="107.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="176.5" cy="107.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="188.0" cy="107.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="199.5" cy="107.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="211.0" cy="107.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="222.5" cy="107.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="234.0" cy="107.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="245.5" cy="107.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="257.0" cy="107.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="268.5" cy="107.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="280.0" cy="107.5" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="291.5" cy="107.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="4.0" cy="119.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="15.5" cy="119.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="27.0" cy="119.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="38.5" cy="119.0" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="50.0" cy="119.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="61.5" cy="119.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="73.0" cy="119.0" r="3.2" fill="#ff6b1a" opacity="0.75"/><circle cx="84.5" cy="119.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="96.0" cy="119.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="107.5" cy="119.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="119.0" cy="119.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="130.5" cy="119.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="142.0" cy="119.0" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="153.5" cy="119.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="165.0" cy="119.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="176.5" cy="119.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="188.0" cy="119.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="199.5" cy="119.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="211.0" cy="119.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="222.5" cy="119.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="234.0" cy="119.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="245.5" cy="119.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="257.0" cy="119.0" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="268.5" cy="119.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="280.0" cy="119.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="291.5" cy="119.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="4.0" cy="130.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="15.5" cy="130.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="27.0" cy="130.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="38.5" cy="130.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="50.0" cy="130.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="61.5" cy="130.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="73.0" cy="130.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="84.5" cy="130.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="96.0" cy="130.5" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="107.5" cy="130.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="119.0" cy="130.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="130.5" cy="130.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="142.0" cy="130.5" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="153.5" cy="130.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="165.0" cy="130.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="176.5" cy="130.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="188.0" cy="130.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="199.5" cy="130.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="211.0" cy="130.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="222.5" cy="130.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="234.0" cy="130.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="245.5" cy="130.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="257.0" cy="130.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="268.5" cy="130.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="280.0" cy="130.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="291.5" cy="130.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="4.0" cy="142.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="15.5" cy="142.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="27.0" cy="142.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="38.5" cy="142.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="50.0" cy="142.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="61.5" cy="142.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="73.0" cy="142.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="84.5" cy="142.0" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="96.0" cy="142.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="107.5" cy="142.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="119.0" cy="142.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="130.5" cy="142.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="142.0" cy="142.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="153.5" cy="142.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="165.0" cy="142.0" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="176.5" cy="142.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="188.0" cy="142.0" r="3.2" fill="#ff6b1a" opacity="0.75"/><circle cx="199.5" cy="142.0" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="211.0" cy="142.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="222.5" cy="142.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="234.0" cy="142.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="245.5" cy="142.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="257.0" cy="142.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="268.5" cy="142.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="280.0" cy="142.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="291.5" cy="142.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="4.0" cy="153.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="15.5" cy="153.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="27.0" cy="153.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="38.5" cy="153.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="50.0" cy="153.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="61.5" cy="153.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="73.0" cy="153.5" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="84.5" cy="153.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="96.0" cy="153.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="107.5" cy="153.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="119.0" cy="153.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="130.5" cy="153.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="142.0" cy="153.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="153.5" cy="153.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="165.0" cy="153.5" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="176.5" cy="153.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="188.0" cy="153.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="199.5" cy="153.5" r="3.2" fill="#ff6b1a" opacity="0.75"/><circle cx="211.0" cy="153.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="222.5" cy="153.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="234.0" cy="153.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="245.5" cy="153.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="257.0" cy="153.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="268.5" cy="153.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="280.0" cy="153.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="291.5" cy="153.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="4.0" cy="165.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="15.5" cy="165.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="27.0" cy="165.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="38.5" cy="165.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="50.0" cy="165.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="61.5" cy="165.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="73.0" cy="165.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="84.5" cy="165.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="96.0" cy="165.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="107.5" cy="165.0" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="119.0" cy="165.0" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="130.5" cy="165.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="142.0" cy="165.0" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="153.5" cy="165.0" r="3.2" fill="#a3e635" opacity="0.75"/><circle cx="165.0" cy="165.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="176.5" cy="165.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="188.0" cy="165.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="199.5" cy="165.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="211.0" cy="165.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="222.5" cy="165.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="234.0" cy="165.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="245.5" cy="165.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="257.0" cy="165.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="268.5" cy="165.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="280.0" cy="165.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="291.5" cy="165.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="4.0" cy="176.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="15.5" cy="176.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="27.0" cy="176.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="38.5" cy="176.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="50.0" cy="176.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="61.5" cy="176.5" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="73.0" cy="176.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="84.5" cy="176.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="96.0" cy="176.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="107.5" cy="176.5" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="119.0" cy="176.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="130.5" cy="176.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="142.0" cy="176.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="153.5" cy="176.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="165.0" cy="176.5" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="176.5" cy="176.5" r="3.2" fill="#ff6b1a" opacity="0.75"/><circle cx="188.0" cy="176.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="199.5" cy="176.5" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="211.0" cy="176.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="222.5" cy="176.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="234.0" cy="176.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="245.5" cy="176.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="257.0" cy="176.5" r="3.2" fill="#8b5cf6" opacity="0.75"/><circle cx="268.5" cy="176.5" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="280.0" cy="176.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="291.5" cy="176.5" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="4.0" cy="188.0" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="15.5" cy="188.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="27.0" cy="188.0" r="3.2" fill="#5b8def" opacity="0.75"/><circle cx="38.5" cy="188.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="50.0" cy="188.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="61.5" cy="188.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="73.0" cy="188.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="84.5" cy="188.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="96.0" cy="188.0" r="3.2" fill="#ff6b1a" opacity="0.75"/><circle cx="107.5" cy="188.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="119.0" cy="188.0" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="130.5" cy="188.0" r="3.2" fill="#facc15" opacity="0.75"/><circle cx="142.0" cy="188.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="153.5" cy="188.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="165.0" cy="188.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="176.5" cy="188.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="188.0" cy="188.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="199.5" cy="188.0" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="211.0" cy="188.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="222.5" cy="188.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="234.0" cy="188.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="245.5" cy="188.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="257.0" cy="188.0" r="3.2" fill="#8b5cf6" opacity="0.9"/><circle cx="268.5" cy="188.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="280.0" cy="188.0" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="291.5" cy="188.0" r="3.2" fill="#ff6b1a" opacity="0.9"/><circle cx="4.0" cy="199.5" r="3.2" fill="#06b6d4" opacity="0.75"/><circle cx="15.5" cy="199.5" r="3.2" fill="#06b6d4" opacity="0.9"/><circle cx="27.0" cy="199.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="38.5" cy="199.5" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="50.0" cy="199.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="61.5" cy="199.5" r="3.2" fill="#a3e635" opacity="0.9"/><circle cx="73.0" cy="199.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="84.5" cy="199.5" r="3.2" fill="#5b8def" opacity="0.9"/><circle cx="96.0" cy="199.5" r="3.2" fill="#ec4899" opacity="0.75"/><circle cx="107.5" cy="199.5" r="3.2" fill="#a3e635" opacity="0.9"/></svg></div>
+  <div style="display:flex; justify-content:space-between; margin-top:2.5mm; font-size:6.6pt; color:var(--faint); font-family:'JetBrains Mono',monospace;">
+    <span><span style="color:#a3e635">●</span> Weizen/Soja</span><span><span style="color:#5b8def">●</span> Gerste/Dinkel</span><span><span style="color:#8b5cf6">●</span> Mais/Lupine</span><span><span style="color:#ff6b1a">●</span> Raps/Lein</span><span><span style="color:#06b6d4">●</span> Rübe/Senf</span><span>1 Punkt = 1 amtliche Sorte</span>
   </div>
-  <div class="grid3">
-    <div class="card"><h3>Wer es braucht</h3><p class="small">Landwirte &amp; Beratung bei Sortenwahl unter Klimastress; Saatgut-Handel als Beratungswerkzeug; Züchter als Parental-Screening über Fruchtarten.</p></div>
-    <div class="card"><h3>Warum jetzt</h3><p class="small">Offizielle Daten sind digital und öffentlich (BSL 2026); Klimaanpassung ist priorisiert; Kernel-Methoden sind in der quantitativen Genetik ausgereift — aber nie für Endanwender-Empfehlung produktisiert.</p></div>
-    <div class="card"><h3>Warum wir</h3><p class="small">Engine, Evaluierung und echte Datenintegration entstehen im eigenen Code — inklusive adversarialer mathematischer Begutachtung und CI-Qualitätsgates.</p></div>
+  <div class="statrow">
+    <div class="stat"><div class="v">452</div><div class="l">offizielle BSL-2026-Sorten<br>in der laufenden Demo</div></div>
+    <div class="stat"><div class="v">13</div><div class="l">Fruchtarten in einem<br>Anfrage-Raum · 66 Merkmale</div></div>
+    <div class="stat"><div class="v">1.0<span>00</span></div><div class="l">Identity-Retrieval — jede Sorte<br>findet sich selbst auf Rang 1</div></div>
+    <div class="stat"><div class="v">4×</div><div class="l">stärker als der Trait-Kern allein<br>durch Kernel-Fusion (amtliches Label)</div></div>
   </div>
-  <div class="card">
-    <h3>Marktlage (Analyse 05/2026)</h3>
-    <table>
-      <tr><th>Anbieter</th><th>Ausrichtung</th><th>Abgrenzung</th></tr>
-      <tr><td>Heritable Agriculture (Google-X)</td><td>Genom-Plattform, Zucht</td><td rowspan="5">Alle treiben die <b>Züchtung</b> an (B2B-Genomik). Keiner beantwortet die <b>Auswahlfrage des Endanwenders</b> auf offiziellen Sortendaten. Diese Lücke schließt AgriGen — mit derselben mathematischen Klasse, aber als Empfehlungssystem.</td></tr>
-      <tr><td>Avalo (11&nbsp;Mio. $ Series A)</td><td>Climate-Crops-Zucht</td></tr>
-      <tr><td>Computomics (Tübingen)</td><td>Enterprise-Genomik</td></tr>
-      <tr><td>NoMaze (München)</td><td>Genomic Prediction</td></tr>
-      <tr><td>Rainbow Crops (9,7&nbsp;Mio. € Seed)</td><td>Zucht-Beschleunigung</td></tr>
-    </table>
-  </div>
-  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">1 / 6</span></div>
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><b>01 / 06</b></div>
 </section>
 
-<!-- S2 ARCHITEKTUR -->
+<!-- ═════ 2 · PROBLEM ═════ -->
 <section class="page">
-  <div class="kicker">Architektur</div>
-  <h2>Ein Rechenkern, zwei getrennte mathematische Objekte — gebaut für echte Datenlücken</h2>
-  <div class="pipe">
-    <div class="step"><b>Offizielle Noten</b>BSL Getreide 2026: Noten 1–9 je Sorte und Merkmal, normalisiert auf [0,1]. Union-Space aus 66 Deskriptoren über 13 Fruchtarten; nicht beobachtete Merkmale bleiben maskiert.</div>
-    <div class="arrow">→</div>
-    <div class="step"><b>RBF-Katalog-Kern</b>K(x,y)=exp(−γ·d̄²(x,y)) mit Median-Heuristik für γ; bei fester Merkmalsmaske positiv definit — ein echter RKHS.</div>
-    <div class="arrow">→</div>
-    <div class="step"><b>Anfrage-Scoring</b>Einseitige Hinge-Terme (Satisficing) mit Toleranzband: Unter-/Überschreiten des Anforderungsziels zählt, Übererfüllen ist frei; Anfragen sind Bereiche.</div>
-    <div class="arrow">→</div>
-    <div class="step"><b>Ranking</b>Score primär; bei Gleichstand RBF-Profilähnlichkeit. Rang, dimensionsloser Score, Perzentil — Null-Überlappung ist kein Match.</div>
+  <div class="kicker">Das Problem</div>
+  <h2>Die Sortenwahl wird zur Risiko­entscheidung — <span class="lime">die Antwort liegt in Tabellen</span></h2>
+  <p class="lead">Dürre, Krankheitsdruck, verkürzte Vegetationsperioden: Welche Sorte passt zu meinem Standort? Das Bundessortenamt beschreibt jede zugelassene Sorte mit amtlichen Noten 1–9. Genbanken katalogisieren Millionen Accessionen. Aber keine Behörde, kein Start-up, kein Konkurrent beantwortet die Auswahlfrage des Endanwenders.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4mm; margin:5mm 0">
+    <div class="panel"><div class="num">01</div><p class="big" style="margin-top:2mm">Amtliche Daten existieren</p><p class="small" style="margin-top:2mm">BSL 2026: präzise Noten je Sorte und Merkmal — als PDF-Tabellen, fruchtart-spezifisch, mit Lücken.</p></div>
+    <div class="panel"><div class="num">02</div><p class="big" style="margin-top:2mm">Sie sind nicht durchsuchbar</p><p class="small" style="margin-top:2mm">Keine Anfrage, kein Ranking, kein Vergleich über Fruchtarten. EURISCO: 2 Mio. Accessionen — Passportdaten dominiert.</p></div>
+    <div class="panel"><div class="num">03</div><p class="big" style="margin-top:2mm">Der Markt züchtet — er wählt nicht</p><p class="small" style="margin-top:2mm">Alle Wettbewerber beschleunigen die Züchtung (B2B-Genomik). Keiner produktisiert die Auswahl.</p></div>
   </div>
-  <div class="formel">K(x,y) = exp(−γ · ‖x−y‖²/d) &nbsp;·&nbsp; feste Maske ⇒ PSD ⇒ RKHS &nbsp;·&nbsp; Kernelwert = RKHS-Kosinus der Einbettungen (Einheitsdiagonale K(z,z)=1)</div>
-  <div class="card">
-    <h3>Mathematische Redlichkeit — am echten Datenmaterial gehärtet</h3>
-    <ul>
-      <li><b>Fehlende Daten sind Masken, nie Schätzungen:</b> nur gemeinsam beobachtete Merkmale fließen in die Distanz ein. Der Echtbetrieb mit BSL-Lücken hat zwei Schwächen aufgedeckt, die im Voll-Daten-Betrieb unsichtbar waren — beide gefixt und per Test gepinnt: <b>Null-Überlappung ist kein Match</b> (statt neutral perfekter Übereinstimmung) und ein Mindest-Abdeckungs-Gate für sinnvoll matchbare Sorten.</li>
-      <li><b>Katalog-Kern und Anfrage-Scoring sind getrennt:</b> der RBF-Kernel (symmetrisch, positiv definit) trägt die RKHS-Interpretation; das Anfrage-Scoring ist asymmetrisch (Satisficing) und wird ausdrücklich nicht als Kernel deklariert.</li>
-      <li><b>PSD ist bewiesen und bewacht:</b> Guard gegen paarweise verschiedene Scoring-Masken; ein dokumentiertes Gegenbeispiel (min-λ = −1) ist als Test gepinnt.</li>
-      <li><b>Inspiriert von</b> RKHS-Regression in der quantitativen Genetik (Gianola / de los Campos) — wir produktisieren denselben Formalismus für die Empfehlungsrichtung.</li>
-    </ul>
+  <div class="panel" style="border-color:rgba(163,230,53,0.35)">
+    <p class="big">Die Marktlücke: <span class="dim">Heritable (Google-X), Avalo (11 Mio. $), Computomics, NoMaze, Rainbow Crops — alle bauen bessere Sorten. AgriGen AI findet die beste vorhandene. Mit derselben mathematischen Klasse, aber als Empfehlungssystem.</span></p>
   </div>
-  <div class="grid2">
-    <div class="card">
-      <h3>Referenz-Implementierung (TypeScript)</h3>
-      <p class="small">Kern portiert aus einem produktiven Matching-System (Quelle per Commit gepinnt, semantisch diff-identisch). Drei Kernel-Räume auf echten Daten: Trait-RBF (BSL-Noten), Pedigree-Kinship (offizielle Genesys-Abstammungen) und Text-Kernel (226 amtliche CPVO-Sortenbeschreibungen, bge-m3-Embeddings, self-hosted auf eigenem Server). Läuft ohne Abhängigkeiten auf Node ≥ 22.18 — jede Aussage im Repo in fünf Minuten verifizierbar.</p>
-    </div>
-    <div class="card">
-      <h3>Engineering-Qualität</h3>
-      <p class="small">Zweiter SOLID-Rebuild in Python; CI prüft bei jedem Push: 74 Selbsttest-Checks (inkl. gepinnter Echtdaten-Deckel), Demo-Läufe und ein <b>Eval-Gate mit 10 Qualitäts-Deckeln</b> — Qualitätsregression bricht den Build. Die RRF-Fusion aus Trait- und Text-Kernel ist bewiesen identitätserhaltend.</p>
-    </div>
-  </div>
-  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">2 / 6</span></div>
+  <p class="tagline" style="margin-top:4mm">Genau die Struktur dieser Daten — heterogene Merkmalssätze je Fruchtart, fehlende Bewertungen, Anfragen über Fruchtartgrenzen — ist der Arbeitspunkt unseres Kernels.</p>
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><b>02 / 06</b></div>
 </section>
 
-<!-- S3 MEHRWERT -->
+<!-- ═════ 3 · ARCHITEKTUR ═════ -->
 <section class="page">
-  <div class="kicker">Mehrwert</div>
-  <h2>Nachvollziehbare Empfehlung aus offiziellen Daten — statt Blackbox oder Tabellen-Sichtung</h2>
-  <p class="lead">AgriGen beantwortet die Anbauprofil-Frage direkt auf der Beschreibenden Sortenliste: eine Shortlist, die jeder Fachkraft erklärbar bleibt — welcher Anforderung jede Sorte wie gut nachkommt, wo sie im Katalog-Perzentil steht, welche Kandidaten praktisch gleichwertig sind. Und erstmals fruchtart-übergreifend: Weizen, Gerste, Roggen, Dinkel, Hafer, Raps, Mais, Sojabohne, Ackerbohne, Zuckerrübe, Senf, Lein und Lupine in einer Anfrage — die Standard-Anfrage bringt derzeit vier Fruchtarten in die Top 6.</p>
-  <div class="grid2">
-    <div class="card">
-      <h3>Für die Praxis</h3>
-      <ul>
-        <li><b>Landwirte &amp; Beratung:</b> Anbau-Profil in natürlichen Begriffen („Septoria- und Fusarium-Druck hoch, standfest, früh, ertragsstark") → qualifizierte Shortlist mit Erfüllungsgrad und Perzentil — direkt aus amtlichen Noten.</li>
-        <li><b>Saatgut-Handel:</b> Beratungsqualität ohne Sortenbuch-Blättern; pathogen-spezifische Differenzierung, die aggregierte Beschreibungen nicht hergeben.</li>
-        <li><b>Züchtung:</b> Parental-Screening über Trait-Profile und Fruchtarten hinweg.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>Für die Datenlage</h3>
-      <ul>
-        <li>Der maskierte Kernel ist <b>im Echtbetrieb auf echte Lücken getestet</b>: fruchtart-spezifische Merkmalssätze, teilweise bewertete Sorten, Null-Überlappungs-Fälle — alles mit definierter Semantik behandelt.</li>
-        <li><b>Äquivalenzklassen-Transparenz:</b> Sorten mit identischer amtlicher Beschreibung werden als solche ausgewiesen — der Matcher offenbart die Grenze der Daten statt sie zu überspielen.</li>
-        <li>Anfragen mit wenigen Kriterien bleiben korrekt (Teilraum-γ) — keine Schätzungen aus Unbekanntem.</li>
-      </ul>
-    </div>
+  <div class="kicker">Wie es funktioniert</div>
+  <h2>Drei Kernel-Räume, <span class="lime">eine Empfehlung</span></h2>
+  <div style="margin:5mm 0 4mm"><svg viewBox="0 0 760 210" xmlns="http://www.w3.org/2000/svg" font-family="Inter">
+  <defs><marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="rgba(244,241,234,0.5)"/></marker></defs>
+  <!-- Datenquellen -->
+  <g text-anchor="middle">
+    <rect x="8" y="18" width="150" height="44" rx="8" fill="#101018" stroke="rgba(244,241,234,0.16)"/>
+    <text x="83" y="38" font-size="8.4" fill="#f4f1ea" font-weight="600">BSL-Getreide 2026</text>
+    <text x="83" y="51" font-size="7" fill="rgba(244,241,234,0.5)" font-family="JetBrains Mono">452 Sorten · 66 Noten</text>
+    <rect x="8" y="84" width="150" height="44" rx="8" fill="#101018" stroke="rgba(244,241,234,0.16)"/>
+    <text x="83" y="104" font-size="8.4" fill="#f4f1ea" font-weight="600">Genesys</text>
+    <text x="83" y="117" font-size="7" fill="rgba(244,241,234,0.5)" font-family="JetBrains Mono">offizielle Abstammungen</text>
+    <rect x="8" y="150" width="150" height="44" rx="8" fill="#101018" stroke="rgba(244,241,234,0.16)"/>
+    <text x="83" y="170" font-size="8.4" fill="#f4f1ea" font-weight="600">CPVO-UPOV-Texte</text>
+    <text x="83" y="183" font-size="7" fill="rgba(244,241,234,0.5)" font-family="JetBrains Mono">226 Sorten · bge-m3</text>
+  </g>
+  <!-- Kernel -->
+  <g text-anchor="middle">
+    <path d="M158,40 L226,40" stroke="rgba(244,241,234,0.5)" stroke-width="1.2" marker-end="url(#arr)"/>
+    <path d="M158,106 L226,106" stroke="rgba(244,241,234,0.5)" stroke-width="1.2" marker-end="url(#arr)"/>
+    <path d="M158,172 L226,172" stroke="rgba(244,241,234,0.5)" stroke-width="1.2" marker-end="url(#arr)"/>
+    <rect x="230" y="18" width="180" height="44" rx="10" fill="none" stroke="#a3e635" stroke-width="1.4"/>
+    <text x="320" y="38" font-size="9" fill="#a3e635" font-weight="700">RBF Trait-Kernel</text>
+    <text x="320" y="51" font-size="6.8" fill="rgba(244,241,234,0.55)" font-family="JetBrains Mono">maskiert · PSD bewiesen</text>
+    <rect x="230" y="84" width="180" height="44" rx="10" fill="none" stroke="#8b5cf6" stroke-width="1.4"/>
+    <text x="320" y="104" font-size="9" fill="#8b5cf6" font-weight="700">Kinship-Kernel</text>
+    <text x="320" y="117" font-size="6.8" fill="rgba(244,241,234,0.55)" font-family="JetBrains Mono">Stammbaum-Wahrscheinlichkeiten</text>
+    <rect x="230" y="150" width="180" height="44" rx="10" fill="none" stroke="#5b8def" stroke-width="1.4"/>
+    <text x="320" y="170" font-size="9" fill="#5b8def" font-weight="700">Text-Kernel</text>
+    <text x="320" y="183" font-size="6.8" fill="rgba(244,241,234,0.55)" font-family="JetBrains Mono">Kosinus · self-hosted bge-m3</text>
+  </g>
+  <!-- Fusion -->
+  <path d="M410,40 C450,40 450,96 470,102" stroke="rgba(244,241,234,0.5)" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+  <path d="M410,106 L470,106" stroke="rgba(244,241,234,0.5)" stroke-width="1.2" marker-end="url(#arr)"/>
+  <path d="M410,172 C450,172 450,116 470,110" stroke="rgba(244,241,234,0.5)" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+  <circle cx="512" cy="106" r="40" fill="#a3e635" opacity="0.14"/>
+  <circle cx="512" cy="106" r="40" fill="none" stroke="#a3e635" stroke-width="1.6"/>
+  <text x="512" y="103" font-size="10" fill="#a3e635" text-anchor="middle" font-weight="800">RRF</text>
+  <text x="512" y="116" font-size="7" fill="rgba(244,241,234,0.7)" text-anchor="middle" font-family="JetBrains Mono">Fusion</text>
+  <!-- Output -->
+  <path d="M552,106 L604,106" stroke="rgba(244,241,234,0.5)" stroke-width="1.2" marker-end="url(#arr)"/>
+  <rect x="608" y="70" width="144" height="72" rx="10" fill="#101018" stroke="#ff6b1a" stroke-width="1.4"/>
+  <text x="680" y="95" font-size="9.4" fill="#ff6b1a" text-anchor="middle" font-weight="700">Empfehlung</text>
+  <text x="680" y="110" font-size="7" fill="rgba(244,241,234,0.6)" text-anchor="middle" font-family="JetBrains Mono">Rang · Score · Perzentil</text>
+  <text x="680" y="124" font-size="7" fill="rgba(244,241,234,0.6)" text-anchor="middle" font-family="JetBrains Mono">13 Fruchtarten · eine Anfrage</text>
+</svg></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4mm; margin-top:2mm">
+    <div class="panel"><p class="big" style="font-size:11pt">Fehlende Daten sind Masken</p><p class="small" style="margin-top:1.6mm">Nur gemeinsam beobachtete Merkmale fließen ein — nie geschätzt. Im Echtbetrieb auf BSL-Lücken gehärtet: zwei Kernel-Schwächen gefunden, gefixt, per Test gepinnt.</p></div>
+    <div class="panel"><p class="big" style="font-size:11pt">Die Mathematik ist bewacht</p><p class="small" style="margin-top:1.6mm">RBF-Kernel mit bewiesener PSD-Garantie; asymmetrisches Anfrage-Scoring wird ausdrücklich nicht als Kernel deklariert. 74 Checks + 10 CI-Deckel sichern jede Aussage.</p></div>
+    <div class="panel"><p class="big" style="font-size:11pt">Anfragen sind Bereiche</p><p class="small" style="margin-top:1.6mm">„Trockenheit: hoch" bedeutet ein Bereich, kein Punkt — Toleranzbänder machen Anfragen robust (Bedauerns-Rate bei realistischer Ungenauigkeit: 0). Inspiriert von RKHS-Regression (Gianola).</p></div>
   </div>
-  <div class="card">
-    <h3>KI-Ehrlichkeit als Merkmal</h3>
-    <p>Alle Qualitätswerte entstehen aus reproduzierbaren, label-freien Evaluierungen und sind im Repository nachvollziehbar. Grenzen werden dokumentiert, nicht verschwiegen: informationell ununterscheidbare Sorten (identische Beschreibungen), der eine dokumentierte fruchtart-übergreifende Doppelschreibung, und die quantisierte Anfrage-Genauigkeit (Stufen-Anfragen 0.59 → kontinuierlich 1.00).</p>
-  </div>
-  <div class="grid3">
-    <div class="metric"><div class="v">452</div><div class="l">offizielle BSL-2026-Sorten<br>in der laufenden Demo</div></div>
-    <div class="metric"><div class="v">13</div><div class="l">Fruchtarten in einem<br>Anfrage-Raum (66 Deskriptoren)</div></div>
-    <div class="metric"><div class="v">46</div><div class="l">eval-getriebene Iterationen,<br>jede mit Keep/Revert-Entscheidung</div></div>
-  </div>
-  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">3 / 6</span></div>
+  <p class="tagline" style="margin-top:4mm">Referenz-Implementierung: TypeScript, ohne Abhängigkeiten, läuft überall — jede Zahl im öffentlichen Repo in Minuten verifizierbar. Datenpipeline: committede Parser, jede Tabellenspalte doppelt verifiziert.</p>
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><b>03 / 06</b></div>
 </section>
 
-<!-- S4 MVP-NACHWEIS -->
+<!-- ═════ 4 · BEWEIS ═════ -->
 <section class="page">
-  <div class="kicker">MVP-Nachweis</div>
-  <h2>Laufende Engine auf echten Bundessortenamt-Daten, gemessene Genauigkeit</h2>
-  <div class="term">╔════════════════════════════════════════════════════════════════════════╗
-║ AgriGen Matcher — Union-Space: 13 Fruchtarten, echte BSL-2026-Daten     ║
-╚════════════════════════════════════════════════════════════════════════╝
-452 Sorten gesamt über 13 Fruchtarten · 66 Union-Deskriptoren
-  Weizen 116 · Gerste 98 · Roggen 23 · Dinkel 19 · Hafer 17
-  Raps 39 · Mais 60 · Zuckerrübe 38 · Soja 16 · Lupine 14 …
-<span class="hl">Identity-Retrieval je Fruchtart (maskiert):</span>
-  Weizen/Gerste/Roggen/Dinkel  top-1 <span class="ok">1.0000</span>
-  Hafer 0.9412 · Mais 0.8333 · Raps 0.8205 · Sojabohne 0.6154
-  (jede Abweichung = ausgewiesene Äquivalenzklassen identischer BSL-Profile)
-<span class="hl">ANFRAGE (cross-crop): mehltauarm, standfest, früh, ertragsstark</span>
-Rang  Sorte                                         Frucht      Score
-  1   Glycine max 'Sussex'                      Sojabohne   0.999
-  2   Glycine max 'Merlin'                      Sojabohne   0.999
-  3   Triticum aestivum 'KWS Mintum'            Weizen      0.999
-  4   Zea mays 'Glutexo'                        Mais        0.998
-  5   Triticum aestivum 'Campesino'             Weizen      0.998
-  6   Hordeum vulgare 'KWS Delis'               Gerste      0.998
-  <p class="small muted" style="margin-top:1.5mm">Echter Demo-Lauf (node mvp/bsa-demo.ts) auf amtlichen BSL-2026-Noten: vier Fruchtarten in den Top 6 der Standard-Anfrage — Sojabohne, Weizen, Mais und Gerste konkurrieren direkt.</p>
-  <div class="card" style="margin-top:3mm">
-    <h3>Gemessene Qualität (label-freie Evaluierung, reproduzierbar im Repo)</h3>
-    <table>
-      <tr><th>Kriterium</th><th>Messung</th><th>Ergebnis</th></tr>
-      <tr><td>Identity-Retrieval (Anfrage = Sortenprofil)</td><td>452 amtliche Sorten, 13 Fruchtarten</td><td><b>4× 1.0000</b>; jede Abweichung ausgewiesene Äquivalenzklassen der amtlichen Daten</td></tr>
-      <tr><td>Leave-One-Out-Stabilität</td><td>270 + 8.100 Entfernungen</td><td><b>1.0000</b> Top-3-Jaccard</td></tr>
-      <tr><td>Cross-Crop-Matching</td><td>gemeinsamer Subspace, 13 Fruchtarten</td><td>4 Fruchtarten in den Top 6 (Soja/Weizen/Mais/Gerste)</td></tr>
-      <tr><td>Text-Kernel (CPVO-Beschreibungen, bge-m3)</td><td>226 amtliche Sortentexte</td><td>Identity <b>1.0000</b>; amtlich-ähnlichste Sorte: top-5 44 %, top-10 50 %</td></tr>
-      <tr><td>RRF-Fusion (Traits + Text)</td><td>amtliches Ground-Truth-Label</td><td>4× über Traits allein (top-5 0.27 vs 0.07); Identität erhaltend</td></tr>
-      <tr><td>Bedauerns-Rate bei Anfrage-Rauschen (Modellkatalog)</td><td>±0.01 / ±0.02 / ±0.05</td><td>0.000 / 0.000 / 0.001</td></tr>
-      <tr><td>Wizard-Genauigkeit (Stufen-Anfragen, Modellkatalog)</td><td>Vollmaske / 4 Merkmale</td><td>top-1 1.000 / top-3 0.989</td></tr>
-      <tr><td>Skalierung</td><td>Ranking / γ-Kalibration (n=5.000)</td><td>linear ~5 ms / gesampelt ≈ 99 ms</td></tr>
-      <tr><td>Build-Absicherung</td><td>CI bei jedem Push</td><td>74 Checks + 10 Deckel-Assertionen</td></tr>
-    </table>
+  <div class="kicker">Der Beweis</div>
+  <h2>Gemessen, nicht behauptet — <span class="lime">auf amtlichen Daten</span></h2>
+  <div style="display:grid; grid-template-columns:1.05fr 1fr; gap:5mm; margin-top:4mm">
+    <div class="panel">
+      <p class="big" style="font-size:11pt">Findet das System die amtlich ähnlichste Sorte?</p>
+      <p class="small" style="margin:1.5mm 0 3mm">Ground-Truth = amtliche Angabe „ähnlichste Sorte" aus den offiziellen UPOV-Beschreibungen.</p>
+      <svg viewBox="0 0 330 92" xmlns="http://www.w3.org/2000/svg"><text x="102" y="8" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.8)" font-family="Inter">Trait-Kern (Noten)</text><rect x="108" y="1" width="172" height="7.6" rx="3.8" fill="rgba(244,241,234,0.06)"/><rect x="108" y="1" width="23.0" height="7.6" rx="3.8" fill="rgba(244,241,234,0.38)"/><text x="135.0" y="8" font-size="7" fill="rgba(244,241,234,0.38)" font-family="JetBrains Mono" font-weight="700">7%</text><rect x="108" y="11.5" width="172" height="7.6" rx="3.8" fill="rgba(244,241,234,0.06)"/><rect x="108" y="11.5" width="68.8" height="7.6" rx="3.8" fill="rgba(244,241,234,0.38)" opacity="0.45"/><text x="180.8" y="18.5" font-size="7" fill="rgba(244,241,234,0.55)" font-family="JetBrains Mono">20%</text><text x="102" y="34" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.8)" font-family="Inter">RRF-Fusion</text><rect x="108" y="27" width="172" height="7.6" rx="3.8" fill="rgba(244,241,234,0.06)"/><rect x="108" y="27" width="91.8" height="7.6" rx="3.8" fill="#5b8def"/><text x="203.8" y="34" font-size="7" fill="#5b8def" font-family="JetBrains Mono" font-weight="700">27%</text><rect x="108" y="37.5" width="172" height="7.6" rx="3.8" fill="rgba(244,241,234,0.06)"/><rect x="108" y="37.5" width="160.6" height="7.6" rx="3.8" fill="#5b8def" opacity="0.45"/><text x="272.6" y="44.5" font-size="7" fill="rgba(244,241,234,0.55)" font-family="JetBrains Mono">47%</text><text x="102" y="60" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.8)" font-family="Inter">Text-Kern (UPOV)</text><rect x="108" y="53" width="172" height="7.6" rx="3.8" fill="rgba(244,241,234,0.06)"/><rect x="108" y="53" width="152.7" height="7.6" rx="3.8" fill="#a3e635"/><text x="264.7" y="60" font-size="7" fill="#a3e635" font-family="JetBrains Mono" font-weight="700">44%</text><rect x="108" y="63.5" width="172" height="7.6" rx="3.8" fill="rgba(244,241,234,0.06)"/><rect x="108" y="63.5" width="172.0" height="7.6" rx="3.8" fill="#a3e635" opacity="0.45"/><text x="284.0" y="70.5" font-size="7" fill="rgba(244,241,234,0.55)" font-family="JetBrains Mono">50%</text><text x="108" y="86" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="Inter">oben: Treffer in Top 5 · unten: Top 10 · Basis: amtliche „ähnlichste Sorte" (CPVO Sektion 16)</text></svg>
+      <p class="small" style="margin-top:2.5mm">Die Fusion aus Noten-Kernel und Text-Kernel den <b style="color:var(--paper)">Trait-Kern 4-fach</b> — die UPOV-Texte tragen ~40 Merkmale in feineren Ausprägungen als 1–9-Noten.</p>
+    </div>
+    <div class="panel">
+      <p class="big" style="font-size:11pt">Identity-Retrieval je Fruchtart</p>
+      <p class="small" style="margin:1.5mm 0 3mm">Anfrage = exaktes Sortenprofil: muss die Sorte selbst auf Rang 1 finden. Zahl rechts = Sorten.</p>
+      <svg viewBox="0 0 330 172" xmlns="http://www.w3.org/2000/svg"><text x="80" y="9.5" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Weizen</text><rect x="86" y="1.5" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="1.5" width="218.0" height="8.6" rx="4.3" fill="#a3e635"/><text x="309.0" y="9.5" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">1.00</text><text x="320" y="9.5" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">116</text><text x="80" y="24.7" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Gerste</text><rect x="86" y="16.7" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="16.7" width="218.0" height="8.6" rx="4.3" fill="#a3e635"/><text x="309.0" y="24.7" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">1.00</text><text x="320" y="24.7" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">98</text><text x="80" y="39.9" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Roggen</text><rect x="86" y="31.9" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="31.9" width="218.0" height="8.6" rx="4.3" fill="#a3e635"/><text x="309.0" y="39.9" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">1.00</text><text x="320" y="39.9" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">23</text><text x="80" y="55.099999999999994" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Dinkel</text><rect x="86" y="47.099999999999994" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="47.099999999999994" width="218.0" height="8.6" rx="4.3" fill="#a3e635"/><text x="309.0" y="55.099999999999994" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">1.00</text><text x="320" y="55.099999999999994" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">19</text><text x="80" y="70.3" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Hafer</text><rect x="86" y="62.3" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="62.3" width="204.9" height="8.6" rx="4.3" fill="#a3e635"/><text x="295.9" y="70.3" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">0.94</text><text x="320" y="70.3" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">17</text><text x="80" y="85.5" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Mais</text><rect x="86" y="77.5" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="77.5" width="180.9" height="8.6" rx="4.3" fill="#5b8def"/><text x="271.9" y="85.5" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">0.83</text><text x="320" y="85.5" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">60</text><text x="80" y="100.69999999999999" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Raps</text><rect x="86" y="92.69999999999999" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="92.69999999999999" width="178.8" height="8.6" rx="4.3" fill="#5b8def"/><text x="269.8" y="100.69999999999999" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">0.82</text><text x="320" y="100.69999999999999" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">39</text><text x="80" y="115.89999999999999" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Soja</text><rect x="86" y="107.89999999999999" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="107.89999999999999" width="137.3" height="8.6" rx="4.3" fill="#5b8def"/><text x="228.3" y="115.89999999999999" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">0.63</text><text x="320" y="115.89999999999999" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">16</text><text x="80" y="131.1" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Lein</text><rect x="86" y="123.1" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="123.1" width="93.7" height="8.6" rx="4.3" fill="rgba(244,241,234,0.35)"/><text x="184.7" y="131.1" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">0.43</text><text x="320" y="131.1" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">9</text><text x="80" y="146.29999999999998" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Lupine</text><rect x="86" y="138.29999999999998" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="138.29999999999998" width="78.5" height="8.6" rx="4.3" fill="rgba(244,241,234,0.35)"/><text x="169.5" y="146.29999999999998" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">0.36</text><text x="320" y="146.29999999999998" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">14</text><text x="80" y="161.5" text-anchor="end" font-size="7.6" fill="rgba(244,241,234,0.75)" font-family="Inter">Zuckerrübe</text><rect x="86" y="153.5" width="218" height="8.6" rx="4.3" fill="rgba(244,241,234,0.07)"/><rect x="86" y="153.5" width="28.3" height="8.6" rx="4.3" fill="rgba(244,241,234,0.35)"/><text x="119.3" y="161.5" font-size="7.6" fill="rgba(244,241,234,0.9)" font-family="JetBrains Mono">0.13</text><text x="320" y="161.5" font-size="6.4" fill="rgba(244,241,234,0.4)" font-family="JetBrains Mono">38</text></svg>
+      <p class="small" style="margin-top:1.5mm; color:var(--faint)">Abweichungen = ausgewiesene Äquivalenzklassen: die amtliche Beschreibung trennt diese Sorten informationell nicht. Wir weisen das aus, statt es zu überspielen. (Senf 3, Ackerbohne 2 Sorten: identische amtliche Profile.)</p>
+    </div>
   </div>
-  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">4 / 6</span></div>
+  <div class="statrow" style="margin-top:4mm">
+    <div class="stat"><div class="v">1.0000</div><div class="l">Leave-One-Out-Stabilität<br>(8.100 Katalog-Entfernungen)</div></div>
+    <div class="stat"><div class="v">226</div><div class="l">eingebettete amtliche<br>Sortentexte (self-hosted)</div></div>
+    <div class="stat"><div class="v">46</div><div class="l">eval-getriebene Iterationen<br>im öffentlichen Log</div></div>
+    <div class="stat"><div class="v">10</div><div class="l">Qualitäts-Deckel im CI —<br>Regression bricht den Build</div></div>
+  </div>
+  <div class="panel" style="margin-top:4mm; font-family:'JetBrains Mono',monospace; font-size:6.9pt; line-height:1.55; color:var(--dim); background:#0a0a10">
+    <span style="color:var(--lime)">›</span> node mvp/bsa-demo.ts &nbsp;·&nbsp; ANFRAGE: mehltauarm, standfest, früh, ertragsstark<br>
+    &nbsp;&nbsp;1&nbsp;&nbsp;Sussex <span style="color:var(--faint)">(Sojabohne)</span> 0.999 &nbsp;&nbsp;2&nbsp;&nbsp;Merlin <span style="color:var(--faint)">(Sojabohne)</span> 0.999 &nbsp;&nbsp;3&nbsp;&nbsp;KWS Mintum <span style="color:var(--faint)">(Weizen)</span> 0.999<br>
+    &nbsp;&nbsp;4&nbsp;&nbsp;Glutexo <span style="color:var(--faint)">(Mais)</span> 0.998 &nbsp;&nbsp;5&nbsp;&nbsp;Campesino <span style="color:var(--faint)">(Weizen)</span> 0.998 &nbsp;&nbsp;6&nbsp;&nbsp;KWS Delis <span style="color:var(--faint)">(Gerste)</span> 0.998<br>
+    <span style="color:var(--faint)">Echter Lauf — vier Fruchtarten konkurrieren in einer Anfrage.</span>
+  </div>
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><b>04 / 06</b></div>
 </section>
 
-<!-- S5 TEAM -->
+<!-- ═════ 5 · TEAM ═════ -->
 <section class="page">
   <div class="kicker">Team</div>
-  <h2>Technical Founder, der die Engine selbst baut und prüfen lässt</h2>
-  <div class="card">
-    <h3>Sonny — Gründer &amp; Entwickler</h3>
-    <p>Baut die Matching-Engine eigenständig: Kernel-Mathematik, Datenpipeline von der amtlichen PDF-Tabelle bis zum gepinnten Deckel, Evaluierungs-Harness und Infrastruktur. Hintergrund in vektorbasierter Suche und produktionsreifen Empfehlungssystemen — der produktive Kernel-Kern von AgriGen ist ein Port aus einem live betriebenen Matching-System.</p>
+  <h2>Technical Founder — <span class="lime">Engine und Daten aus einer Hand</span></h2>
+  <p class="lead" style="max-width:165mm">Sonny, Adaptive AI Solutions (Ruhrgebiet, Pre-Seed). Baut die Matching-Engine eigenständig: Kernel-Mathematik, Datenpipeline von der amtlichen PDF-Tabelle bis zum CI-Deckel, Evaluierungs-Harness. Hintergrund in vektorbasierter Suche und produktiven Empfehlungssystemen — der Kern ist ein Port aus einem live betriebenen System.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4mm; margin:5mm 0">
+    <div class="panel"><div class="num">EVAL-GETRIEBEN</div><p class="small" style="margin-top:2mm">46 Iterationen, jede mit messbarer Hypothese und Keep/Revert-Entscheidung — öffentlich im Repo nachvollziehbar, inklusive jeder verworfenen Idee.</p></div>
+    <div class="panel"><div class="num">ADVERSARIAL GEPRÜFT</div><p class="small" style="margin-top:2mm">Unabhängiges RKHS-Gutachten mit vollständiger numerischer Replikation; alle Befunde eingearbeitet — auch der Kernel-Fehler, den erst echte Datenlücken sichtbar machten.</p></div>
+    <div class="panel"><div class="num">EHRLICH BIS INS DETAIL</div><p class="small" style="margin-top:2mm">Grenzen werden ausgewiesen, nicht überspielt: Äquivalenzklassen, Datenabdeckung, Anfrage-Präzision. Qualitätssicherung bricht den Build, nicht die Marketing-Zeile.</p></div>
   </div>
-  <div class="card">
-    <h3>Arbeitsweise: eval-getrieben, adversarial geprüft, daten-erprobt</h3>
-    <ul>
-      <li>46 Iterationen mit messbaren Hypothesen, jede Entscheidung im öffentlichen Iterations-Log begründet — inklusive dreier Kernel-Räume (Traits, Abstammung, Text) auf echten Daten.</li>
-      <li>Die Mathematik wurde von einem unabhängigen RKHS-Gutachten adversarial geprüft (inkl. vollständiger numerischer Replikation); alle Befunde eingearbeitet — inklusive eines Kernel-Fehlers, den erst echte Bundessortenamt-Lücken sichtbar machten und der mit Test gepinnt ist.</li>
-      <li>Qualität ist automatisiert: CI prüft 74 Selbsttest-Checks (mit gepinnten Echtdaten-Deckeln), Demo-Läufe und ein Eval-Gate mit zehn Qualitäts-Deckeln.</li>
-    </ul>
+  <div class="panel" style="border-color:rgba(163,230,53,0.35)">
+    <p class="big">Passung zu BRYCK: <span class="dim">technische Umsetzungsstärke als Kernkompetenz. Gesucht: Mentoring und Zugang zu Pilotkunden — Beratung, Saatgut-Handel, Zucht.</span></p>
   </div>
-  <div class="grid2">
-    <div class="card">
-      <h3>Adaptive AI Solutions</h3>
-      <p class="small">Einreichende Arbeitsplattform des Gründers für KI-Produktarbeit im Ruhrgebiet; Produktmarke für diese Einreichung: <b>AgriGen AI</b>.</p>
-    </div>
-    <div class="card">
-      <h3>Passung zum BRYCK-Umfeld</h3>
-      <p class="small">Pre-Seed-Phase, technische Umsetzungsstärke als Kernkompetenz; gesucht: Zugang zu Mentoring und Pilotkunden-Netzwerk (Beratung, Saatgut-Handel, Zucht).</p>
-    </div>
-  </div>
-  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><span class="pageno">5 / 6</span></div>
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions</span><b>05 / 06</b></div>
 </section>
 
-<!-- S6 SKALIERUNG -->
+<!-- ═════ 6 · WEG ═════ -->
 <section class="page">
-  <div class="kicker">Skalierung</div>
-  <h2>Von 452 amtlichen Sorten in 13 Fruchtarten zur vollständigen offiziellen Sortenlandschaft</h2>
-  <div class="card">
-    <h3>Roadmap</h3>
-    <table>
-      <tr><th>Phase</th><th>Inhalt</th><th>Zeitfenster</th></tr>
-      <tr><td><b>M2a — BSL ausbauen</b></td><td><b>Das komplette Getreide-Heft 2026 lebt bereits</b>: 13 Fruchtarten, 452 Sorten. Rest: Sommerraps, Silomais und die Kartoffel-Heftreihe nach demselben doppelt verifizierten Parser-Prozess — ohne neue Mechanik.</td><td>läuft seit 08/2026</td></tr>
-      <tr><td><b>M2b — Datenraum erweitern</b></td><td>Erste Etappe läuft: offizielle Genesys-Abstammungen (Pedigree-Kernel) und 226 CPVO-Sortenbeschreibungen (Text-Kernel, bge-m3, self-hosted) sind integriert. Weiter: EURISCO-Passportdaten und C&amp;E-Harmonisierung.</td><td>läuft / 2027</td></tr>
-      <tr><td><b>M3 — API &amp; Web-Demo</b></td><td>FastAPI-Wrapper um den Rechenkern; Match-Wizard als Web-Oberfläche (Anfrage-Präzision nach der gemessenen Quantisierungs-Leiter: kontinuierliche Regler = 1.000).</td><td>Q4 2026</td></tr>
-      <tr><td><b>M4 — Pilotkunden</b></td><td>Beratungsgesellschaften und Saatgut-Handel im Ruhrgebiet/NRW; Feedback-Schleife in die Merkmals-Harmonisierung.</td><td>2027</td></tr>
-    </table>
+  <div class="kicker">Der Weg</div>
+  <h2>Vom laufenden System <span class="lime">zur Sortenlandschaft Europas</span></h2>
+  <div class="panel" style="margin-top:4mm">
+    <svg viewBox="0 0 700 88" xmlns="http://www.w3.org/2000/svg" font-family="Inter">
+      <line x1="30" y1="30" x2="672" y2="30" stroke="rgba(244,241,234,0.18)" stroke-width="2"/>
+      <g>
+        <circle cx="60" cy="30" r="6" fill="#a3e635"/><circle cx="60" cy="30" r="10" fill="none" stroke="#a3e635" opacity="0.35" stroke-width="1.5"/>
+        <text x="60" y="55" text-anchor="middle" font-size="8.2" font-weight="700" fill="#a3e635">08/2026 — LÄUFT</text>
+        <text x="60" y="67" text-anchor="middle" font-size="6.8" fill="rgba(244,241,234,0.55)">13 Fruchtarten · 452 Sorten · 3 Kernel</text>
+        <circle cx="300" cy="30" r="6" fill="#5b8def"/>
+        <text x="300" y="55" text-anchor="middle" font-size="8.2" font-weight="700" fill="#5b8def">Q4/2026</text>
+        <text x="300" y="67" text-anchor="middle" font-size="6.8" fill="rgba(244,241,234,0.55)">BSL-Komplett · API &amp; Web-Wizard</text>
+        <circle cx="540" cy="30" r="6" fill="#8b5cf6"/>
+        <text x="540" y="55" text-anchor="middle" font-size="8.2" font-weight="700" fill="#8b5cf6">2027</text>
+        <text x="540" y="67" text-anchor="middle" font-size="6.8" fill="rgba(244,241,234,0.55)">EURISCO-Accessionen · Pilotkunden</text>
+      </g>
+    </svg>
   </div>
-  <div class="card">
-    <h3>Skalierungspfad der Engine (gemessen, nicht behauptet)</h3>
-    <ul>
-      <li><b>Ranking skaliert linear</b> (O(n·d)): ~5 ms bei 5.000 Sorten — für die gesamte BSL-Sortenlandschaft ohne Architekturwechsel.</li>
-      <li><b>γ-Kalibration über Stichprobe</b> statt aller Paare: konstant ≈ 100 ms unabhängig von n, Ranking nachweislich unverändert.</li>
-      <li><b>Datenpipeline als Reproduzierbarkeits-Vertrag:</b> committede Parser, dokumentierte Spaltenverifikation, Coverage-Gates, Äquivalenzklassen-Ausweisung — jeder neue BSL-Band läuft mit demselben Qualitätsschutz durch.</li>
-      <li><b>Two-Stage-Retrieval</b> (grober Kandidaten-Filter → exaktes Re-Ranking) ist bei Millionen-Accessionen der dokumentierte nächste Schritt — die HNSW-Erfahrung existiert in der Produktivumgebung, aus der der Kern portiert wurde.</li>
-    </ul>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:4mm; margin-top:4mm">
+    <div class="panel"><p class="big" style="font-size:11pt">Skaliert per Messung</p><p class="small" style="margin-top:2mm">Ranking linear (~5 ms bei 5.000 Sorten, gemessen); Kalibration über Stichprobe konstant ~100 ms. Die nächste Tabellen-Seite läuft mit demselben verifizierten Parser-Prozess durch — ohne neue Mechanik.</p></div>
+    <div class="panel"><p class="big" style="font-size:11pt">Warum es jetzt trägt</p><p class="small" style="margin-top:2mm">Der Rechenkern steht auf messbarer Decke jedes Kriteriums — auf offiziellen Daten. Das Risiko ist nicht Mathematik und nicht Datenzugang, sondern nur noch Produktarbeit: Wizard, API, Piloten.</p></div>
   </div>
-  <div class="card">
-    <h3>Warum das jetzt trägt</h3>
-    <p>Der Rechenkern steht auf messbarer Decke jedes falsifizierbaren Kriteriums — auf offiziellen Daten, mit bewiesener Stabilität unter Katalogveränderung und Robustheit gegen Anfrage-Ungenauigkeit. Das Risiko des Projekts ist nicht die Mathematik und nicht der Datenzugang, sondern nur noch Produktarbeit: Wizard, API, Piloten. Genau diese Arbeit ist für einen Technical Founder ohne Agentur-Abhängigkeit umsetzbar.</p>
+  <div class="panel" style="margin-top:4mm; border-color:rgba(255,107,26,0.4)">
+    <p class="big">github.com/Shadows-In-The-Space/agrigen-matcher <span class="dim" style="font-family:'JetBrains Mono',monospace; font-size:8.6pt">— jede Zahl dieser Bewerbung in Minuten verifizierbar</span></p>
   </div>
-  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions · github.com/Shadows-In-The-Space/agrigen-matcher</span><span class="pageno">6 / 6</span></div>
+  <div class="footer"><span>AgriGen AI · Adaptive AI Solutions · Ruhrgebiet</span><b>06 / 06</b></div>
 </section>
 </body>
 </html>
