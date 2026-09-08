@@ -99,3 +99,18 @@ unterscheidbar und werden daher von `buildCatalog` als Datenfehler abgelehnt.
 Einreichung für den **KI Biennale Award 2026** (Digital Campus Zollverein, Essen).
 Kategorie: KI Nachwuchs (BRYCK) oder KI in Produkt & Kundenerlebnis (Vorwerk).
 Deadline: 31. August 2026.
+
+## Verifizierter Portfolio-Prüfstand · 8. September 2026
+
+Die für diese Prüfung benötigten 46 Quell-, Test- und Datendateien wurden bytegenau mit ihren GitHub-Blob-SHAs abgeglichen. Ausgeführt unter Python 3.12.13 und Node.js 24.19.0:
+
+| Prüfung | Ergebnis |
+| --- | --- |
+| `python -m pytest tests/ -q --cov=core --cov-report=term --cov-fail-under=68` | 130 bestanden; 97,46 % Statement-Coverage im Python-Kern |
+| `node mvp/selftest.ts` | 74 PASS, 0 FAIL |
+| `ruff check --config pyproject.toml core/ tests/` mit Ruff 0.14.14 | bestanden |
+| `ruff format --config pyproject.toml --check core/ tests/` mit Ruff 0.14.14 | 13 Dateien bereits formatiert |
+
+Diese Ergebnisse ersetzen ältere Zählstände der Selbsttests in diesem Dokument. Sie sind lokale Prüfergebnisse und kein Nachweis einer Award-Einreichung, Auszeichnung, agronomischen Validierung oder produktiven Nutzung. Die Trennung zwischen synthetischen Musterdaten, weiteren Katalogdaten und den beiden Implementierungen bleibt maßgeblich.
+
+**Veröffentlichungsgrenze:** `mvp/kernelMath.ts` ist laut Quellheader ein Port aus Seedshuffle. Eine öffentliche Freigabe dieses Repositorys würde diesen Port mit veröffentlichen; das muss getrennt vom privaten Status der Seedshuffle-Repositories entschieden werden. Die Portfolio-Dokumentation selbst ändert keine Repository-Sichtbarkeit.
