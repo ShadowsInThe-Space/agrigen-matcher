@@ -16,6 +16,8 @@ import {
 import { matrixRank, symmetricEigenvalues } from './metrics.ts'
 import { percentileOf, queryGamma, queryGammaSampled, rankCandidates, scoreCandidate, TRAIT_DIRECTIONS } from './scoring.ts'
 import { loadBsaUnionCatalog, UNION_TRAIT_NAMES, UNION_DIRECTIONS } from './bsaCatalog.ts'
+import { embedNaturalLanguageQuery, rankNaturalLanguageEmbedding } from './naturalLanguage.ts'
+import type { TextKernelData } from './textKernel.ts'
 import {
   buildCatalog, CROP_GROUPS, extractRequirements, TRAIT_NAMES, WIZARD_TOLERANCE,
   type AccessionRecord, type Catalog, type FarmingRequirements,
@@ -61,6 +63,35 @@ const rrf = reciprocalRankFusion([
   [{ id: 'c', score: 0.8 }, { id: 'a', score: 0.4 }],
 ])
 check('RRF: in beiden Listen vorne gewinnt', rrf[0]!.id === 'a')
+
+console.log('Natural-Language Embedding & Text-Ranking')
+console.log('─'.repeat(64))
+const fakeEmbeddingFetch = (async (_input: string | URL | Request, init?: RequestInit) => {
+  const body = JSON.parse(String(init?.body)) as { model: string, input: string[] }
+  return new Response(JSON.stringify({ embeddings: [[0.8, 0.6]] }), {
+    status: body.model === 'bge-m3' && body.input[0] === 'standfest und früh' ? 200 : 400,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}) as typeof fetch
+const naturalQueryEmbedding = await embedNaturalLanguageQuery('standfest und früh', {
+  endpoint: 'http://embedding.test/api/embed', model: 'bge-m3', fetchImpl: fakeEmbeddingFetch,
+})
+check('Freitext wird über den bge-m3-Endpoint eingebettet',
+  naturalQueryEmbedding.length === 2 && naturalQueryEmbedding[0] === 0.8 && naturalQueryEmbedding[1] === 0.6)
+const syntheticTextKernel: TextKernelData = {
+  names: ['Passend', 'Unpassend', 'Andere Fruchtart'],
+  crops: ['Weizen', 'Weizen', 'Gerste'],
+  similarTo: [null, null, null],
+  embeddings: [[0.8, 0.6], [-0.8, -0.6], [0.8, 0.6]],
+  cos: () => 0,
+}
+const naturalRanking = rankNaturalLanguageEmbedding(naturalQueryEmbedding, syntheticTextKernel, { crop: 'Weizen', limit: 2 })
+check('Freitext-Ranking nutzt denselben semantischen Vektorraum',
+  naturalRanking[0]?.name === 'Passend' && Math.abs(naturalRanking[0]!.score - 1) < 1e-12)
+check('Freitext-Ranking respektiert den harten Fruchtart-Filter',
+  naturalRanking.length === 2 && naturalRanking.every(match => match.crop === 'Weizen'))
+check('Embedding-Dimensionsfehler wird abgelehnt',
+  throws(() => rankNaturalLanguageEmbedding([1, 0, 0], syntheticTextKernel)))
 
 check('Rang(Einheitsmatrix) = n', matrixRank(identity(6)) === 6)
 check('Rang(All-Einsen-Matrix) = 1', matrixRank([[1, 1, 1], [1, 1, 1], [1, 1, 1]]) === 1)

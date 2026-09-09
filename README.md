@@ -14,11 +14,25 @@ Zero Dependencies, lauffähig ab **Node ≥ 22.18 ohne Flags** (Type-Stripping i
 node mvp/demo.ts        # Terminal-Demo: 3 Szenarien (vom Repo-Root)
 node mvp/selftest.ts    # Port-Selbsttest: Kernel-Invarianten
 
+# freie Sprache -> bge-m3 Query-Embedding -> semantische Shortlist
+# benötigt denselben bge-m3-Ollama-Endpunkt wie die Katalog-Embeddings
+node mvp/natural-language-demo.ts "standfest, früh, hoher Krankheitsdruck"
+
 # alternativ im mvp/-Ordner:
 cd mvp
 npm run demo
 npm run selftest
 ```
+
+### Natural-Language-Pfad
+
+`mvp/naturalLanguage.ts` bildet eine freie Fachanfrage mit `bge-m3` in
+denselben 1024-dimensionalen semantischen Raum wie die gecachten amtlichen
+CPVO/UPOV-Sortenbeschreibungen ab. Der Text-Kernel rankt die Kandidaten per
+Kosinusähnlichkeit; das Ergebnis kann anschließend per RRF mit dem
+deterministischen Trait-Ranking fusioniert werden. Ein generatives Modell
+erfindet dabei keine Merkmalswerte. Der Endpunkt ist über
+`AGRIGEN_EMBED_URL` und das Modell über `AGRIGEN_EMBED_MODEL` konfigurierbar.
 
 ### Python-Kern
 

@@ -7,6 +7,7 @@
   },
   "scripts": {
     "demo": "node demo.ts",
+    "demo:natural-language": "node natural-language-demo.ts",
     "selftest": "node selftest.ts"
   }
 }

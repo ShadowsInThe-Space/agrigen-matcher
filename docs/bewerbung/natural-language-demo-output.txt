@@ -1,0 +1,27 @@
+AgriGen AI - reproduzierbarer Natural-Language-Lauf
+Stand: 2026-08-30
+
+Embedding-Dienst: Ollama 0.32.1 auf Neobox
+Modell: bge-m3:latest
+Embedding-Dimension: 1024
+Katalog: 226 amtliche CPVO/UPOV-Sortenbeschreibungen
+Fruchtart-Filter: winterweizen
+
+Natuerliche Anfrage:
+"Gesucht wird ein kurzer, frueh aehrenschiebender Winterweizen mit aufrechter Wuchsform und starker Blattbereifung."
+
+Rang  Sorte              Kosinus-Aehnlichkeit
+1     SU Hystoric        0.6197
+2     SU Hyclass         0.6164
+3     Intensity          0.6035
+4     Complice           0.6005
+5     RGT Volupto        0.5944
+
+Ausgefuehrter Einstiegspunkt:
+mvp/natural-language-demo.ts
+
+Einordnung:
+Die Anfrage wird live mit bge-m3 eingebettet und im selben 1024-dimensionalen
+Raum mit den gecachten Katalog-Embeddings verglichen. Der Fruchtart-Filter wird
+vor der Ausgabe hart angewendet. Die Rangliste ist ein technischer Retrieval-
+Nachweis und noch keine agronomisch validierte Empfehlung.
