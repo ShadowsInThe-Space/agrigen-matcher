@@ -14,7 +14,7 @@ Zero Dependencies, lauffähig ab **Node ≥ 22.18 ohne Flags** (Type-Stripping i
 
 ```bash
 node mvp/demo.ts        # Terminal-Demo: 3 Szenarien (vom Repo-Root)
-node mvp/selftest.ts    # Port-Selbsttest: Kernel-Invarianten
+node mvp/selftest.ts    # Selbsttest: Kernel-Invarianten
 
 # alternativ im mvp/-Ordner:
 cd mvp
@@ -37,12 +37,12 @@ Entry-Point ist **`core/cli.py`** (nicht `core/matcher.py`). Hinweis: `python -m
 
 ```
 agrigen-matcher/
-├── mvp/                        # TypeScript-Referenz-Port (primärer Einstieg, zero deps)
-│   ├── kernelMath.ts           # Kernel-Kern — Port des SeedShuffle-Kernels (s. Header dort)
+├── mvp/                        # TypeScript-Referenzimplementierung (primärer Einstieg, zero deps)
+│   ├── kernelMath.ts           # Kernel-Kern — reine RBF/RKHS-Utilities
 │   ├── traits.ts               # 12-Trait-Raum, Query-Extraktion, Katalog-Normalisierung
 │   ├── metrics.ts              # Rang & Eigenwerte (Jacobi) für die Kernel-Diagnose
 │   ├── demo.ts                 # Terminal-Demo (3 Szenarien)
-│   ├── selftest.ts             # Port-Selbsttest (Kernel-Invarianten)
+│   ├── selftest.ts             # Selbsttest (Kernel-Invarianten)
 │   └── package.json            # npm run demo / npm run selftest (Node ≥ 22.18)
 ├── core/                       # SOLID Python-Rebuild (Strategy/DI)
 │   ├── cli.py                  # Entry-Point der Python-Demo
@@ -62,10 +62,10 @@ agrigen-matcher/
 
 ## Zwei Implementierungen — bewusst nicht derselbe Rechenkern
 
-- **`mvp/` — Reference-Port (TypeScript):** Semantisch identischer Port des produktionserprobten SeedShuffle-Kernels (`seedshuffle_aistudio/server/utils/kernelMath.ts`). Das vollständige Diff ist im Header von `mvp/kernelMath.ts` dokumentiert: Renames strain → candidate, angepasste `validateFeatureRanges`-Fehlermeldung, Auslagerung der domänenspezifischen Feature-Liste nach `traits.ts`. Das Verhalten wird durch die Test-Suite des Quell-Repos abgedeckt (`tests/unit/kernelMath.spec.ts`, 39 Unit-Tests).
+- **`mvp/` — TypeScript-Referenzimplementierung:** Zero-Dependency-Kernel-Utilities mit dokumentierten Invarianten (PSD bei fester Maske, RKHS-Kosinus-Preconditions); abgesichert durch `mvp/selftest.ts` (Kernel-Invarianten) und die Demo-Szenarien.
 - **`core/` — SOLID Python-Rebuild:** Unabhängige Neuimplementierung nach Dependency-Inversion (injizierte `KernelStrategy`, `TraitScaler`, Loader), abgesichert durch 130 Pytest-Tests und CI.
 
-Die beiden Implementierungen sind ausdrücklich **nicht** als derselbe Rechenkern behauptet: Normalisierungen (TS: Rating-/min-max-Skalierung auf [0,1]; Python: StandardScaler) und γ-Kalibrierungen unterscheiden sich — die Scores sind nicht numerisch identisch. Der TS-Port dient als verifizierbare Referenz des produktionserprobten Kernel-Verhaltens, der Python-Kern als testbare Architektur-Basis.
+Die beiden Implementierungen sind ausdrücklich **nicht** als derselbe Rechenkern behauptet: Normalisierungen (TS: Rating-/min-max-Skalierung auf [0,1]; Python: StandardScaler) und γ-Kalibrierungen unterscheiden sich — die Scores sind nicht numerisch identisch. Der TypeScript-Kern dient als invariantengeprüfte Referenz, der Python-Kern als testbare Architektur-Basis.
 
 ## Architektur (Kernel-Pipeline)
 
@@ -114,5 +114,3 @@ Die für diese Prüfung benötigten 46 Quell-, Test- und Datendateien wurden byt
 | `ruff format --config pyproject.toml --check core/ tests/` mit Ruff 0.14.14 | 13 Dateien bereits formatiert |
 
 Diese Ergebnisse ersetzen ältere Zählstände der Selbsttests in diesem Dokument. Sie sind lokale Prüfergebnisse und kein Nachweis einer Award-Einreichung, Auszeichnung, agronomischen Validierung oder produktiven Nutzung. Die Trennung zwischen synthetischen Musterdaten, weiteren Katalogdaten und den beiden Implementierungen bleibt maßgeblich.
-
-**Veröffentlichungsgrenze:** `mvp/kernelMath.ts` ist laut Quellheader ein Port aus Seedshuffle. Eine öffentliche Freigabe dieses Repositorys würde diesen Port mit veröffentlichen; das muss getrennt vom privaten Status der Seedshuffle-Repositories entschieden werden. Die Portfolio-Dokumentation selbst ändert keine Repository-Sichtbarkeit.
