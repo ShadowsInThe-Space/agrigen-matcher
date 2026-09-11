@@ -633,7 +633,7 @@ Deckel-Gate: 10/10 PASS — neu: text_identity_top1 = 1,
                                 rrf_fusion_identity = 1
 ```
 Die RRF-Fusion (Traits-RBF + Text) ist identitätserhaltend — die
-SeedShuffle-Dual-Space-Disziplin trägt auf echten Daten. Pedigree-Kinship
+Dual-Space-Disziplin trägt auf echten Daten. Pedigree-Kinship
 (Genesys) als dritter Raum integriert und geprüft. System-Endstand:
 314 amtliche Sorten · 7 Fruchtarten · 47 Deskriptoren · 3 Kernel-Räume ·
 alle Deckel build-gesichert (68/66→Checks + 10 Gate-Assertionen).

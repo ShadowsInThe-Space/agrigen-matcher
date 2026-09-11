@@ -1,6 +1,6 @@
 /**
- * Port self-test: verifies the kernel core invariants after the SeedShuffle →
- * AgriGen port and the query-scoring semantics (scoring.ts/traits.ts), using
+ * Kernel self-test: verifies the kernel core invariants and the query-scoring
+ * semantics (scoring.ts/traits.ts), using
  * only pure functions — plus gold values pinned against a REAL run on the
  * EURISCO sample catalog (γ, min-λ, per-scenario Top-1), the PSD
  * counterexample for varying masks, and the Jacobi eigenvalue solver.

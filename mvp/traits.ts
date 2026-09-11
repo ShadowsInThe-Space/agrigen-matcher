@@ -2,10 +2,10 @@
  * AgriGen feature space: 12 quantitative crop traits normalized to [0,1],
  * plus extraction of farmer requirements into a query feature vector + mask.
  *
- * AgriGen equivalent of SeedShuffle's queryFeatureExtractor: structured
- * requirements make the RBF kernel query-dependent instead of measuring
- * "closeness to the catalog average". Unspecified requirements get mask = 0
- * and are excluded from the kernel distance — never an invented midpoint.
+ * Structured requirements make the RBF kernel query-dependent instead of
+ * measuring "closeness to the catalog average". Unspecified requirements get
+ * mask = 0 and are excluded from the kernel distance — never an invented
+ * midpoint.
  *
  * Normalization contract (catalog pipeline):
  *   - 1–10 rating scales  → (value - 1) / 9   (absolute scale semantics)
@@ -114,7 +114,7 @@ function cropGroupNormalizer(records: AccessionRecord[], key: string): (record: 
   }
 }
 
-/** Build the normalized [0,1] catalog feature matrix (SeedShuffle data contract). */
+/** Build the normalized [0,1] catalog feature matrix (shared data contract with scoring/kernel). */
 export function buildCatalog(records: AccessionRecord[]): Catalog {
   const rating = (value: number) => (value - 1) / 9
   const normPhMin = minMaxNormalizer(records, 'soil_ph_min')

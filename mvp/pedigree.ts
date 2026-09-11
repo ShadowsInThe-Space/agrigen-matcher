@@ -21,8 +21,8 @@
  * i.e. the Gram matrix of L2-normalized nonnegative vectors — positive
  * semi-definite. K(v,v) = 1. Convex fusion with the masked-RBF trait kernel
  * (α·K_traits + γ·K_pedigree, α,γ ≥ 0, α+γ = 1) is therefore PSD and stays
- * inside the RKHS framework (mirrors the SeedShuffle embedding-fusion
- * contract: only PSD-preserving combinations).
+ * inside the RKHS framework (embedding-fusion contract: only PSD-preserving
+ * combinations).
  *
  * Honest limitations (documented, not hidden):
  *   - Varieties without pedigree data get a founder vector (self only):

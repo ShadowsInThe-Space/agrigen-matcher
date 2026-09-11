@@ -1,26 +1,16 @@
 /**
  * Pure Hilbert-space kernel utilities.
  *
- * Port of the SeedShuffle production kernel. Source of truth:
- * `seedshuffle_aistudio/server/utils/kernelMath.ts` at commit 4437dfc,
- * 2026-08-19 — the last commit touching that file, verifiable via
- * `git log -1 --format="%h %ci" -- server/utils/kernelMath.ts`. Covered by
- * that repo's test suite (`seedshuffle_aistudio/tests/unit/kernelMath.spec.ts`,
- * 39 unit tests — count verifiable via `grep -c "it(" <spec path>`).
+ * Semantics and invariants of this kernel core:
+ *   - a fixed (non-zero-only) scoring mask keeps the kernel PSD, i.e. a
+ *     genuine RKHS embedding; kernel values are the RKHS cosine of the
+ *     normalized embeddings (unit diagonal K(z,z)=1 given),
+ *   - values and masks share one feature order; a non-zero mask value
+ *     means observed/active; missing observations never become an
+ *     invented midpoint (see validateFeatureRanges and the
+ *     assertFixedScoringMask guard).
  *
- * The port is semantically identical to the source; the complete diff is:
- *   - removal of the strain-specific ACTIVE_FEATURES constant (domain
- *     feature list lives in traits.ts here),
- *   - renames strain → candidate (parameter/local names in
- *     dimensionNormalizedRbf),
- *   - adapted error message in validateFeatureRanges
- *     ("canonical Hilbert launch dataset" → "catalog dataset"),
- *   - adjusted comments/JSDoc (including the RKHS-cosine preconditions on
- *     dimensionNormalizedRbf and the new assertFixedScoringMask guard).
- * No behavior was changed relative to the source.
- *
- * Values and masks must share one feature order. A non-zero mask value means
- * observed/active. Missing observations never become an invented midpoint.
+ * Verified by the invariant self-test in selftest.ts.
  */
 
 export type FeatureMask = readonly number[]
