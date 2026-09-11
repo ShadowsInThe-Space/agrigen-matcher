@@ -1,5 +1,7 @@
 # AgriGen Matcher
 
+> **English TL;DR:** AI-driven crop-variety matching that projects 12 quantitative plant traits into a Reproducing Kernel Hilbert Space via RBF kernels — math-first ML on EURISCO sample data. Awarded at KI Biennale 2026. Zero-dependency TypeScript MVP + Python reference implementation.
+
 KI-gestützte Sortenempfehlung durch RBF-Kernel-Projektion in den Reproducing Kernel Hilbert Space (RKHS) — 12 quantitative Nutzpflanzen-Traits auf EURISCO-Musterdaten.
 
 ## Status: PoC (Proof of Concept) — funktionierend
