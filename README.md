@@ -114,3 +114,16 @@ Die für diese Prüfung benötigten 46 Quell-, Test- und Datendateien wurden byt
 | `ruff format --config pyproject.toml --check core/ tests/` mit Ruff 0.14.14 | 13 Dateien bereits formatiert |
 
 Diese Ergebnisse ersetzen ältere Zählstände der Selbsttests in diesem Dokument. Sie sind lokale Prüfergebnisse und kein Nachweis einer Award-Einreichung, Auszeichnung, agronomischen Validierung oder produktiven Nutzung. Die Trennung zwischen synthetischen Musterdaten, weiteren Katalogdaten und den beiden Implementierungen bleibt maßgeblich.
+
+## Lizenz
+
+Dieses Projekt steht unter der **GNU AGPL-3.0-or-later** (siehe [`LICENSE`](LICENSE)).
+Copyright (C) 2026 Marc-Dennis Haberland (Adaptive AI Solutions).
+
+**Warum AGPL:** Der Code bleibt freie Software — nutzen, prüfen und erweitern
+ist für Forschung und Community ausdrücklich erlaubt. Wer ihn in eigene
+Produkte oder Dienste einspeist, muss dieselbe Freiheit weitergeben
+(Copyleft einschließlich SaaS-Nutzung, §13 AGPL).
+
+**Kommerzielle Lizenz ohne Copyleft** (für Unternehmen, die AGPL nicht
+erfüllen können oder wollen): hallo@adaptive-ai-solutions.de

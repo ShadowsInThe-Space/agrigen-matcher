@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// AgriGen Matcher · Copyright (C) 2026 Marc-Dennis Haberland (Adaptive AI Solutions)
+// Kommerzielle Lizenz ohne Copyleft: hallo@adaptive-ai-solutions.de
 /**
  * Demo + validation for the genealogy kernel on the real EURISCO/Genesys
  * ancestry data (data/pedigree/genesys-ancestry.json, fetched 2026-08-27).

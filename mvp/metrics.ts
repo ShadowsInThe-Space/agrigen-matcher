@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// AgriGen Matcher · Copyright (C) 2026 Marc-Dennis Haberland (Adaptive AI Solutions)
+// Kommerzielle Lizenz ohne Copyleft: hallo@adaptive-ai-solutions.de
 /**
  * Self-contained matrix metrics for the kernel matrix — no numeric
  * dependencies. Rank via Gaussian elimination, eigenvalues via cyclic Jacobi
