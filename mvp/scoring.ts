@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// AgriGen Matcher · Copyright (C) 2026 Marc-Dennis Haberland (Adaptive AI Solutions)
+// Kommerzielle Lizenz ohne Copyleft: hallo@adaptive-ai-solutions.de
 /**
  * Query scoring for the AgriGen Matcher — asymmetric hinge scoring (Fix P4).
  *

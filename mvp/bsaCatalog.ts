@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// AgriGen Matcher · Copyright (C) 2026 Marc-Dennis Haberland (Adaptive AI Solutions)
+// Kommerzielle Lizenz ohne Copyleft: hallo@adaptive-ai-solutions.de
 /**
  * BSA real-data catalog: official Bundessortenamt winter wheat notes
  * (Beschreibende Sortenliste Getreide 2026, parsed by data/bsa/parse-wheat.ts)

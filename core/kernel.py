@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# AgriGen Matcher · Copyright (C) 2026 Marc-Dennis Haberland (Adaptive AI Solutions)
+# Kommerzielle Lizenz ohne Copyleft: hallo@adaptive-ai-solutions.de
 """Kernel strategies for Hilbert-space projection.
 
 The RBF (Gaussian) kernel maps trait vectors into a Reproducing Kernel

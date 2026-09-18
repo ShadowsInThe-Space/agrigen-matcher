@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# AgriGen Matcher · Copyright (C) 2026 Marc-Dennis Haberland (Adaptive AI Solutions)
+# Kommerzielle Lizenz ohne Copyleft: hallo@adaptive-ai-solutions.de
 """Edge case & robustness tests — rewritten for the SOLID DI-based API."""
 
 import json
